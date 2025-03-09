@@ -17,7 +17,6 @@
 import torch
 import torchaudio
 from einops import rearrange
-import argparse
 import os
 import time
 import uuid
@@ -108,7 +107,11 @@ def generate(
 
     cfm, tokenizer, muq, vae = prepare_model(device)
 
-    lrc = calculate_lrc(lyrics)
+    if lyrics != "":
+        lrc = calculate_lrc(lyrics)
+    else:
+        print("Instrumental song")
+        lrc = ""
 
     lrc_prompt, start_time = get_lrc_token(lrc, tokenizer, device)
 

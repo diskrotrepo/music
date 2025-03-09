@@ -27,7 +27,7 @@ def run_generate():
     try:
         # Get parameters from the request
 
-        lyrics = request.json.get("lyrics")
+        lyrics = request.json.get("lyrics", "")
         input_file = request.json.get("input")
         audio_length = request.json.get("duration")
         steps = request.json.get("steps")
@@ -37,7 +37,7 @@ def run_generate():
         negative_tags = request.json.get("negative_tags")
 
         # Ensure all required parameters are provided
-        if not all([lyrics, audio_length, steps, cfg_strength]):
+        if not all([audio_length, steps, cfg_strength]):
             return jsonify({"error": "Missing required parameters"}), 400
 
         output_path = generate(
