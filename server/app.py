@@ -13,25 +13,25 @@ def run_inference():
         lyrics = request.json.get("lyrics")
         input_file = request.json.get("input")
         audio_length = request.json.get("duration")
-        output_file = request.json.get("output")
         steps = request.json.get("steps")
         cfg_strength = request.json.get("cfg_strength")
         chunked = request.json.get("chunked")
         tags = request.json.get("tags")
+        negative_tags = request.json.get("negative_tags")
 
         # Ensure all required parameters are provided
-        if not all([lyrics, audio_length, output_file, steps, cfg_strength]):
+        if not all([lyrics, audio_length, steps, cfg_strength]):
             return jsonify({"error": "Missing required parameters"}), 400
 
         generate(
             lyrics,
             input_file,
             audio_length,
-            output_file,
             steps,
             cfg_strength,
             chunked,
             tags,
+            negative_tags,
         )
 
         # Return the output

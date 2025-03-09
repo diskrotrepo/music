@@ -20,6 +20,7 @@ from einops import rearrange
 import argparse
 import os
 import time
+import uuid
 from lyrics import calculate_lrc
 
 import os
@@ -84,11 +85,11 @@ def generate(
     lyrics,
     input_file,
     audio_length,
-    output_file,
     steps,
     cfg_strength,
     chunked,
     tags,
+    negative_tags=None,
 ):
 
     assert tags or input_file, "either tags or input should be provided"
@@ -117,10 +118,12 @@ def generate(
         input_path = os.path.join("input", input_file)
         style_prompt = get_style_prompt(muq, input_path)
     else:
-        print("tags")
         style_prompt = get_style_prompt(muq, prompt=tags)
 
-    negative_style_prompt = get_negative_style_prompt(device)
+    if negative_tags:
+        negative_style_prompt = get_style_prompt(muq, prompt=negative_tags)
+    else:
+        negative_style_prompt = get_negative_style_prompt(device)
 
     latent_prompt = get_reference_latent(device, max_frames)
 
@@ -141,7 +144,6 @@ def generate(
     e_t = time.time() - s_t
     print(f"inference cost {e_t} seconds")
 
-    output_file = output_file
-    output_path = os.path.join("output", output_file)
+    output_path = os.path.join("output", "{}.wav".format(uuid.uuid4()))
 
     torchaudio.save(output_path, generated_song, sample_rate=44100)
