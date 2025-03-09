@@ -100,10 +100,6 @@ if __name__ == "__main__":
     negative_style_prompt = get_negative_style_prompt(device)
     
     latent_prompt = get_reference_latent(device, max_frames)
-
-    print(style_prompt)
-    print(negative_style_prompt)
-    print(latent_prompt)
     
     s_t = time.time()
     generated_song = inference(
