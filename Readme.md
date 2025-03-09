@@ -1,8 +1,7 @@
 
 ## diskrot fork of DiffRhythm
 
-This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo.
-
+This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo. Information about running this fork can be found in the wiki.
 
 ## License & Disclaimer
 
