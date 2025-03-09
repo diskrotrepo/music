@@ -1,91 +1,8 @@
-<p align="center">
-    <img src="src/DiffRhythm_logo.jpg" width="400"/>
-<p>
 
-<p align="center">
-   <h1>Di♪♪Rhythm: Blazingly Fast and Embarrassingly Simple</br>End-to-End Full-Length Song Generation with Latent Diffusion</h1>
-</p>
+## diskrot fork of DiffRhythm
 
-Ziqian Ning, Huakang Chen, Yuepeng Jiang, Chunbo Hao, Guobin Ma, Shuai Wang, Jixun Yao, Lei Xie†
+This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo.
 
-<p align="center">
- <a href="https://huggingface.co/spaces/ASLP-lab/DiffRhythm"> Huggingface Space Demo</a> </a>&nbsp
-<br>
-📑 <a href="https://arxiv.org/abs/2503.01183">Paper</a> &nbsp&nbsp | &nbsp&nbsp 📑 <a href="https://aslp-lab.github.io/DiffRhythm.github.io/">Demo</a> &nbsp&nbsp | &nbsp&nbsp 💬 <a href="src/contact.md">WeChat (微信)</a>&nbsp&nbsp
-</p>
-
-DiffRhythm (Chinese: 谛韵, Dì Yùn) is the ***first*** open-sourced diffusion-based music generation model that is capable of creating full-length songs. The name combines "Diff" (referencing its diffusion architecture) with "Rhythm" (highlighting its focus on music and song creation). The Chinese name 谛韵 (Dì Yùn) phonetically mirrors "DiffRhythm", where "谛" (attentive listening) symbolizes auditory perception, and "韵" (melodic charm) represents musicality.
-
-
-<p align="center">
-    <img src="src/diffrhythm.jpg" width="90%"/>
-<p>
-
-## News and Updates
-
-* 📌 Join Us on Discord! [![Discord](https://dcbadge.limes.pink/api/server/https://discord.gg/q4T7nTdd)](https://discord.gg/q4T7nTdd)
-
-* **2025.3.7 🔥** **DiffRhythm** is now officially licensed under the **Apache 2.0 License**! 🎉 As the first diffusion-based music generation model, DiffRhythm opens up exciting new possibilities for AI-driven creativity in music. Whether you're a researcher, developer, or music enthusiast, we invite you to explore, innovate, and build upon this foundation. 
-
-* **2025.3.6 🔥** The local deployment guide is now available.
-
-* **2025.3.4 🔥** We released the [DiffRhythm paper](https://arxiv.org/abs/2503.01183) and [Huggingface Space demo](https://huggingface.co/spaces/ASLP-lab/DiffRhythm).
-
-## TODOs
-- [ ] Release DiffRhythm-full.
-- [ ] Support Colab.
-- [ ] Support Docker.
-- [ ] Release training code.
-- [x] Support local deployment.
-- [x] Release paper to Arxiv.
-- [x] Online serving on Hugging Face Space.
-
-## Model Versions
-
-|  Model   | HuggingFace |
-|  ----  | ----  |
-| DiffRhythm-base (1m35s)  | https://huggingface.co/ASLP-lab/DiffRhythm-base |
-| DiffRhythm-full (4m45s)  | Coming soon... |
-| DiffRhythm-vae  | https://huggingface.co/ASLP-lab/DiffRhythm-vae |
-
-## Inference
-
-Following the steps below to clone the repository and install the environment.
-
-```bash 
-# clone and enter the repositry
-git clone https://github.com/ASLP-lab/DiffRhythm.git
-cd DiffRhythm
-
-# install the environment
-
-## espeak-ng
-# For Debian-like distribution (e.g. Ubuntu, Mint, etc.)
-sudo apt-get install espeak-ng
-# For RedHat-like distribution (e.g. CentOS, Fedora, etc.) 
-sudo yum install espeak-ng
-# For Windows
-# Please visit https://github.com/espeak-ng/espeak-ng/releases to download .msi installer
-
-## python environment
-conda create -n diffrhythm python=3.10
-conda activate diffrhythm
-pip install -r requirements.txt
-```
-
-Now, you can simply use the inference script:
-```bash
-bash scripts/infer.sh 
-```
-Example files of lrc and reference audio can be found in `infer/example`.
-
-You can use [the tools](https://huggingface.co/spaces/ASLP-lab/DiffRhythm) we provide on huggingface to generate the lrc
-
-**Note that DiffRhythm-base requires a minimum of 8G of VRAM. To meet the 8G VRAM requirement, ensure `chunked=True` is set in the `decode_audio` function during inference. Higher VRAM may be required if chunked decoding is disabled.**
-
-## Training
-
-Coming soon...
 
 ## License & Disclaimer
 
@@ -104,11 +21,3 @@ DiffRhythm enables the creation of original music across diverse genres, support
   year={2025}
 }
 ```
-## Contact Us
-
-If you are interested in leaving a message to our research team, feel free to email `nzqiann@gmail.com`.
-<p align="center">
-    <a href="http://www.nwpu-aslp.org/">
-        <img src="src/ASLP.jpg" width="400"/>
-    </a>
-</p>
