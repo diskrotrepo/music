@@ -7,3 +7,4 @@ pretrained/
 ckpt
 wandb
 dataset/** 
+start.sh

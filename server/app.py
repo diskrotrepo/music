@@ -15,7 +15,7 @@ def run_inference():
         output_file = request.json.get("output")
         steps = request.json.get("steps")
         cfg_strength = request.json.get("cfg_strength")
-
+        chunked = request.json.get("chunked")
 
 
         # Ensure all required parameters are provided
@@ -31,7 +31,8 @@ def run_inference():
             "--repo_id", "ASLP-lab/DiffRhythm-base",
             "--output-file", output_file,
             "--steps", str(steps),
-            "--cfg_strength",str(cfg_strength)
+            "--cfg_strength",str(cfg_strength),
+            "--chunked",str(chunked)
         ]
 
         # Run the inference process

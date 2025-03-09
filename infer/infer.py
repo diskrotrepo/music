@@ -34,7 +34,7 @@ from infer_utils import (
     decode_audio
 )
 
-def inference(cfm_model, vae_model, cond, text, duration, style_prompt, negative_style_prompt, start_time, steps, cfg_strength):   
+def inference(cfm_model, vae_model, cond, text, duration, style_prompt, negative_style_prompt, start_time, steps, cfg_strength, chunked=False):   
     with torch.inference_mode():
         generated, _ = cfm_model.sample(
             cond=cond,
@@ -50,7 +50,7 @@ def inference(cfm_model, vae_model, cond, text, duration, style_prompt, negative
         generated = generated.to(torch.float32)
         latent = generated.transpose(1, 2) # [b d t]
     
-        output = decode_audio(latent, vae_model, chunked=False)
+        output = decode_audio(latent, vae_model, chunked=chunked)
 
         # Rearrange audio batch to a single sequence
         output = rearrange(output, "b d n -> d (b n)")
@@ -68,6 +68,7 @@ if __name__ == "__main__":
     parser.add_argument('--output-file', type=str, default="output.wav", help="output filename for generated song") # output directory fo target song
     parser.add_argument('--steps', type=int, default=32, help="steps")
     parser.add_argument('--cfg_strength', type=float, default=6.0, help="cfg strength")
+    parser.add_argument('--chunked', type=bool, default=False, help="whether to use chunked decoding")
 
     args = parser.parse_args()
 
@@ -112,7 +113,8 @@ if __name__ == "__main__":
         negative_style_prompt=negative_style_prompt,
         start_time=start_time,
         steps=args.steps,
-        cfg_strength=args.cfg_strength
+        cfg_strength=args.cfg_strength,
+        chunked=args.chunked
     )
     e_t = time.time() - s_t
     print(f"inference cost {e_t} seconds")
