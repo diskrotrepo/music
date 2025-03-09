@@ -15,8 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" This implementation is adapted from github repo:
-    https://github.com/SWivid/F5-TTS.
+"""This implementation is adapted from github repo:
+https://github.com/SWivid/F5-TTS.
 """
 
 from __future__ import annotations
@@ -25,7 +25,10 @@ import torch
 from torch import nn
 import torch
 
-from transformers.models.llama.modeling_llama import LlamaDecoderLayer, LlamaRotaryEmbedding
+from transformers.models.llama.modeling_llama import (
+    LlamaDecoderLayer,
+    LlamaRotaryEmbedding,
+)
 from transformers.models.llama import LlamaConfig
 
 from model.modules import (
@@ -37,18 +40,28 @@ from model.modules import (
     get_pos_embed_indices,
 )
 
+
 # Text embedding
 class TextEmbedding(nn.Module):
     def __init__(self, text_num_embeds, text_dim, conv_layers=0, conv_mult=2):
         super().__init__()
-        self.text_embed = nn.Embedding(text_num_embeds + 1, text_dim)  # use 0 as filler token
+        self.text_embed = nn.Embedding(
+            text_num_embeds + 1, text_dim
+        )  # use 0 as filler token
 
         if conv_layers > 0:
             self.extra_modeling = True
             self.precompute_max_pos = 4096  # ~44s of 24khz audio
-            self.register_buffer("freqs_cis", precompute_freqs_cis(text_dim, self.precompute_max_pos), persistent=False)
+            self.register_buffer(
+                "freqs_cis",
+                precompute_freqs_cis(text_dim, self.precompute_max_pos),
+                persistent=False,
+            )
             self.text_blocks = nn.Sequential(
-                *[ConvNeXtV2Block(text_dim, text_dim * conv_mult) for _ in range(conv_layers)]
+                *[
+                    ConvNeXtV2Block(text_dim, text_dim * conv_mult)
+                    for _ in range(conv_layers)
+                ]
             )
         else:
             self.extra_modeling = False
@@ -65,7 +78,9 @@ class TextEmbedding(nn.Module):
         if self.extra_modeling:
             # sinus pos emb
             batch_start = torch.zeros((batch,), dtype=torch.long)
-            pos_idx = get_pos_embed_indices(batch_start, seq_len, max_pos=self.precompute_max_pos)
+            pos_idx = get_pos_embed_indices(
+                batch_start, seq_len, max_pos=self.precompute_max_pos
+            )
             text_pos_embed = self.freqs_cis[pos_idx]
             text = text + text_pos_embed
 
@@ -82,7 +97,15 @@ class InputEmbedding(nn.Module):
         self.proj = nn.Linear(mel_dim * 2 + text_dim + cond_dim * 2, out_dim)
         self.conv_pos_embed = ConvPositionEmbedding(dim=out_dim)
 
-    def forward(self, x: float["b n d"], cond: float["b n d"], text_embed: float["b n d"], style_emb, time_emb, drop_audio_cond=False):  # noqa: F722
+    def forward(
+        self,
+        x: float["b n d"],
+        cond: float["b n d"],
+        text_embed: float["b n d"],
+        style_emb,
+        time_emb,
+        drop_audio_cond=False,
+    ):  # noqa: F722
         if drop_audio_cond:  # cfg for cond audio
             cond = torch.zeros_like(cond)
 
@@ -108,7 +131,7 @@ class DiT(nn.Module):
         text_num_embeds=256,
         text_dim=None,
         conv_layers=0,
-        long_skip_connection=False
+        long_skip_connection=False,
     ):
         super().__init__()
 
@@ -117,26 +140,30 @@ class DiT(nn.Module):
         self.start_time_embed = TimestepEmbedding(cond_dim)
         if text_dim is None:
             text_dim = mel_dim
-        self.text_embed = TextEmbedding(text_num_embeds, text_dim, conv_layers=conv_layers)
+        self.text_embed = TextEmbedding(
+            text_num_embeds, text_dim, conv_layers=conv_layers
+        )
         self.input_embed = InputEmbedding(mel_dim, text_dim, dim, cond_dim=cond_dim)
 
         self.dim = dim
         self.depth = depth
 
-        llama_config = LlamaConfig(hidden_size=dim, intermediate_size=dim * ff_mult, hidden_act='silu')
-        llama_config._attn_implementation = 'sdpa'
+        llama_config = LlamaConfig(
+            hidden_size=dim, intermediate_size=dim * ff_mult, hidden_act="silu"
+        )
+        llama_config._attn_implementation = "sdpa"
         self.transformer_blocks = nn.ModuleList(
             [LlamaDecoderLayer(llama_config, layer_idx=i) for i in range(depth)]
         )
         self.rotary_emb = LlamaRotaryEmbedding(config=llama_config)
-        self.long_skip_connection = nn.Linear(dim * 2, dim, bias=False) if long_skip_connection else None
+        self.long_skip_connection = (
+            nn.Linear(dim * 2, dim, bias=False) if long_skip_connection else None
+        )
 
         self.text_fusion_linears = nn.ModuleList(
             [
-                nn.Sequential(
-                    nn.Linear(cond_dim, dim),
-                    nn.SiLU()
-                ) for i in range(depth // 2)
+                nn.Sequential(nn.Linear(cond_dim, dim), nn.SiLU())
+                for i in range(depth // 2)
             ]
         )
         for layer in self.text_fusion_linears:
@@ -155,7 +182,6 @@ class DiT(nn.Module):
             text_residuals.append(text_residual)
         return s_t, text_embed, text_residuals
 
-
     def forward(
         self,
         x: float["b n d"],  # nosied input audio  # noqa: F722
@@ -165,7 +191,7 @@ class DiT(nn.Module):
         drop_audio_cond,  # cfg for cond audio
         drop_text,  # cfg for text
         drop_prompt=False,
-        style_prompt=None, # [b d t]
+        style_prompt=None,  # [b d t]
         style_prompt_lens=None,
         mask: bool["b n"] | None = None,  # noqa: F722
         grad_ckpt=False,
@@ -184,10 +210,12 @@ class DiT(nn.Module):
 
         if drop_prompt:
             style_prompt = torch.zeros_like(style_prompt)
-        
-        style_embed = style_prompt # [b, 512]
 
-        x = self.input_embed(x, cond, text_embed, style_embed, c, drop_audio_cond=drop_audio_cond)
+        style_embed = style_prompt  # [b, 512]
+
+        x = self.input_embed(
+            x, cond, text_embed, style_embed, c, drop_audio_cond=drop_audio_cond
+        )
 
         if self.long_skip_connection is not None:
             residual = x

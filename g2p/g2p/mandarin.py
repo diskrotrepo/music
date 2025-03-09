@@ -182,9 +182,7 @@ _bopomofo_to_ipa = [
 must_not_er_words = {"女儿", "老儿", "男儿", "少儿", "小儿"}
 
 word_pinyin_dict = {}
-with open(
-    r"./g2p/sources/chinese_lexicon.txt", "r", encoding="utf-8"
-) as fread:
+with open(r"./g2p/sources/chinese_lexicon.txt", "r", encoding="utf-8") as fread:
     txt_list = fread.readlines()
     for txt in txt_list:
         word, pinyin = txt.strip().split("\t")
@@ -192,9 +190,7 @@ with open(
     fread.close()
 
 pinyin_2_bopomofo_dict = {}
-with open(
-    r"./g2p/sources/pinyin_2_bpmf.txt", "r", encoding="utf-8"
-) as fread:
+with open(r"./g2p/sources/pinyin_2_bpmf.txt", "r", encoding="utf-8") as fread:
     txt_list = fread.readlines()
     for txt in txt_list:
         pinyin, bopomofo = txt.strip().split("\t")
@@ -211,9 +207,7 @@ tone_dict = {
 }
 
 bopomofos2pinyin_dict = {}
-with open(
-    r"./g2p/sources/bpmf_2_pinyin.txt", "r", encoding="utf-8"
-) as fread:
+with open(r"./g2p/sources/bpmf_2_pinyin.txt", "r", encoding="utf-8") as fread:
     txt_list = fread.readlines()
     for txt in txt_list:
         v, k = txt.strip().split("\t")

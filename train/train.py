@@ -22,8 +22,9 @@ from prefigure.prefigure import get_all_args
 import json
 import os
 
-os.environ['OMP_NUM_THREADS']="1"
-os.environ['MKL_NUM_THREADS']="1"
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+
 
 def main():
     args = get_all_args("config/default.ini")
@@ -37,11 +38,11 @@ def main():
 
     model = CFM(
         transformer=model_cls(**model_config["model"]),
-        num_channels=model_config["model"]['mel_dim'],
+        num_channels=model_config["model"]["mel_dim"],
         audio_drop_prob=args.audio_drop_prob,
         cond_drop_prob=args.cond_drop_prob,
         style_drop_prob=args.style_drop_prob,
-        lrc_drop_prob=args.lrc_drop_prob
+        lrc_drop_prob=args.lrc_drop_prob,
     )
 
     total_params = sum(p.numel() for p in model.parameters())
@@ -64,7 +65,7 @@ def main():
         bnb_optimizer=False,
         reset_lr=args.reset_lr,
         batch_size=args.batch_size,
-        grad_ckpt=args.grad_ckpt
+        grad_ckpt=args.grad_ckpt,
     )
 
     trainer.train(

@@ -672,11 +672,11 @@ class JapanesePhoneConverter(object):
                     "",
                 ):
                     # ここはpyopenjtalkが読めない文字等のときに起こる
-                    #print(
+                    # print(
                     #    "{}Cannot read:{}, yomi:{}, new_word:{};".format(
                     #        parsed, word, yomi, self.japan_JH2K.convert(word)[0]["kana"]
                     #    )
-                    #)
+                    # )
                     # raise ValueError(word)
                     word = self.japan_JH2K.convert(word)[0]["kana"]
                     # print(word, self.japan_JH2K.convert(word)[0]['kana'], kata2phoneme_list(self.japan_JH2K.convert(word)[0]['kana']))

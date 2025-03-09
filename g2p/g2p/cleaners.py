@@ -27,4 +27,4 @@ def cjekfd_cleaners(text, sentence, language, text_tokenizers):
     elif language == "de":
         return german_to_ipa(text, text_tokenizers["de"])
     else:
-       return english_to_ipa(text, text_tokenizers["en"])
+        return english_to_ipa(text, text_tokenizers["en"])

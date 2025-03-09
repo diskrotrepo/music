@@ -5,6 +5,7 @@ client = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
 )
 
+
 def calculate_lrc(lyrics):
     chat_completion = client.chat.completions.create(
         messages=[
@@ -15,7 +16,7 @@ def calculate_lrc(lyrics):
             {
                 "role": "user",
                 "content": lyrics,
-            }
+            },
         ],
         model="gpt-4o",
     )

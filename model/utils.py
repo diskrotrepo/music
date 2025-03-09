@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" This implementation is adapted from github repo:
-    https://github.com/SWivid/F5-TTS.
+"""This implementation is adapted from github repo:
+https://github.com/SWivid/F5-TTS.
 """
 
 from __future__ import annotations
@@ -54,7 +54,9 @@ def default(v, d):
 # tensor helpers
 
 
-def lens_to_mask(t: int["b"], length: int | None = None) -> bool["b n"]:  # noqa: F722 F821
+def lens_to_mask(
+    t: int["b"], length: int | None = None
+) -> bool["b n"]:  # noqa: F722 F821
     if not exists(length):
         length = t.amax()
 
@@ -62,7 +64,9 @@ def lens_to_mask(t: int["b"], length: int | None = None) -> bool["b n"]:  # noqa
     return seq[None, :] < t[:, None]
 
 
-def mask_from_start_end_indices(seq_len: int["b"], start: int["b"], end: int["b"]):  # noqa: F722 F821
+def mask_from_start_end_indices(
+    seq_len: int["b"], start: int["b"], end: int["b"]
+):  # noqa: F722 F821
     max_seq_len = 2048
     seq = torch.arange(max_seq_len, device=start.device).long()
     start_mask = seq[None, :] >= start[:, None]
@@ -70,7 +74,9 @@ def mask_from_start_end_indices(seq_len: int["b"], start: int["b"], end: int["b"
     return start_mask & end_mask
 
 
-def mask_from_frac_lengths(seq_len: int["b"], frac_lengths: float["b"]):  # noqa: F722 F821
+def mask_from_frac_lengths(
+    seq_len: int["b"], frac_lengths: float["b"]
+):  # noqa: F722 F821
     lengths = (frac_lengths * seq_len).long()
     max_start = seq_len - lengths
 
@@ -81,7 +87,9 @@ def mask_from_frac_lengths(seq_len: int["b"], frac_lengths: float["b"]):  # noqa
     return mask_from_start_end_indices(seq_len, start, end)
 
 
-def maybe_masked_mean(t: float["b n d"], mask: bool["b n"] = None) -> float["b d"]:  # noqa: F722
+def maybe_masked_mean(
+    t: float["b n d"], mask: bool["b n"] = None
+) -> float["b d"]:  # noqa: F722
     if not exists(mask):
         return t.mean(dim=1)
 
@@ -105,7 +113,9 @@ def list_str_to_idx(
     vocab_char_map: dict[str, int],  # {char: idx}
     padding_value=-1,
 ) -> int["b nt"]:  # noqa: F722
-    list_idx_tensors = [torch.tensor([vocab_char_map.get(c, 0) for c in t]) for t in text]  # pinyin or char style
+    list_idx_tensors = [
+        torch.tensor([vocab_char_map.get(c, 0) for c in t]) for t in text
+    ]  # pinyin or char style
     text = pad_sequence(list_idx_tensors, padding_value=padding_value, batch_first=True)
     return text
 
@@ -124,13 +134,18 @@ def get_tokenizer(dataset_name, tokenizer: str = "pinyin"):
                 - if use "byte", set to 256 (unicode byte range)
     """
     if tokenizer in ["pinyin", "char"]:
-        tokenizer_path = os.path.join(files("diffrhythm").joinpath("../../data"), f"{dataset_name}_{tokenizer}/vocab.txt")
+        tokenizer_path = os.path.join(
+            files("diffrhythm").joinpath("../../data"),
+            f"{dataset_name}_{tokenizer}/vocab.txt",
+        )
         with open(tokenizer_path, "r", encoding="utf-8") as f:
             vocab_char_map = {}
             for i, char in enumerate(f):
                 vocab_char_map[char[:-1]] = i
         vocab_size = len(vocab_char_map)
-        assert vocab_char_map[" "] == 0, "make sure space is of idx 0 in vocab.txt, cuz 0 is used for unknown char"
+        assert (
+            vocab_char_map[" "] == 0
+        ), "make sure space is of idx 0 in vocab.txt, cuz 0 is used for unknown char"
 
     elif tokenizer == "byte":
         vocab_char_map = None
@@ -165,7 +180,9 @@ def convert_char_to_pinyin(text_list, polyphone=True):
                 if char_list and seg_byte_len > 1 and char_list[-1] not in " :'\"":
                     char_list.append(" ")
                 char_list.extend(seg)
-            elif polyphone and seg_byte_len == 3 * len(seg):  # if pure chinese characters
+            elif polyphone and seg_byte_len == 3 * len(
+                seg
+            ):  # if pure chinese characters
                 seg = lazy_pinyin(seg, style=Style.TONE3, tone_sandhi=True)
                 for c in seg:
                     if c not in "。，、；：？！《》【】—…":
@@ -178,7 +195,9 @@ def convert_char_to_pinyin(text_list, polyphone=True):
                     else:
                         if c not in "。，、；：？！《》【】—…":
                             char_list.append(" ")
-                            char_list.extend(lazy_pinyin(c, style=Style.TONE3, tone_sandhi=True))
+                            char_list.extend(
+                                lazy_pinyin(c, style=Style.TONE3, tone_sandhi=True)
+                            )
                         else:  # if is zh punc
                             char_list.append(c)
         final_text_list.append(char_list)

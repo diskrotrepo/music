@@ -119,15 +119,17 @@ with open("./g2p/g2p/vocab.json", "r") as f:
 data = json.loads(json_data)
 vocab = data["vocab"]
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     phone, token = chn_eng_g2p("你好，hello world")
-    phone, token = chn_eng_g2p("你好，hello world, Bonjour, 테스트 해 보겠습니다, 五月雨緑")
+    phone, token = chn_eng_g2p(
+        "你好，hello world, Bonjour, 테스트 해 보겠습니다, 五月雨緑"
+    )
     print(phone)
     print(token)
 
-    #phone, token = text_tokenizer.tokenize("你好，hello world, Bonjour, 테스트 해 보겠습니다, 五月雨緑", "", "auto")
+    # phone, token = text_tokenizer.tokenize("你好，hello world, Bonjour, 테스트 해 보겠습니다, 五月雨緑", "", "auto")
     phone, token = text_tokenizer.tokenize("緑", "", "auto")
-    #phone, token = text_tokenizer.tokenize("आइए इसका परीक्षण करें", "", "auto")
-    #phone, token = text_tokenizer.tokenize("आइए इसका परीक्षण करें", "", "other")
+    # phone, token = text_tokenizer.tokenize("आइए इसका परीक्षण करें", "", "auto")
+    # phone, token = text_tokenizer.tokenize("आइए इसका परीक्षण करें", "", "other")
     print(phone)
     print(token)
