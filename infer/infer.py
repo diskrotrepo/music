@@ -20,6 +20,7 @@ from einops import rearrange
 import argparse
 import os
 import time
+from lyrics import calculate_lrc
 
 import os
 print("Current working directory:", os.getcwd())
@@ -60,12 +61,14 @@ def inference(cfm_model, vae_model, cond, text, duration, style_prompt, negative
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lrc-path', type=str, default="infer/example/eg.lrc", help="lyrics of target song") # lyrics of target song
-    parser.add_argument('--ref-audio-path', type=str, default="infer/example/eg.mp3", help="reference audio as style prompt for target song") # reference audio as style prompt for target song
+    parser.add_argument('--lyrics', type=str, default="infer/example/eg.lrc", help="lyrics of target song") # lyrics of target song
+    parser.add_argument('--input_file', type=str, default="eg.mp3", help="reference audio as style prompt for target song") # reference audio as style prompt for target song
     parser.add_argument('--audio-length', type=int, default=95, choices=[95], help="length of generated song") # length of target song
     parser.add_argument('--repo_id', type=str, default="ASLP-lab/DiffRhythm-base", help="target model")
-    parser.add_argument('--output-dir', type=str, default="infer/example/output", help="output directory fo generated song") # output directory fo target song
+    parser.add_argument('--output-file', type=str, default="output.wav", help="output filename for generated song") # output directory fo target song
     args = parser.parse_args()
+
+    # vlrc-path
     
     assert torch.cuda.is_available(), "only available on gpu"
 
@@ -79,11 +82,17 @@ if __name__ == "__main__":
     
     cfm, tokenizer, muq, vae = prepare_model(device)
     
-    with open(args.lrc_path, 'r') as f:
-        lrc = f.read()
+    
+    lrc = calculate_lrc(args.lyrics)
+
+    print(lrc)
+
     lrc_prompt, start_time = get_lrc_token(lrc, tokenizer, device)
     
-    style_prompt = get_style_prompt(muq, args.ref_audio_path)
+    input_path = os.path.join("input", args.input_file)
+
+
+    style_prompt = get_style_prompt(muq, input_path)
     
     negative_style_prompt = get_negative_style_prompt(device)
     
@@ -103,9 +112,12 @@ if __name__ == "__main__":
     e_t = time.time() - s_t
     print(f"inference cost {e_t} seconds")
     
-    output_dir = args.output_dir
-    os.makedirs(output_dir, exist_ok=True)
+    output_file = args.output_file
+  
     
-    output_path = os.path.join(output_dir, "output.wav")
+    output_path = os.path.join("output", output_file)
+
+    print (output_path)
+
     torchaudio.save(output_path, generated_song, sample_rate=44100)
     
