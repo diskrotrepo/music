@@ -6,3 +6,4 @@ pretrained/
 .DS_Store
 ckpt
 wandb
+dataset/** 
