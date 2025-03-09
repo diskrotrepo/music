@@ -131,8 +131,12 @@ def get_negative_style_prompt(device):
     return vocal_stlye
 
 
-def get_style_prompt(model, wav_path):
+@torch.no_grad()
+def get_style_prompt(model, wav_path=None, prompt=None):
     mulan = model
+
+    if prompt is not None:
+        return mulan(texts=prompt).half()
 
     ext = os.path.splitext(wav_path)[-1].lower()
     if ext == ".mp3":

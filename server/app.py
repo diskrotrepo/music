@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-import subprocess
-import os
+from infer import generate
+
 
 app = Flask(__name__)
 
@@ -17,38 +17,25 @@ def run_inference():
         steps = request.json.get("steps")
         cfg_strength = request.json.get("cfg_strength")
         chunked = request.json.get("chunked")
+        tags = request.json.get("tags")
 
         # Ensure all required parameters are provided
         if not all([lyrics, audio_length, output_file, steps, cfg_strength]):
             return jsonify({"error": "Missing required parameters"}), 400
 
-        # Construct the command
-        command = [
-            "python3",
-            "infer/infer.py",
-            "--lyrics",
+        generate(
             lyrics,
-            "--input_file",
             input_file,
-            "--audio-length",
-            str(audio_length),
-            "--repo_id",
-            "ASLP-lab/DiffRhythm-base",
-            "--output-file",
+            audio_length,
             output_file,
-            "--steps",
-            str(steps),
-            "--cfg_strength",
-            str(cfg_strength),
-            "--chunked",
-            str(chunked),
-        ]
-
-        # Run the inference process
-        process = subprocess.run(command, capture_output=True, text=True)
+            steps,
+            cfg_strength,
+            chunked,
+            tags,
+        )
 
         # Return the output
-        return jsonify({"stdout": process.stdout, "stderr": process.stderr})
+        return jsonify({"stdout": "hello"})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

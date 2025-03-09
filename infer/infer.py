@@ -24,9 +24,8 @@ from lyrics import calculate_lrc
 
 import os
 
-print("Current working directory:", os.getcwd())
 
-from infer_utils import (
+from .infer_utils import (
     get_reference_latent,
     get_lrc_token,
     get_style_prompt,
@@ -81,43 +80,19 @@ def inference(
         return output
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--lyrics",
-        type=str,
-        default="infer/example/eg.lrc",
-        help="lyrics of target song",
-    )  # lyrics of target song
-    parser.add_argument(
-        "--input_file",
-        type=str,
-        default="eg.mp3",
-        help="reference audio as style prompt for target song",
-    )  # reference audio as style prompt for target song
-    parser.add_argument(
-        "--audio-length",
-        type=int,
-        default=95,
-        choices=[95],
-        help="length of generated song",
-    )  # length of target song
-    parser.add_argument(
-        "--repo_id", type=str, default="ASLP-lab/DiffRhythm-base", help="target model"
-    )
-    parser.add_argument(
-        "--output-file",
-        type=str,
-        default="output.wav",
-        help="output filename for generated song",
-    )  # output directory fo target song
-    parser.add_argument("--steps", type=int, default=32, help="steps")
-    parser.add_argument("--cfg_strength", type=float, default=6.0, help="cfg strength")
-    parser.add_argument(
-        "--chunked", type=bool, default=False, help="whether to use chunked decoding"
-    )
+def generate(
+    lyrics,
+    input_file,
+    audio_length,
+    output_file,
+    steps,
+    cfg_strength,
+    chunked,
+    tags,
+):
 
-    args = parser.parse_args()
+    assert tags or input_file, "either tags or input should be provided"
+    assert not (tags and input_file), "only one of them should be provided"
 
     # vlrc-path
 
@@ -125,21 +100,25 @@ if __name__ == "__main__":
 
     device = "cuda"
 
-    audio_length = args.audio_length
     if audio_length == 95:
         max_frames = 2048
     elif audio_length == 285:  # current not available
         max_frames = 6144
+    else:
+        raise ValueError(f"Unsupported audio_length: {audio_length}")
 
     cfm, tokenizer, muq, vae = prepare_model(device)
 
-    lrc = calculate_lrc(args.lyrics)
+    lrc = calculate_lrc(lyrics)
 
     lrc_prompt, start_time = get_lrc_token(lrc, tokenizer, device)
 
-    input_path = os.path.join("input", args.input_file)
-
-    style_prompt = get_style_prompt(muq, input_path)
+    if input_file:
+        input_path = os.path.join("input", input_file)
+        style_prompt = get_style_prompt(muq, input_path)
+    else:
+        print("tags")
+        style_prompt = get_style_prompt(muq, prompt=tags)
 
     negative_style_prompt = get_negative_style_prompt(device)
 
@@ -155,17 +134,14 @@ if __name__ == "__main__":
         style_prompt=style_prompt,
         negative_style_prompt=negative_style_prompt,
         start_time=start_time,
-        steps=args.steps,
-        cfg_strength=args.cfg_strength,
-        chunked=args.chunked,
+        steps=steps,
+        cfg_strength=cfg_strength,
+        chunked=chunked,
     )
     e_t = time.time() - s_t
     print(f"inference cost {e_t} seconds")
 
-    output_file = args.output_file
-
+    output_file = output_file
     output_path = os.path.join("output", output_file)
-
-    print(output_path)
 
     torchaudio.save(output_path, generated_song, sample_rate=44100)
