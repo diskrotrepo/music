@@ -1,12 +1,29 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, abort
 from infer import generate
+import os
 
 
 app = Flask(__name__)
+GENERATED_DIR = "./output"
+
+
+@app.route("/v1/generate/<id>", methods=["GET"])
+def download(id):
+
+    if not id:
+        abort(400, description="Missing 'id' parameter")
+
+    file_name = "{}.wav".format(id)
+
+    try:
+        # Return the file as an attachment
+        return send_from_directory(GENERATED_DIR, file_name, as_attachment=True)
+    except Exception as e:
+        abort(404, description=f"File not found: {file_name}")
 
 
 @app.route("/v1/generate", methods=["POST"])
-def run_inference():
+def run_generate():
     try:
         # Get parameters from the request
 
@@ -23,7 +40,7 @@ def run_inference():
         if not all([lyrics, audio_length, steps, cfg_strength]):
             return jsonify({"error": "Missing required parameters"}), 400
 
-        generate(
+        output_path = generate(
             lyrics,
             input_file,
             audio_length,
@@ -35,7 +52,7 @@ def run_inference():
         )
 
         # Return the output
-        return jsonify({"stdout": "hello"})
+        return jsonify({"output_path": output_path})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

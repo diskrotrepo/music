@@ -95,8 +95,6 @@ def generate(
     assert tags or input_file, "either tags or input should be provided"
     assert not (tags and input_file), "only one of them should be provided"
 
-    # vlrc-path
-
     assert torch.cuda.is_available(), "only available on gpu"
 
     device = "cuda"
@@ -147,3 +145,4 @@ def generate(
     output_path = os.path.join("output", "{}.wav".format(uuid.uuid4()))
 
     torchaudio.save(output_path, generated_song, sample_rate=44100)
+    return output_path
