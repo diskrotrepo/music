@@ -1,24 +1,38 @@
 import os
 from openai import OpenAI
 
-client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
-)
+if os.environ.get("USE_LOCAL_LLM"):
+    print("Using local LLM")
+    client = OpenAI(
+        base_url=os.environ.get("LLM_API"),
+        api_key=os.environ.get("OPENAI_API_KEY"),
+    )
+else:
+    print("Using OpenAI")
+    client = OpenAI(
+        api_key=os.environ.get("OPENAI_API_KEY"),
+    )
 
 
 def calculate_lrc(lyrics):
+
+    with open("./config/lyricPrompt.txt", "r") as f:
+        systemPrompt = f.read()
+
     chat_completion = client.chat.completions.create(
         messages=[
             {
                 "role": "system",
-                "content": "You are a helpful assistant that calculates the lrc time for the lyrics. Return only the lrc file without comment.",
+                "content": systemPrompt,
             },
             {
                 "role": "user",
                 "content": lyrics,
             },
         ],
-        model="gpt-4o",
+        model=os.environ.get("MODEL"),
     )
 
-    return chat_completion.choices[0].message.content
+    lrc = chat_completion.choices[0].message.content
+    print(lrc)
+    return lrc

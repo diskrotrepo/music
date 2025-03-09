@@ -1,0 +1,8 @@
+Take the input, and produce an Simple LRC format file which takes into account time required to sing the previous line. 
+Time tags have the format [mm:ss.xx]lyric , where mm is minutes, ss is seconds, xx is hundredths of a second, 
+and lyric is the lyric to be played at that time. Do not provide any other information. I require just the file.
+
+Example output:
+
+[00:12.00]Line 1 lyrics
+[00:17.20]Line 2 lyrics
