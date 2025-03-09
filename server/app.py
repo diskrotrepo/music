@@ -13,9 +13,13 @@ def run_inference():
         input_file = request.json.get("input")
         audio_length = request.json.get("duration")
         output_file = request.json.get("output")
+        steps = request.json.get("steps")
+        cfg_strength = request.json.get("cfg_strength")
+
+
 
         # Ensure all required parameters are provided
-        if not all([lyrics, input_file, audio_length, output_file]):
+        if not all([lyrics, input_file, audio_length, output_file, steps, cfg_strength]):
             return jsonify({"error": "Missing required parameters"}), 400
 
         # Construct the command
@@ -25,7 +29,9 @@ def run_inference():
             "--input_file", input_file,
             "--audio-length", str(audio_length),
             "--repo_id", "ASLP-lab/DiffRhythm-base",
-            "--output-file", output_file
+            "--output-file", output_file,
+            "--steps", str(steps),
+            "--cfg_strength",str(cfg_strength)
         ]
 
         # Run the inference process

@@ -34,7 +34,7 @@ from infer_utils import (
     decode_audio
 )
 
-def inference(cfm_model, vae_model, cond, text, duration, style_prompt, negative_style_prompt, start_time):
+def inference(cfm_model, vae_model, cond, text, duration, style_prompt, negative_style_prompt, start_time, steps, cfg_strength):   
     with torch.inference_mode():
         generated, _ = cfm_model.sample(
             cond=cond,
@@ -42,8 +42,8 @@ def inference(cfm_model, vae_model, cond, text, duration, style_prompt, negative
             duration=duration,
             style_prompt=style_prompt,
             negative_style_prompt=negative_style_prompt,
-            steps=32,
-            cfg_strength=4.0,
+            steps=steps,
+            cfg_strength=cfg_strength,
             start_time=start_time
         )
         
@@ -66,6 +66,9 @@ if __name__ == "__main__":
     parser.add_argument('--audio-length', type=int, default=95, choices=[95], help="length of generated song") # length of target song
     parser.add_argument('--repo_id', type=str, default="ASLP-lab/DiffRhythm-base", help="target model")
     parser.add_argument('--output-file', type=str, default="output.wav", help="output filename for generated song") # output directory fo target song
+    parser.add_argument('--steps', type=int, default=32, help="steps")
+    parser.add_argument('--cfg_strength', type=float, default=6.0, help="cfg strength")
+
     args = parser.parse_args()
 
     # vlrc-path
@@ -97,6 +100,10 @@ if __name__ == "__main__":
     negative_style_prompt = get_negative_style_prompt(device)
     
     latent_prompt = get_reference_latent(device, max_frames)
+
+    print(style_prompt)
+    print(negative_style_prompt)
+    print(latent_prompt)
     
     s_t = time.time()
     generated_song = inference(
@@ -107,7 +114,9 @@ if __name__ == "__main__":
         duration=max_frames, 
         style_prompt=style_prompt,
         negative_style_prompt=negative_style_prompt,
-        start_time=start_time
+        start_time=start_time,
+        steps=args.steps,
+        cfg_strength=args.cfg_strength
     )
     e_t = time.time() - s_t
     print(f"inference cost {e_t} seconds")
