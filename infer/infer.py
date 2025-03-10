@@ -25,7 +25,7 @@ from lyrics import calculate_lrc
 import os
 
 
-from .infer_utils import (
+from infer.infer_utils import (
     get_reference_latent,
     get_lrc_token,
     get_style_prompt,
