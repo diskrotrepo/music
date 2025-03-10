@@ -34,6 +34,8 @@ from .infer_utils import (
     decode_audio,
 )
 
+from embedding import get_embeddings
+
 
 def inference(
     cfm_model,
@@ -89,6 +91,7 @@ def generate(
     chunked,
     tags,
     negative_tags=None,
+    use_embeddings=False,
 ):
 
     assert tags or input_file, "either tags or input should be provided"
@@ -110,7 +113,6 @@ def generate(
     if lyrics != "":
         lrc = calculate_lrc(lyrics)
     else:
-        print("Instrumental song")
         lrc = ""
 
     lrc_prompt, start_time = get_lrc_token(lrc, tokenizer, device)
@@ -119,7 +121,12 @@ def generate(
         input_path = os.path.join("input", input_file)
         style_prompt = get_style_prompt(muq, input_path)
     else:
-        style_prompt = get_style_prompt(muq, prompt=tags)
+        if use_embeddings:
+            print("use_embeddings ")
+            style_prompt = get_embeddings(tags)
+        else:
+            print("use tags")
+            style_prompt = get_style_prompt(muq, prompt=tags)
 
     if negative_tags:
         negative_style_prompt = get_style_prompt(muq, prompt=negative_tags)
@@ -145,7 +152,9 @@ def generate(
     e_t = time.time() - s_t
     print(f"inference cost {e_t} seconds")
 
-    output_path = os.path.join("output", "{}.wav".format(uuid.uuid4()))
+    id = str(uuid.uuid4())
+
+    output_path = os.path.join("output", "{}.wav".format(id))
 
     torchaudio.save(output_path, generated_song, sample_rate=44100)
-    return output_path
+    return id

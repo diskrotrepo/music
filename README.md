@@ -3,6 +3,10 @@
 
 This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo. Information about running this fork can be found in the wiki.
 
+## Swagger
+
+After starting the server you can view the Swagger documentation at http://localhost:5000/api/v1/doc/
+
 ## License & Disclaimer
 
 DiffRhythm (code and DiT weights) is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). This open-source license allows you to freely use, modify, and distribute the model, as long as you include the appropriate copyright notice and disclaimer.

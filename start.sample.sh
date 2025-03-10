@@ -7,4 +7,4 @@ export MODEL=llama-3.2-3b-instruct # The model you want to use important for loc
 
 conda activate diffrhythm
 pip install -r requirements.txt
-python3 server/app.py
+python3 run_app.py
