@@ -22,6 +22,7 @@ export default {
         const tags = ref('');
 
         const handleSubmit = () => {
+            console.log({ lyrics: lyrics.value, tags: tags.value });
             emit('submit', { lyrics: lyrics.value, tags: tags.value });
         };
 

@@ -13,6 +13,9 @@ export default {
         const responseMessage = ref('');
 
         const submitForm = async (formData) => {
+
+            console.log(formData);
+
             try {
                 const response = await fetch('http://localhost:5000/api/v1/music/generate', {
                     method: 'POST',

@@ -3,6 +3,28 @@
 
 This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo. Information about running this fork can be found in the wiki.
 
+## Running the Application
+
+1. Copy start.sample.sh to start.sh and adjust start.sh
+
+```bash
+cp start.sample.sh start.sh 
+```
+
+2. Run the server
+
+```bash
+bash start.sh 
+```
+
+3. Run the client
+
+```bash
+npm run dev
+```
+
+
+
 ## Swagger
 
 After starting the server you can view the Swagger documentation at http://localhost:5000/api/v1/doc/
