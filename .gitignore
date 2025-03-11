@@ -9,3 +9,5 @@ wandb
 dataset/** 
 start.sh
 output/**
+migrations/**
+app/instance/diskrot.db

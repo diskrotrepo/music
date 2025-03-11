@@ -2,6 +2,10 @@ from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
 from infer import generate
 
+from app.extensions import db
+from app.models import Music
+
+
 api = Namespace("music", description="Music related APIs")
 
 music_definition = api.model(
@@ -87,6 +91,10 @@ class MusicGenerationV1(Resource):
                 negative_tags,
                 use_embedding,
             )
+
+            new_music = Music(filename=generation_id)
+            db.session.add(new_music)
+            db.session.commit()
 
             # Return the output
             return {"id": generation_id}, 200
