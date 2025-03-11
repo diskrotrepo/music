@@ -1,6 +1,9 @@
 <template>
     <Create @submit="submitForm" />
-    <p v-if="responseMessage" class="response">{{ responseMessage }}</p>
+    <audio v-if="musicId" controls>
+        <source :src="`http://localhost:5000/static/music/${musicId}.wav`" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
 </template>
 
 <script>
@@ -11,22 +14,29 @@ export default {
     components: { Create },
     setup() {
         const responseMessage = ref('');
+        const musicId = ref(null);
 
         const submitForm = async (formData) => {
 
-            console.log(formData);
+            const lyrics = formData.lyrics;
+            const tags = formData.tags;
+
+            if (!formData || !formData.lyrics) {
+                console.warn('submitForm received empty data, ignoring.');
+                return;
+            }
 
             try {
                 const response = await fetch('http://localhost:5000/api/v1/music/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        lyrics: formData.lyrics,
+                        lyrics: lyrics,
                         duration: 95,
                         steps: 32,
                         cfg_strength: 6,
                         chunked: true,
-                        tags: formData.tags,
+                        tags: tags,
                     })
                 });
 
@@ -34,12 +44,13 @@ export default {
 
                 const data = await response.json();
                 responseMessage.value = `Success! Music ID: ${data.id}`;
+                musicId.value = data.id;
             } catch (error) {
                 responseMessage.value = `Error: ${error.message}`;
             }
         };
 
-        return { responseMessage, submitForm };
+        return { responseMessage, musicId, submitForm };
     }
 };
 </script>

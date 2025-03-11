@@ -157,7 +157,7 @@ def generate(
 
     id = str(uuid.uuid4())
 
-    output_path = os.path.join("output", "{}.wav".format(id))
+    output_path = os.path.join("app", "static", "music", "{}.wav".format(id))
 
     torchaudio.save(output_path, generated_song, sample_rate=44100)
     return id

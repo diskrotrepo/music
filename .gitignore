@@ -11,3 +11,8 @@ start.sh
 output/**
 migrations/**
 app/instance/diskrot.db
+.env
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir
+app/static/music/** 

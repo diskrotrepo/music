@@ -3,23 +3,41 @@
 
 This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo. Information about running this fork can be found in the wiki.
 
+## Prerequisites
+
+You'll need the follow installed:
+
+- Redis
+- Python
+- Node
+- NPM
+
 ## Running the Application
 
-1. Copy start.sample.sh to start.sh and adjust start.sh
+1. Copy .env.sample to .env and adjust required
 
 ```bash
 cp start.sample.sh start.sh 
 ```
 
-2. Run the server
+**Run the server**
 
 ```bash
-bash start.sh 
+source .env
+flask run
 ```
 
-3. Run the client
+**Run Task Queue**
 
 ```bash
+source .env
+celery -A src.worker:celery beat --loglevel=INFO
+```
+
+**Run the client**
+
+```bash
+cd client
 npm run dev
 ```
 

@@ -27,3 +27,5 @@ flask-restx==1.3.0
 Flask-SQLAlchemy==3.1.1
 Flask-Migrate==4.1.0
 flask-cors==5.0.1
+redis==5.2.1
+celery==5.4.0

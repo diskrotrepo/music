@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
-from flask import request, jsonify
+from flask import request, jsonify, send_from_directory
+from app.tasks import generate_music_task
 from infer import generate
 
 from app.extensions import db
@@ -62,7 +63,7 @@ music_response_model = api.model(
     "MusicResponse",
     {
         "id": fields.String(
-            description="Unique identifier for the generated music",
+            description="Unique identifier for the music generation task",
             example="b7e6a5d9-5f42-4a8b-9a38-47ef2e2a8df1",
         ),
     },
@@ -79,15 +80,6 @@ class MusicGenerationV1(Resource):
         try:
             # Get parameters from the request
             data = request.json or {}
-            lyrics = data.get("lyrics", "")
-            input_file = data.get("input")
-            audio_length = data.get("duration")
-            steps = data.get("steps")
-            cfg_strength = data.get("cfg_strength")
-            chunked = data.get("chunked")
-            tags = data.get("tags")
-            negative_tags = data.get("negative_tags")
-            use_embedding = data.get("use_embedding", False)
             lrc_id = data.get("lrc_id", None)
 
             if lrc_id is None:
@@ -103,24 +95,23 @@ class MusicGenerationV1(Resource):
                 return {"error": "Prompt not found"}, 404  # Return 404 if not found
 
             generation_id = generate(
-                lyrics,
-                input_file,
-                audio_length,
-                steps,
-                cfg_strength,
-                chunked,
-                tags,
-                lrcPrompt,
-                negative_tags,
-                use_embedding,
+                lyrics=data.get("lyrics", ""),
+                lrcPrompt=lrcPrompt,
+                input_file=data.get("input"),
+                audio_length=data.get("duration"),
+                steps=data.get("steps"),
+                cfg_strength=data.get("cfg_strength"),
+                chunked=data.get("chunked"),
+                tags=data.get("tags"),
+                negative_tags=data.get("negative_tags"),
+                use_embeddings=data.get("use_embedding", False),
             )
 
             new_music = Music(filename=generation_id)
             db.session.add(new_music)
             db.session.commit()
 
-            # Return the output
-            return {"id": generation_id}, 200
+            return {"id": generation_id}
 
         except Exception as e:
             return {"error": str(e)}, 500
