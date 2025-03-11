@@ -18,4 +18,7 @@ def create_app():
 def register_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
-    from app.models import Music
+    from app.models import (
+        Music,
+        Prompt,
+    )

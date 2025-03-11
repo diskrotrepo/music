@@ -22,6 +22,8 @@ import time
 import uuid
 from lyrics import calculate_lrc
 
+from app.models import Prompt
+
 import os
 
 
@@ -90,6 +92,7 @@ def generate(
     cfg_strength,
     chunked,
     tags,
+    lrcPrompt=Prompt,
     negative_tags=None,
     use_embeddings=False,
 ):
@@ -111,7 +114,7 @@ def generate(
     cfm, tokenizer, muq, vae = prepare_model(device)
 
     if lyrics != "":
-        lrc = calculate_lrc(lyrics)
+        lrc = calculate_lrc(lyrics, lrcPrompt)
     else:
         lrc = ""
 

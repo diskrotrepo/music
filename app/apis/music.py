@@ -3,7 +3,11 @@ from flask import request, jsonify
 from infer import generate
 
 from app.extensions import db
-from app.models import Music
+from app.models import (
+    Music,
+    Prompt,
+    PromptyCategoryEnum,
+)
 
 
 api = Namespace("music", description="Music related APIs")
@@ -46,6 +50,11 @@ music_definition = api.model(
             description="The negative style tags used to generate your music",
             example="heavy metal, noise",
         ),
+        "lrc_id": fields.String(
+            required=False,
+            description="The LRC system prompt id applied to the incoming lyrics",
+            example="b7e6a5d9-5f42-4a8b-9a38-47ef2e2a8df1",
+        ),
     },
 )
 
@@ -79,6 +88,19 @@ class MusicGenerationV1(Resource):
             tags = data.get("tags")
             negative_tags = data.get("negative_tags")
             use_embedding = data.get("use_embedding", False)
+            lrc_id = data.get("lrc_id", None)
+
+            if lrc_id is None:
+                lrcPrompt = (
+                    db.session.query(Prompt)
+                    .filter_by(category=PromptyCategoryEnum.LRC, is_default=True)
+                    .first()
+                )
+            else:
+                lrcPrompt = db.session.get(Prompt, lrc_id)
+
+            if not lrcPrompt:
+                return {"error": "Prompt not found"}, 404  # Return 404 if not found
 
             generation_id = generate(
                 lyrics,
@@ -88,6 +110,7 @@ class MusicGenerationV1(Resource):
                 cfg_strength,
                 chunked,
                 tags,
+                lrcPrompt,
                 negative_tags,
                 use_embedding,
             )
@@ -100,4 +123,4 @@ class MusicGenerationV1(Resource):
             return {"id": generation_id}, 200
 
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return {"error": str(e)}, 500

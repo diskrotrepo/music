@@ -14,23 +14,20 @@ else:
     )
 
 
-def calculate_lrc(lyrics):
-
-    with open("./config/lyricPrompt.txt", "r") as f:
-        systemPrompt = f.read()
+def calculate_lrc(lyrics, prompt):
 
     chat_completion = client.chat.completions.create(
         messages=[
             {
                 "role": "system",
-                "content": systemPrompt,
+                "content": prompt.prompt,
             },
             {
                 "role": "user",
                 "content": lyrics,
             },
         ],
-        model=os.environ.get("MODEL"),
+        model=prompt.model,
     )
 
     lrc = chat_completion.choices[0].message.content
