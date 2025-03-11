@@ -2,7 +2,6 @@ from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
 from infer import generate
 
-
 api = Namespace("music", description="Music related APIs")
 
 music_definition = api.model(
