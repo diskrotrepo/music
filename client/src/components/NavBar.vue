@@ -3,6 +3,7 @@
         <ul>
             <li><router-link to="/">Home</router-link></li>
             <li><router-link to="/create">Create</router-link></li>
+            <li><router-link to="/library">Library</router-link></li>
             <li><router-link to="/settings">Settings</router-link></li>
         </ul>
     </nav>

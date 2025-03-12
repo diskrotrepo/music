@@ -1,5 +1,6 @@
 <template>
     <Create @submit="submitForm" />
+    <p v-if="generatingMusic" class="response">{{ generatingMusic }}</p>
     <audio v-if="musicId" controls>
         <source :src="`http://localhost:5000/static/music/${musicId}.wav`" type="audio/wav">
         Your browser does not support the audio element.
@@ -13,13 +14,15 @@ import Create from '../components/Create.vue';
 export default {
     components: { Create },
     setup() {
-        const responseMessage = ref('');
+        const generatingMusic = ref('');
         const musicId = ref(null);
 
         const submitForm = async (formData) => {
 
             const lyrics = formData.lyrics;
             const tags = formData.tags;
+            const title = formData.title;
+            generatingMusic.value = 'Generating Music...'
 
             if (!formData || !formData.lyrics) {
                 console.warn('submitForm received empty data, ignoring.');
@@ -31,6 +34,7 @@ export default {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        title: title,
                         lyrics: lyrics,
                         duration: 95,
                         steps: 32,
@@ -45,12 +49,13 @@ export default {
                 const data = await response.json();
                 responseMessage.value = `Success! Music ID: ${data.id}`;
                 musicId.value = data.id;
+                generatingMusic.value = ''
             } catch (error) {
-                responseMessage.value = `Error: ${error.message}`;
+                console.log(error);
             }
         };
 
-        return { responseMessage, musicId, submitForm };
+        return { generatingMusic, musicId, submitForm };
     }
 };
 </script>

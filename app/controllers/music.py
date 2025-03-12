@@ -16,6 +16,11 @@ api = Namespace("music", description="Music related APIs")
 music_definition = api.model(
     "Music",
     {
+        "title": fields.String(
+            required=True,
+            description="Title for your song",
+            example="Banger #1",
+        ),
         "lyrics": fields.String(
             required=False,
             description="Lyrics for your song",
@@ -92,7 +97,7 @@ class MusicGenerationV1(Resource):
                 lrcPrompt = db.session.get(Prompt, lrc_id)
 
             if not lrcPrompt:
-                return {"error": "Prompt not found"}, 404  # Return 404 if not found
+                return {"error": "LRC not found"}, 404  # Return 404 if not found
 
             generation_id = generate(
                 lyrics=data.get("lyrics", ""),
@@ -107,7 +112,17 @@ class MusicGenerationV1(Resource):
                 use_embeddings=data.get("use_embedding", False),
             )
 
-            new_music = Music(filename=generation_id)
+            new_music = Music(
+                filename=f"{generation_id}.wav",
+                title=data.get("title", ""),
+                lyrics=data.get("lyrics", ""),
+                prompt=data.get("tags"),
+                duration=data.get("duration"),
+                steps=data.get("steps"),
+                cfg_strength=data.get("cfg_strength"),
+                model="unknown",
+            )
+
             db.session.add(new_music)
             db.session.commit()
 

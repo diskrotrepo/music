@@ -2,10 +2,9 @@
     <div class="content">
         <h1>Create</h1>
         <form @submit.prevent="handleSubmit">
-            <textarea v-model="lyrics" rows="10" cols="40" placeholder="Enter lyrics..."></textarea>
-
+            <input v-model="title" type="text" placeholder="your song title" size="50" />
             <input v-model="tags" type="text" placeholder="tags" size="50" />
-
+            <textarea v-model="lyrics" rows="10" cols="40" placeholder="Enter lyrics..."></textarea>
             <p>
                 <input type="submit" value="Create" />
             </p>
@@ -20,13 +19,14 @@ export default {
     setup(_, { emit }) {
         const lyrics = ref('');
         const tags = ref('');
+        const title = ref('');
 
         const handleSubmit = () => {
             event.preventDefault();
-            emit('submit', { lyrics: lyrics.value, tags: tags.value });
+            emit('submit', { lyrics: lyrics.value, tags: tags.value, title: title.value });
         };
 
-        return { lyrics, tags, handleSubmit };
+        return { lyrics, tags, title, handleSubmit };
     }
 };
 </script>
