@@ -100,10 +100,8 @@ def generate(
     assert tags or input_file, "either tags or input should be provided"
     assert not (tags and input_file), "only one of them should be provided"
 
-    assert torch.cuda.is_available(), "only available on gpu"
-
     device = "cpu"
-    
+
     if torch.cuda.is_available():
         device = "cuda"
     elif torch.mps.is_available():

@@ -7,6 +7,9 @@
             <li><router-link to="/settings">Settings</router-link></li>
         </ul>
     </nav>
+
+    <a href="https://github.com/diskrotrepo/DiffRhythm">Github</a>
+    <a href="http://127.0.0.1:5000/api/v1/docs">API</a>
 </template>
 
 <style scoped>

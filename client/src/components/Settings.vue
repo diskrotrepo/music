@@ -15,7 +15,6 @@
 </template>
 
 <script>
-
 import { ref, onMounted } from "vue";
 
 export default {
@@ -25,57 +24,67 @@ export default {
         const lrcModel = ref('');
         const poetModel = ref('');
 
-    const fetchPrompt = async () => {
-        try {
-            const response = await fetch("http://localhost:5000/api/v1/prompt/?category=LRC");
+        const fetchPrompt = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:5000/api/v1/prompt/LRC");
 
-            if (!response.ok) {
-                throw new Error("Failed to fetch prompt");
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const lrcData = await response.json();
+                if (lrcData && typeof lrcData === 'object') {
+                    lrc.value = lrcData.prompt || '';
+                    lrcModel.value = lrcData.model || '';
+                } else {
+                    lrc.value = '';
+                    lrcModel.value = '';
+                }
+            } catch (e) {
+                console.error("Error fetching LRC:", e);
+                lrc.value = '';
+                lrcModel.value = '';
             }
 
-            const lrcData = await response.json();
-            lrc.value = lrcData.prompt;
-            lrcModel.value = lrcData.model;
+            try {
+                const response = await fetch("http://127.0.0.1:5000/api/v1/prompt/POET");
 
-        } catch (e) {
-            console.log(e);
-        } finally {
-           
-        }
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
 
-        try {
-            const response = await fetch("http://localhost:5000/api/v1/prompt/?category=POET");
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch prompt");
+                const poetData = await response.json();
+                if (poetData && typeof poetData === 'object') {
+                    poet.value = poetData.prompt || '';
+                    poetModel.value = poetData.model || '';
+                } else {
+                    poet.value = '';
+                    poetModel.value = '';
+                }
+            } catch (e) {
+                console.error("Error fetching POET:", e);
+                poet.value = '';
+                poetModel.value = '';
             }
+        };
 
-            const poetData = await response.json();
-            poet.value = poetData.prompt;
-            poetModel.value = poetData.model;
+        onMounted(fetchPrompt); // Call API on page load
 
-        } catch (e) {
-            console.log(e);
-        } finally {
-           
-        }
-    };
-    
+        const handleSubmit = (event) => {
+            event.preventDefault();
+            emit('submit', {
+                lrc: lrc.value,
+                lrcModel: lrcModel.value,
+                poet: poet.value,
+                poetModel: poetModel.value
+            });
+        };
 
-    onMounted(() => {
-      fetchPrompt(); // Call API on page load
-    });
-
-
-    const handleSubmit = () => {
-        event.preventDefault();
-        emit('submit', { lrc: lrc.value, lrcModel: lrcModel.value, poet: poet.value, poetModel: poetModel.value });
-    };
-
-    return { lrc, lrcModel, poet, poetModel, handleSubmit };
+        return { lrc, lrcModel, poet, poetModel, handleSubmit };
     }
 };
 </script>
+
 
 
 <style scoped>

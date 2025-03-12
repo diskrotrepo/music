@@ -11,12 +11,9 @@ export default {
     components: { Settings },
     setup() {
    
-
-        
-
         const updateModel = async (prompt, model, category) => {
             try {
-                const response = await fetch('http://localhost:5000/api/v1/prompt/', {
+                const response = await fetch('http://127.0.0.1:5000/api/v1/prompt/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

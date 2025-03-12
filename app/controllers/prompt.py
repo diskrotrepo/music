@@ -57,8 +57,7 @@ response = api.model(
 )
 
 
-@api.route("/", defaults={"id": None})  # No ID means fetching default
-@api.route("/<string:id>")  # Fetch a specific prompt by ID
+@api.route("/")  # No ID means fetching default
 class PromptV1(Resource):
 
     @api.expect(prompt_definition, True)
@@ -97,25 +96,22 @@ class PromptV1(Resource):
             db.session.rollback()
             return {"error": str(e)}, 500
 
-    @api.doc(
-        params={
-            "category": "Optional. Filter by category (e.g., 'LRC', 'POET'). Used only when id is not provided."
-        }
-    )
+@api.route("/<id>")  # No ID means fetching default
+class PromptV1(Resource):
+
+    
     @api.response(200, "Success")
     @api.response(404, "Prompt not found")
     def get(self, id):
-        """Retrieve the default prompt (filtered by category) or a specific prompt by ID"""
+        """Retrieve the default prompt (LRC or POET as id) or a specific prompt by ID"""
         try:
-            if id is None:
-                # Get category from query parameters (optional)
-                category = request.args.get("category")
-
+            if id == "LRC" or id == "POET":
+               
                 query = db.session.query(Prompt).filter_by(is_default=True)
-                if category:
-                    if category not in [e.value for e in PromptyCategoryEnum]:
-                        return {"error": "Invalid category"}, 400
-                    query = query.filter_by(category=category)
+                if id == "LRC":
+                    query = query.filter_by(category="LRC")
+                else:
+                    query = query.filter_by(category="POET")
 
                 prompt = query.first()
 

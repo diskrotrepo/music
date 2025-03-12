@@ -1,4 +1,6 @@
 
+# !!WARNING EXTREMELY UNSTABLE WHILE UNDER RAPID DEVELOPMENT!!
+
 ## diskrot fork of DiffRhythm
 
 This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo. Information about running this fork can be found in the wiki.
@@ -55,7 +57,7 @@ npm run dev
 
 ## Swagger
 
-After starting the server you can view the Swagger documentation at http://localhost:5000/api/v1/doc/
+After starting the server you can view the Swagger documentation at http://127.0.0.1:5000/api/v1/docs/
 
 ## License & Disclaimer
 

@@ -14,7 +14,7 @@ class Music(db.Model):
     steps = db.Column(db.Integer, nullable=False, default="")
     cfg_strength = db.Column(db.Float, nullable=False, default="")
     duration = db.Column(db.Integer, nullable=False, default="")
-    dtCreated = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    dt_created = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
 
 class PromptyCategoryEnum(enum.Enum):
@@ -28,4 +28,4 @@ class Prompt(db.Model):
     category = db.Column(db.Enum(PromptyCategoryEnum), nullable=False)
     model = db.Column(db.String(128), nullable=False, default="")
     is_default = db.Column(db.Boolean, nullable=False, default=False)
-    dtCreated = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    dt_created = db.Column(db.DateTime, nullable=False, default=datetime.now())

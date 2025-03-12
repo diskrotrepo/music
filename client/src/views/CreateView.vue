@@ -2,7 +2,7 @@
     <Create @submit="submitForm" />
     <p v-if="generatingMusic" class="response">{{ generatingMusic }}</p>
     <audio v-if="musicId" controls>
-        <source :src="`http://localhost:5000/static/music/${musicId}.wav`" type="audio/wav">
+        <source :src="`http://127.0.0.1:5000/static/music/${musicId}.wav`" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
 </template>
@@ -22,6 +22,10 @@ export default {
             const lyrics = formData.lyrics;
             const tags = formData.tags;
             const title = formData.title;
+            const steps = formData.steps == 0 ? 32 : Number(formData.steps);
+            const cfg_strength = formData.cfg_strength == 0 ? 6.0 : Number(formData.cfg_strength);
+
+
             generatingMusic.value = 'Generating Music...'
 
             if (!formData || !formData.lyrics) {
@@ -30,15 +34,15 @@ export default {
             }
 
             try {
-                const response = await fetch('http://localhost:5000/api/v1/music/generate', {
+                const response = await fetch('http://127.0.0.1:5000/api/v1/music/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         title: title,
                         lyrics: lyrics,
                         duration: 95,
-                        steps: 32,
-                        cfg_strength: 6,
+                        steps: steps,
+                        cfg_strength: cfg_strength,
                         chunked: true,
                         tags: tags,
                     })
@@ -47,7 +51,7 @@ export default {
                 if (!response.ok) throw new Error('Failed to generate music.');
 
                 const data = await response.json();
-                responseMessage.value = `Success! Music ID: ${data.id}`;
+                
                 musicId.value = data.id;
                 generatingMusic.value = ''
             } catch (error) {
