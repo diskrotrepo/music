@@ -102,7 +102,12 @@ def generate(
 
     assert torch.cuda.is_available(), "only available on gpu"
 
-    device = "cuda"
+    device = "cpu"
+    
+    if torch.cuda.is_available():
+        device = "cuda"
+    elif torch.mps.is_available():
+        device = "mps"
 
     if audio_length == 95:
         max_frames = 2048

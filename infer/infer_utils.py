@@ -263,8 +263,7 @@ def get_lrc_token(text, tokenizer, device):
 
 
 def load_checkpoint(model, ckpt_path, device, use_ema=True):
-    if device == "cuda":
-        model = model.half()
+    model = model.half()
 
     ckpt_type = ckpt_path.split(".")[-1]
     if ckpt_type == "safetensors":

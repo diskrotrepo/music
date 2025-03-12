@@ -7,10 +7,20 @@ This fork is focused on the specific needs for the diskrot community. The origin
 
 You'll need the follow installed:
 
+1. Software 
+
 - Redis
 - Python
 - Node
 - NPM
+- Conda
+
+2. Create environment
+
+```bash
+conda create -n diffrhythm
+```
+
 
 ## Running the Application
 
