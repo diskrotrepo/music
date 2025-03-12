@@ -1,8 +1,11 @@
+from enum import Enum
+from uuid import UUID
 from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
 from app.extensions import db
 from app.models import Music, Prompt, PromptyCategoryEnum
 from infer import generate
+import logging
 
 api = Namespace("library", description="Library related APIs")
 
@@ -47,23 +50,51 @@ library_definition = api.model(
     },
 )
 
-@api.route("/")
+@api.route("")
 class LibraryV1(Resource):
 
-    @api.doc("generate_music_v1")
-    @api.response(200, "Success", [library_definition])  # Fixed list format
+    @api.doc(
+        description="Filters songs based on list_view (library or trash) and optional favorite filter.",
+        params={
+            "list_view": "Required: 'library' (is_deleted=False) or 'trash' (is_deleted=True)",
+            "favorite": "Optional: true or false to filter favorites",
+        },
+        tags=["Music Library"]
+    )
+    @api.response(200, "Success", [library_definition])
     def get(self):
+        """Retrieve songs based on list_view and optional favorite filter."""
         try:
-            
-            library = db.session.query(Music).all()
+            list_view = request.args.get("list_view")
+            favorite_filter = request.args.get("favorite")
+
+            # Validate list_view
+            if list_view not in {"library", "trash"}:
+                return {"error": "Invalid list_view. Must be 'library' or 'trash'"}, 400
+
+            # Determine is_deleted filter based on list_view
+            if list_view == "trash":
+                is_deleted = True
+            else:
+                is_deleted = False
+
+            # Base query
+            query = db.session.query(Music).filter_by(is_deleted=is_deleted)
+
+            # Apply optional favorite filter
+            if favorite_filter is not None:
+                query = query.filter_by(is_favorite=True)
+           
+            # Fetch results
+            library = query.all()
 
             if not library:
-                return {"error": "No songs found"}, 404  # Return 404 if not found
+                return {"error": "No songs found"}, 404
 
+            # Format response
             library_list = [
                 {
                     "id": song.id,
-                    "filename": song.filename,
                     "title": song.title,
                     "dt_created": song.dt_created.isoformat() if song.dt_created else None,
                     "lyrics": song.lyrics,
@@ -71,12 +102,66 @@ class LibraryV1(Resource):
                     "tags": song.prompt,
                     "negative_tags": song.negative_tags if hasattr(song, "negative_tags") else None,
                     "lrc_id": song.lrc_id if hasattr(song, "lrc_id") else None,
+                    "is_favorite": song.is_favorite,
+                    "is_deleted": song.is_deleted,
                 }
                 for song in library
             ]
-        
+
             return {"library": library_list}, 200
 
         except Exception as e:
             return {"error": str(e)}, 500
-      
+
+class SongAction(str, Enum):
+    FAVORITE = "favorite"
+    DELETE = "delete"
+    RESTORE = "restore"
+    UNFAVORITE = "unfavorite"
+
+@api.route("/song/<uuid:song>/action/<string:action>")
+@api.doc(params={
+    "song": "UUID of the song",
+    "action": f"Action to perform ({', '.join([a.value for a in SongAction])})"
+})
+class SongActionAPI(Resource):
+
+    def update_song(self, songId, action):
+        """Updates song in the database based on the action"""
+
+        logging.info(songId)
+        song = db.session.query(Music).filter_by(id=str(songId)).one_or_none()
+
+        if not song:
+            return {"error": "Song not found"}, 404
+
+        match action:
+            case SongAction.FAVORITE:
+                song.is_favorite = True
+            case SongAction.UNFAVORITE:
+                song.is_favorite = False
+            case SongAction.DELETE:
+                song.is_deleted = True
+            case SongAction.RESTORE:
+                song.is_deleted = False
+            case _:
+                return {"error": "Invalid action"}, 400
+        
+        db.session.commit()
+        return {"success": True}, 200
+
+    @api.doc(
+        description="Handles song actions such as favorite, delete, restore, and unfavorite.",
+        tags=["Music Library"]
+    )
+    @api.response(200, "Success")
+    def post(self, song, action):
+        """Handles actions for a specific song"""
+        try:
+            if action not in SongAction._value2member_map_:
+                return {"error": "Invalid action"}, 400
+            
+            return self.update_song(song, action)
+
+        except Exception as e:
+            return {"error": str(e)}, 500

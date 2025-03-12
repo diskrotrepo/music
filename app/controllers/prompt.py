@@ -35,7 +35,7 @@ prompt_definition = api.model(
         "category": fields.String(
             required=True,
             description=f"Category of the prompt. Allowed values: {category_values}",
-            example="lrc",
+            example="LRC",
             enum=category_values,
         ),
         "is_default": fields.Boolean(
@@ -57,9 +57,10 @@ response = api.model(
 )
 
 
-@api.route("/")  # No ID means fetching default
+@api.route("/")  
 class PromptV1(Resource):
 
+    @api.doc(description="Update system prompt for various LLMs", tags=["Prompt"])
     @api.expect(prompt_definition, True)
     @api.response(200, "Success", response)
     def post(self):
@@ -100,6 +101,7 @@ class PromptV1(Resource):
 class PromptV1(Resource):
 
     
+    @api.doc(description="Returns the specified system prompt", tags=["Prompt"])
     @api.response(200, "Success")
     @api.response(404, "Prompt not found")
     def get(self, id):

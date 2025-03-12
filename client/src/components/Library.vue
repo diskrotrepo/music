@@ -22,6 +22,14 @@
                 Your browser does not support the audio element.
               </audio>
           </p>
+          <p>
+            <button @click="song.is_favorite ? unfavoriteSong(song.id) : favoriteSong(song.id)">
+              {{ song.is_favorite ? "Unfavorite" : "Favorite" }}
+            </button>
+            <button @click="song.is_deleted ? restoreSong(song.id) : deleteSong(song.id)">
+              {{ song.is_deleted ? "Restore" : "Delete" }}
+            </button>
+            </p>
         </li>
       </ul>
       <p v-else class="text-gray-500">No songs found.</p>
@@ -40,6 +48,39 @@
       formatDate(date) {
         return date ? new Date(date).toLocaleString() : "Unknown";
       },
+        async favoriteSong(id) {
+          const response = await fetch(`http://127.0.0.1:5000/api/v1/library/song/${id}/action/favorite`,{
+            method: 'POST',
+          });
+          if (!response.ok) {
+            throw new Error("Could not favorite song");
+          }
+        },
+
+        async deleteSong(id) {
+          const response = await fetch(`http://127.0.0.1:5000/api/v1/library/song/${id}/action/delete`,{
+            method: 'POST',
+          });
+          if (!response.ok) {
+            throw new Error("Could not delete song");
+          }
+        },
+        async unfavoriteSong(id) {
+          const response = await fetch(`http://127.0.0.1:5000/api/v1/library/song/${id}/action/unfavorite`,{
+            method: 'POST',
+          });
+          if (!response.ok) {
+            throw new Error("Could not unfavorite song");
+          }
+        },
+        async restoreSong(id) {
+          const response = await fetch(`http://127.0.0.1:5000/api/v1/library/song/${id}/action/restore`,{
+            method: 'POST',
+          });
+          if (!response.ok) {
+            throw new Error("Could not restore song");
+          }
+        }
     },
   };
   </script>

@@ -31,6 +31,7 @@ lyric_generated_response = api.model(
 @api.route("/poet")
 class LyricsGeneratorV1(Resource):
 
+    @api.doc(description="Update poet system prompt", tags=["Lyrics"])
     @api.expect(lyric_definition, True)
     @api.response(200, "Success", lyric_generated_response)
     def post(self):
@@ -45,6 +46,7 @@ class LyricsGeneratorV1(Resource):
         except Exception as e:
             return {"error": str(e)}, 500
 
+    @api.doc(description="Returns poet system prompt", tags=["Lyrics"])
     @api.response(200, "Success")
     def get(self):
         try:

@@ -78,7 +78,7 @@ music_response_model = api.model(
 @api.route("/generate")
 class MusicGenerationV1(Resource):
 
-    @api.doc("generate_music_v1")
+    @api.doc(description="Generates music", tags=["Music"])
     @api.expect(music_definition, True)
     @api.response(200, "Success", music_response_model)
     def post(self):
@@ -114,9 +114,11 @@ class MusicGenerationV1(Resource):
 
             new_music = Music(
                 filename=f"{generation_id}.wav",
-                title=data.get("title", ""),
-                lyrics=data.get("lyrics", ""),
+                title=data.get("title"),
+                lyrics=data.get("lyrics"),
                 prompt=data.get("tags"),
+                negative_prompt = data.get("negative_tags"),
+                input_file = data.get("input"),
                 duration=data.get("duration"),
                 steps=data.get("steps"),
                 cfg_strength=data.get("cfg_strength"),
@@ -130,3 +132,4 @@ class MusicGenerationV1(Resource):
 
         except Exception as e:
             return {"error": str(e)}, 500
+

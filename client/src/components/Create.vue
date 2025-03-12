@@ -14,6 +14,7 @@
             <p>
                 <input type="submit" value="Create" />
             </p>
+            
         </form>
     </div>
 </template>
@@ -36,7 +37,8 @@ export default {
         };
 
         return { lyrics, tags, title,steps,cfg_strength, handleSubmit };
-    }
+    },
+    
 };
 </script>
 

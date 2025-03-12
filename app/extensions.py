@@ -1,11 +1,14 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+import logging
 from celery import Celery
 
 db = SQLAlchemy()
 migrate = Migrate()
 celery = Celery()
+
+logging.basicConfig()
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
 def register_extensions(app, worker=False):
