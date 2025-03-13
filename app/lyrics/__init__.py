@@ -1,3 +1,3 @@
-from .lyrics import calculate_lrc
+from .lyrics import calculate_lrc, write_lyrics
 
-__all__ = ["calculate_lrc"]
+__all__ = ["calculate_lrc", "write_lyrics"]

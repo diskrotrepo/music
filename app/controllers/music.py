@@ -98,7 +98,7 @@ class MusicGenerationV1(Resource):
                 lrcPrompt = db.session.get(Prompt, lrc_id)
 
             if not lrcPrompt:
-                lrcPrompt = get_default_lrc_prompt
+                lrcPrompt = get_default_lrc_prompt()
 
             generation_id = generate(
                 lyrics=data.get("lyrics", ""),
@@ -136,8 +136,8 @@ class MusicGenerationV1(Resource):
 
 
 def get_default_lrc_prompt():
-    """Reads the lyric prompt from app/config/lyricPrompt.txt."""
-    prompt_path = os.path.join("app", "config", "lyricPrompt.txt")
+    """Reads the lyric prompt from app/config/lrcDefault.txt."""
+    prompt_path = os.path.join("app", "config", "lrcDefault.txt")
 
     try:
         with open(prompt_path, "r", encoding="utf-8") as file:

@@ -1,21 +1,23 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
+from app.lyrics import write_lyrics
+from app.models import Prompt, PromptyCategoryEnum
+from app.extensions import db
 
+import os
 
 api = Namespace("lyrics", description="Lyric related APIs")
-
 
 lyric_definition = api.model(
     "Lyric",
     {
-        "prompt": fields.String(
+        "lyrics": fields.String(
             required=True,
             description="Lyrics for your song",
             example="""Take the input and create an amazing pop song from the existing lyrics.""",
         ),
     },
 )
-
 
 lyric_generated_response = api.model(
     "LyricResponse",
@@ -31,27 +33,37 @@ lyric_generated_response = api.model(
 @api.route("/poet")
 class LyricsGeneratorV1(Resource):
 
-    @api.doc(description="Update poet system prompt", tags=["Lyrics"])
+    @api.doc(description="For a given promp generate lyrics", tags=["Lyrics"])
     @api.expect(lyric_definition, True)
     @api.response(200, "Success", lyric_generated_response)
     def post(self):
         try:
-            # Get parameters from the request
             data = request.json or {}
+            lyrics = data.get("lyrics")
 
-            prompt = data.get("prompt")
+            poetPrompt = db.session.query(Prompt).filter_by(category=PromptyCategoryEnum.POET, is_default=True).one_or_none()
+            
+            
+            if poetPrompt is None:
+                poetPrompt = get_default_poet_prompt()
 
-            return {"success": True}, 200
+            poetLyrics = write_lyrics(lyrics, poetPrompt)
 
-        except Exception as e:
-            return {"error": str(e)}, 500
-
-    @api.doc(description="Returns poet system prompt", tags=["Lyrics"])
-    @api.response(200, "Success")
-    def get(self):
-        try:
-
-            return {"id": "ok"}, 200
+            return {"lyrics": poetLyrics}, 200
 
         except Exception as e:
             return {"error": str(e)}, 500
+
+def get_default_poet_prompt():
+    """Reads the poet prompt from app/config/poetDefault.txt."""
+    prompt_path = os.path.join("app", "config", "poetDefault.txt")
+
+    try:
+        with open(prompt_path, "r", encoding="utf-8") as file:
+            return file.read().strip()
+    except FileNotFoundError:
+        print(f"Error: Missing {prompt_path}")
+        return None
+    except Exception as e:
+        print(f"Error reading {prompt_path}: {e}")
+        return None    
