@@ -59,7 +59,7 @@ response = api.model(
 )
 
 
-@api.route("")  
+@api.route("")
 class PromptV1(Resource):
 
     @api.doc(description="Update system prompt for various LLMs", tags=["Prompt"])
@@ -99,10 +99,10 @@ class PromptV1(Resource):
             db.session.rollback()
             return {"error": str(e)}, 500
 
+
 @api.route("/<id>")  # No ID means fetching default
 class PromptV1(Resource):
 
-    
     @api.doc(description="Returns the specified system prompt", tags=["Prompt"])
     @api.response(200, "Success")
     @api.response(404, "Prompt not found")
@@ -110,7 +110,7 @@ class PromptV1(Resource):
         """Retrieve the default prompt (LRC or POET as id) or a specific prompt by ID"""
         try:
             if id == "LRC" or id == "POET":
-               
+
                 query = db.session.query(Prompt).filter_by(is_default=True)
                 if id == "LRC":
                     query = query.filter_by(category="LRC")
@@ -125,23 +125,23 @@ class PromptV1(Resource):
 
             if not prompt:
                 if id == "LRC":
-                    
+
                     return {
-                        "id": 'LRC',
+                        "id": "LRC",
                         "prompt": get_default_lrc_prompt(),
-                        "category": 'LRC',
-                        "model": 'default',
+                        "category": "LRC",
+                        "model": "default",
                         "is_default": True,
                     }
                 elif id == "POET":
                     return {
-                        "id": 'POET',
+                        "id": "POET",
                         "prompt": get_default_poet_prompt(),
-                        "category": 'POET',
-                        "model": 'default',
+                        "category": "POET",
+                        "model": "default",
                         "is_default": True,
                     }
-                else:    
+                else:
                     return {"error": "Prompt not found"}, 404
 
             return {
@@ -154,12 +154,12 @@ class PromptV1(Resource):
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-        
 
 
 def get_default_poet_prompt():
     """Reads the poet prompt from music_backend/config/poetDefault.txt."""
-    prompt_path = os.path.join("music_backend", "config", "poetDefault.txt")
+
+    prompt_path = os.path.join("config", "poetDefault.txt")
 
     try:
         with open(prompt_path, "r", encoding="utf-8") as file:
@@ -169,7 +169,4 @@ def get_default_poet_prompt():
         return None
     except Exception as e:
         print(f"Error reading {prompt_path}: {e}")
-        return None    
-    
-
-    
+        return None

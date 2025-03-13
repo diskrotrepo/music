@@ -15,7 +15,7 @@ if os.getenv("LLM_SOURCE") == "huggingface":
         poet_pipeline = transformers.pipeline(
             "text-generation",
             model=poet_model_id,
-            model_kwargs={"torch_dtype": torch.bfloat16},
+            model_kwargs={"torch_dtype": torch.float32},
             device_map="auto",
         )
         print(f"Poet Model {poet_model_id} loaded successfully!")
@@ -29,16 +29,13 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
 def register_extensions(app, worker=False):
-    
+
     db.init_app(app)
     migrate.init_app(app, db)
 
     logging.info(f"Pipeline source -> {os.getenv("LLM_SOURCE")}")
-    
-   
+
     from music_shared.models import (
         Music,
         Prompt,
     )
-
-        

@@ -1,6 +1,6 @@
 accelerate==1.4.0
 torchdiffeq==0.2.5
-torchaudio==2.6.0
+torchaudio
 x-transformers==2.1.2
 transformers==4.49.0
 librosa==0.10.2.post1
@@ -21,11 +21,4 @@ onnxruntime
 Unidecode==1.3.8
 phonemizer==3.3.0
 LangSegment==0.3.5
-Flask==3.1.0
 openai==1.65.4
-flask-restx==1.3.0
-Flask-SQLAlchemy==3.1.1
-Flask-Migrate==4.1.0
-flask-cors==5.0.1
-redis==5.2.1
-celery==5.4.0

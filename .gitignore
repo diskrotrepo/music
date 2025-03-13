@@ -21,3 +21,7 @@ music_backend/venv/**
 music_queue/venv/**
 music_backend/venv/**
 music_backend/static/**
+diffrhythm/venv/**
+music_backend/venv/**
+music_queue/venv/**
+music_database/diskrot.db

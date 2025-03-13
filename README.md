@@ -3,15 +3,65 @@
 
 ## diskrot fork of DiffRhythm
 
-This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo. Information about running this fork can be found in the wiki.
+This fork is focused on the specific needs for the diskrot community. The original repo is here: https://github.com/ASLP-lab/DiffRhythm and when it makes sense improves from that repo will be ported into this repo. 
 
 ## Installation
 
-1. Clone the repo: `git clone https://github.com/diskrotrepo/DiffRhythm.git`
+**Prerequisites**
 
-## Swagger
+1. Node
+2. NPM
+3. Python
+4. Register with huggingface (https://huggingface.co/) and obtain an access token
+5. Install python-dotenv
 
-After starting the server you can view the Swagger documentation at http://127.0.0.1:5000/api/v1/docs/
+**Get the Code**
+
+1. Clone the repo: `git clone https://github.com/diskrotrepo/music.git`
+
+**Setup Music Backend**
+
+From the terminal go to the `music_backend` directory.
+
+**Note**: The first time run will be slow because it needs to download the models.
+
+1. Create an virtual environment with conda: `conda create -n music_backend python=3.12`
+2. Activate the environment: `conda activate music_backend`
+3. Install requirements: `pip install -r requirements.txt`
+4. Copy the .env.example file: `cp .env.example .env`
+5. Update the hugging face token variable `HF_TOKEN`
+6. Source the .env: `source .env`
+7. From the music_backend directory: `flask db init`
+8. Create an empty database file: `touch ../music_database/diskrot.db`
+9. Run database migration: `flask db migrate`
+10. Run database upgrade: `flask db upgrade`
+11. Run flask: `flask run`
+
+By default this will run at http://127.0.0.1:5000 with API documents available at http://127.0.0.1:5000/api/v1/docs
+
+**Setup Music Queue**
+
+From the terminal go to the `music_queue` directory.
+
+**Note**: The first time run will be slow because it needs to download the models.
+
+1. Create an virtual environment with conda: `conda create -n music_queue python=3.12`
+2. Activate the environment: `conda activate music_queue`
+3. Install requirements: `pip install -r requirements.txt`
+4. Copy the .env.example file: `cp .env.example .env`
+5. Update the hugging face token variable `HF_TOKEN`
+6. Source the .env: `source .env`
+7. Run flask: `flask run`
+
+By default this will run at http://127.0.0.1:5001 with API documents available at http://127.0.0.1:5001/api/v1/docs
+
+
+**Web App**
+
+From the music_frontend
+
+1. Run npm install: `npm install`
+2. Start the server: `npm run dev`
 
 ## License & Disclaimer
 
