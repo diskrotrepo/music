@@ -1,10 +1,10 @@
 from flask import Blueprint
 from flask_restx import Api
 
-from app.controllers.music import api as music_api
-from app.controllers.lyrics import api as lyric_api
-from app.controllers.prompt import api as prompt_api
-from app.controllers.library import api as library_api
+from app.controllers.v1.music import api as music_api
+from app.controllers.v1.lyrics import api as lyric_api
+from app.controllers.v1.prompt import api as prompt_api
+from app.controllers.v1.library import api as library_api
 
 blueprint = Blueprint("api", __name__, url_prefix="/api/v1")
 

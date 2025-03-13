@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
+import os
 
 from app.models import (
     Prompt,
@@ -57,7 +58,7 @@ response = api.model(
 )
 
 
-@api.route("/")  
+@api.route("")  
 class PromptV1(Resource):
 
     @api.doc(description="Update system prompt for various LLMs", tags=["Prompt"])
@@ -122,7 +123,25 @@ class PromptV1(Resource):
                 prompt = db.session.query(Prompt).filter_by(id=id).first()
 
             if not prompt:
-                return {"error": "Prompt not found"}, 404
+                if id == "LRC":
+                    
+                    return {
+                        "id": 'LRC',
+                        "prompt": get_default_lrc_prompt(),
+                        "category": 'LRC',
+                        "model": 'default',
+                        "is_default": True,
+                    }
+                elif id == "POET":
+                    return {
+                        "id": 'POET',
+                        "prompt": get_default_poet_prompt(),
+                        "category": 'POET',
+                        "model": 'default',
+                        "is_default": True,
+                    }
+                else:    
+                    return {"error": "Prompt not found"}, 404
 
             return {
                 "id": prompt.id,
@@ -134,3 +153,34 @@ class PromptV1(Resource):
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        
+
+
+def get_default_poet_prompt():
+    """Reads the poet prompt from app/config/poetDefault.txt."""
+    prompt_path = os.path.join("app", "config", "poetDefault.txt")
+
+    try:
+        with open(prompt_path, "r", encoding="utf-8") as file:
+            return file.read().strip()
+    except FileNotFoundError:
+        print(f"Error: Missing {prompt_path}")
+        return None
+    except Exception as e:
+        print(f"Error reading {prompt_path}: {e}")
+        return None    
+    
+
+def get_default_lrc_prompt():
+    """Reads the lyric prompt from app/config/lrcDefault.txt."""
+    prompt_path = os.path.join("app", "config", "lrcDefault.txt")
+
+    try:
+        with open(prompt_path, "r", encoding="utf-8") as file:
+            return file.read().strip()
+    except FileNotFoundError:
+        print(f"Error: Missing {prompt_path}")
+        return None
+    except Exception as e:
+        print(f"Error reading {prompt_path}: {e}")
+        return None         

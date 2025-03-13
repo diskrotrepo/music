@@ -1,10 +1,10 @@
 from flask_restx import Namespace, Resource, fields
-from flask import request, jsonify
+from flask import request
 from app.lyrics import write_lyrics
 from app.models import Prompt, PromptyCategoryEnum
 from app.extensions import db
+from app.controllers.v1.prompt import get_default_poet_prompt
 
-import os
 
 api = Namespace("lyrics", description="Lyric related APIs")
 
@@ -31,7 +31,7 @@ lyric_generated_response = api.model(
 
 
 @api.route("/poet")
-class LyricsGeneratorV1(Resource):
+class PoetController(Resource):
 
     @api.doc(description="For a given promp generate lyrics", tags=["Lyrics"])
     @api.expect(lyric_definition, True)
@@ -54,16 +54,4 @@ class LyricsGeneratorV1(Resource):
         except Exception as e:
             return {"error": str(e)}, 500
 
-def get_default_poet_prompt():
-    """Reads the poet prompt from app/config/poetDefault.txt."""
-    prompt_path = os.path.join("app", "config", "poetDefault.txt")
-
-    try:
-        with open(prompt_path, "r", encoding="utf-8") as file:
-            return file.read().strip()
-    except FileNotFoundError:
-        print(f"Error: Missing {prompt_path}")
-        return None
-    except Exception as e:
-        print(f"Error reading {prompt_path}: {e}")
-        return None    
+ 

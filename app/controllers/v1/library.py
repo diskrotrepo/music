@@ -1,10 +1,8 @@
 from enum import Enum
-from uuid import UUID
 from flask_restx import Namespace, Resource, fields
-from flask import request, jsonify
+from flask import request
 from app.extensions import db
-from app.models import Music, Prompt, PromptyCategoryEnum
-from infer import generate
+from app.models import Music
 import logging
 
 api = Namespace("library", description="Library related APIs")
@@ -51,7 +49,7 @@ library_definition = api.model(
 )
 
 @api.route("")
-class LibraryV1(Resource):
+class LibraryController(Resource):
 
     @api.doc(
         description="Filters songs based on list_view (library or trash) and optional favorite filter.",
@@ -125,7 +123,7 @@ class SongAction(str, Enum):
     "song": "UUID of the song",
     "action": f"Action to perform ({', '.join([a.value for a in SongAction])})"
 })
-class SongActionAPI(Resource):
+class SongActionController(Resource):
 
     def update_song(self, songId, action):
         """Updates song in the database based on the action"""

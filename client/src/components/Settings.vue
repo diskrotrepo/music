@@ -68,8 +68,8 @@ export default {
             }
         };
 
-        onMounted(fetchPrompt); // Call API on page load
-
+        onMounted(fetchPrompt); 
+        
         const handleSubmit = (event) => {
             event.preventDefault();
             emit('submit', {
