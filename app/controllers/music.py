@@ -2,6 +2,7 @@ from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify, send_from_directory
 from app.tasks import generate_music_task
 from infer import generate
+import os
 
 from app.extensions import db
 from app.models import (
@@ -97,7 +98,7 @@ class MusicGenerationV1(Resource):
                 lrcPrompt = db.session.get(Prompt, lrc_id)
 
             if not lrcPrompt:
-                return {"error": "LRC not found"}, 404  # Return 404 if not found
+                lrcPrompt = get_default_lrc_prompt
 
             generation_id = generate(
                 lyrics=data.get("lyrics", ""),
@@ -133,3 +134,17 @@ class MusicGenerationV1(Resource):
         except Exception as e:
             return {"error": str(e)}, 500
 
+
+def get_default_lrc_prompt():
+    """Reads the lyric prompt from app/config/lyricPrompt.txt."""
+    prompt_path = os.path.join("app", "config", "lyricPrompt.txt")
+
+    try:
+        with open(prompt_path, "r", encoding="utf-8") as file:
+            return file.read().strip()
+    except FileNotFoundError:
+        print(f"Error: Missing {prompt_path}")
+        return None
+    except Exception as e:
+        print(f"Error reading {prompt_path}: {e}")
+        return None

@@ -22,6 +22,7 @@
 <script>
 import { ref } from 'vue';
 
+
 export default {
     setup(_, { emit }) {
         const lyrics = ref('');

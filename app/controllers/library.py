@@ -96,6 +96,7 @@ class LibraryV1(Resource):
                 {
                     "id": song.id,
                     "title": song.title,
+                    "filename": song.filename,
                     "dt_created": song.dt_created.isoformat() if song.dt_created else None,
                     "lyrics": song.lyrics,
                     "duration": song.duration,

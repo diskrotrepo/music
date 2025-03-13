@@ -8,9 +8,11 @@ class Config:
         f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'diskrot.db')}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    CELERY_BROKER_URL = "redis://localhost:6379/0"
-    CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+    CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+    CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
     CELERY_SEND_SENT_EVENT = True
+    HF_LRC_MODEL = os.getenv("HF_LRC_MODEL")
+    HF_POET_MODEL = os.getenv("HF_POET_MODEL")
 
 
 class DevelopmentConfig(Config):

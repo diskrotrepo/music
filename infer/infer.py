@@ -20,7 +20,7 @@ from einops import rearrange
 import os
 import time
 import uuid
-from lyrics import calculate_lrc
+from app.lyrics import calculate_lrc
 
 from app.models import Prompt
 
