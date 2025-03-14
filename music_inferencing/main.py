@@ -1,5 +1,5 @@
 import os
-from music_queue.music_queue import create_app
+from music_inferencing.music_queue import create_app
 
 app = create_app()
 

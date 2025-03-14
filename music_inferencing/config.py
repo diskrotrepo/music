@@ -4,11 +4,11 @@ import os
 class Config:
     DEBUG = False
     PROJECT_ROOT_DIR = os.path.abspath(os.path.dirname(__file__)).replace(
-        "/music_queue", ""
+        "/music_inference", ""
     )
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     SQLALCHEMY_DATABASE_URI = (
-        f"sqlite:///{os.path.join(PROJECT_ROOT_DIR,'music_database', 'diskrot.db')}"
+        f"sqlite:///{os.path.join(PROJECT_ROOT_DIR, 'database', 'diskrot.db')}"
     )
     PORT = os.getenv("MUSIC_QUEUE_PORT", "5001")
     SQLALCHEMY_TRACK_MODIFICATIONS = False

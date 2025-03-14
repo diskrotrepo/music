@@ -8,8 +8,8 @@ import jieba
 import cn2an
 from pypinyin import lazy_pinyin, BOPOMOFO
 from typing import List
-from g2p.g2p.chinese_model_g2p import BertPolyPredict
-from g2p.utils.front_utils import *
+from diffrhythm.g2p.g2p.chinese_model_g2p import BertPolyPredict
+from diffrhythm.g2p.utils.front_utils import *
 import os
 
 # from g2pw import G2PWConverter
@@ -19,9 +19,12 @@ import os
 BLANK_LEVEL = 0
 
 # conv = G2PWConverter(style='pinyin', enable_non_tradional_chinese=True)
-resource_path = r"./g2p"
+
+PROJECT_ROOT_DIR = os.path.abspath(os.path.dirname(__file__)).replace("g2p", "")
+RESOURCE_PATH = os.path.join(PROJECT_ROOT_DIR, "g2p")
+
 poly_all_class_path = os.path.join(
-    resource_path, "sources", "g2p_chinese_model", "polychar.txt"
+    RESOURCE_PATH, "sources", "g2p_chinese_model", "polychar.txt"
 )
 if not os.path.exists(poly_all_class_path):
     print(
@@ -33,7 +36,7 @@ if not os.path.exists(poly_all_class_path):
 poly_dict = generate_poly_lexicon(poly_all_class_path)
 
 # Set up G2PW model parameters
-g2pw_poly_model_path = os.path.join(resource_path, "sources", "g2p_chinese_model")
+g2pw_poly_model_path = os.path.join(RESOURCE_PATH, "sources", "g2p_chinese_model")
 if not os.path.exists(g2pw_poly_model_path):
     print(
         "Incorrect path for g2pw polyphonic character model: {}, please check...".format(
@@ -43,7 +46,7 @@ if not os.path.exists(g2pw_poly_model_path):
     exit()
 
 json_file_path = os.path.join(
-    resource_path, "sources", "g2p_chinese_model", "polydict.json"
+    RESOURCE_PATH, "sources", "g2p_chinese_model", "polydict.json"
 )
 if not os.path.exists(json_file_path):
     print(
@@ -54,7 +57,7 @@ if not os.path.exists(json_file_path):
     exit()
 
 jsonr_file_path = os.path.join(
-    resource_path, "sources", "g2p_chinese_model", "polydict_r.json"
+    RESOURCE_PATH, "sources", "g2p_chinese_model", "polydict_r.json"
 )
 if not os.path.exists(jsonr_file_path):
     print(
@@ -182,7 +185,11 @@ _bopomofo_to_ipa = [
 must_not_er_words = {"女儿", "老儿", "男儿", "少儿", "小儿"}
 
 word_pinyin_dict = {}
-with open(r"./g2p/sources/chinese_lexicon.txt", "r", encoding="utf-8") as fread:
+with open(
+    os.path.join(PROJECT_ROOT_DIR, "g2p", "sources", "chinese_lexicon.txt"),
+    "r",
+    encoding="utf-8",
+) as fread:
     txt_list = fread.readlines()
     for txt in txt_list:
         word, pinyin = txt.strip().split("\t")
@@ -190,7 +197,11 @@ with open(r"./g2p/sources/chinese_lexicon.txt", "r", encoding="utf-8") as fread:
     fread.close()
 
 pinyin_2_bopomofo_dict = {}
-with open(r"./g2p/sources/pinyin_2_bpmf.txt", "r", encoding="utf-8") as fread:
+with open(
+    os.path.join(PROJECT_ROOT_DIR, "g2p", "sources", "pinyin_2_bpmf.txt"),
+    "r",
+    encoding="utf-8",
+) as fread:
     txt_list = fread.readlines()
     for txt in txt_list:
         pinyin, bopomofo = txt.strip().split("\t")
@@ -207,7 +218,11 @@ tone_dict = {
 }
 
 bopomofos2pinyin_dict = {}
-with open(r"./g2p/sources/bpmf_2_pinyin.txt", "r", encoding="utf-8") as fread:
+with open(
+    os.path.join(PROJECT_ROOT_DIR, "g2p", "sources", "bpmf_2_pinyin.txt"),
+    "r",
+    encoding="utf-8",
+) as fread:
     txt_list = fread.readlines()
     for txt in txt_list:
         v, k = txt.strip().split("\t")

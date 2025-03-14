@@ -26,6 +26,11 @@ from huggingface_hub import hf_hub_download
 
 from diffrhythm.model import DiT, CFM
 
+PROJECT_ROOT_DIR = os.path.abspath(os.path.dirname(__file__)).replace("infer", "")
+PRETRAINED_DIR = os.path.join(PROJECT_ROOT_DIR, "pretrained")
+VOCAB_DIR = os.path.join(PROJECT_ROOT_DIR, "g2p", "g2p")
+CONFIG_DIR = os.path.join(PROJECT_ROOT_DIR, "config")
+
 
 def decode_audio(latents, vae_model, chunked=False, overlap=32, chunk_size=128):
     downsampling_ratio = 2048
@@ -85,9 +90,9 @@ def decode_audio(latents, vae_model, chunked=False, overlap=32, chunk_size=128):
 def prepare_model(device, repo_id="ASLP-lab/DiffRhythm-base"):
     # prepare cfm model
     dit_ckpt_path = hf_hub_download(
-        repo_id=repo_id, filename="cfm_model.pt", cache_dir="./pretrained"
+        repo_id=repo_id, filename="cfm_model.pt", cache_dir=PRETRAINED_DIR
     )
-    dit_config_path = "./config/diffrhythm-1b.json"
+    dit_config_path = os.path.join(CONFIG_DIR, "diffrhythm-1b.json")
     with open(dit_config_path) as f:
         model_config = json.load(f)
     dit_model_cls = DiT
@@ -102,14 +107,14 @@ def prepare_model(device, repo_id="ASLP-lab/DiffRhythm-base"):
     tokenizer = CNENTokenizer()
 
     # prepare muq
-    muq = MuQMuLan.from_pretrained("OpenMuQ/MuQ-MuLan-large", cache_dir="./pretrained")
+    muq = MuQMuLan.from_pretrained("OpenMuQ/MuQ-MuLan-large", cache_dir=PRETRAINED_DIR)
     muq = muq.to(device).eval()
 
     # prepare vae
     vae_ckpt_path = hf_hub_download(
         repo_id="ASLP-lab/DiffRhythm-vae",
         filename="vae_model.pt",
-        cache_dir="./pretrained",
+        cache_dir=PRETRAINED_DIR,
     )
     vae = torch.jit.load(vae_ckpt_path, map_location="cpu").to(device)
 
@@ -122,7 +127,7 @@ def get_reference_latent(device, max_frames):
 
 
 def get_negative_style_prompt(device):
-    file_path = "infer/example/vocal.npy"
+    file_path = os.path.join(PROJECT_ROOT_DIR, "infer", "example", "vocal.npy")
     vocal_stlye = np.load(file_path)
 
     vocal_stlye = torch.from_numpy(vocal_stlye).to(device)  # [1, 512]
@@ -186,10 +191,10 @@ def parse_lyrics(lyrics: str):
 
 class CNENTokenizer:
     def __init__(self):
-        with open("./g2p/g2p/vocab.json", "r") as file:
+        with open(os.path.join(VOCAB_DIR, "vocab.json"), "r", encoding="utf-8") as file:
             self.phone2id: dict = json.load(file)["vocab"]
         self.id2phone = {v: k for (k, v) in self.phone2id.items()}
-        from g2p.g2p_generation import chn_eng_g2p
+        from diffrhythm.g2p.g2p_generation import chn_eng_g2p
 
         self.tokenizer = chn_eng_g2p
 

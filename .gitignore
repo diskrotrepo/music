@@ -9,13 +9,8 @@ wandb
 dataset/** 
 start.sh
 output/**
-migrations/**
-app/instance/diskrot.db
 .env
-celerybeat-schedule.bak
-celerybeat-schedule.dat
-celerybeat-schedule.dir
-app/static/music/** 
+
 
 music_backend/venv/**
 music_queue/venv/**
@@ -24,5 +19,6 @@ music_backend/static/**
 diffrhythm/venv/**
 music_backend/venv/**
 music_queue/venv/**
-music_database/diskrot.db
 music_backend/env/**
+env.bat
+diskrot.db

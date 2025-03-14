@@ -1,8 +1,8 @@
 from enum import Enum
 from flask_restx import Namespace, Resource, fields
 from flask import request
-from music_queue.background_thread import BackgroundThreadFactory
-from music_queue.extensions import db
+from music_inferencing.background_thread import BackgroundThreadFactory
+from music_inferencing.extensions import db
 from music_shared.models import Music
 
 api = Namespace("status", description="Queue Status related APIs")

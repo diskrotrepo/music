@@ -7,9 +7,7 @@ class Config:
         "/music_backend", ""
     )
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-    SQLALCHEMY_DATABASE_URI = (
-        f"sqlite:///{os.path.join(PROJECT_ROOT_DIR,'music_database', 'diskrot.db')}"
-    )
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{PROJECT_ROOT_DIR,'database', 'diskrot.db'})"
     PORT = os.getenv("MUSIC_BACKEND_PORT", "5000")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     HF_POET_MODEL = os.getenv("HF_POET_MODEL")

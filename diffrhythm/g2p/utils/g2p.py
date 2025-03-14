@@ -11,6 +11,8 @@ import os
 import json
 import sys
 
+PROJECT_ROOT_DIR = os.path.abspath(os.path.dirname(__file__)).replace("utils", "")
+
 # separator=Separator(phone=' ', word=' _ ', syllable='|'),
 separator = Separator(word=" _ ", syllable="|", phone=" ")
 
@@ -26,11 +28,6 @@ phonemizer_en = EspeakBackend(
     language_switch="remove-flags",
 )
 # phonemizer_en.separator = separator
-
-phonemizer_ja = EspeakBackend(
-    "ja", preserve_punctuation=False, with_stress=False, language_switch="remove-flags"
-)
-# phonemizer_ja.separator = separator
 
 phonemizer_ko = EspeakBackend(
     "ko", preserve_punctuation=False, with_stress=False, language_switch="remove-flags"
@@ -53,14 +50,15 @@ phonemizer_de = EspeakBackend(
 
 lang2backend = {
     "zh": phonemizer_zh,
-    "ja": phonemizer_ja,
     "en": phonemizer_en,
     "fr": phonemizer_fr,
     "ko": phonemizer_ko,
     "de": phonemizer_de,
 }
 
-with open("./g2p/utils/mls_en.json", "r") as f:
+with open(
+    os.path.join(PROJECT_ROOT_DIR, "utils", "mls_en.json"), "r", encoding="utf-8"
+) as f:
     json_data = f.read()
 token = json.loads(json_data)
 

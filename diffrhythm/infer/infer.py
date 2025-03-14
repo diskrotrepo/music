@@ -20,11 +20,18 @@ from einops import rearrange
 import os
 import time
 import uuid
-from music_shared.lrc import calculate_lrc
+import logging
+from music_inferencing.lyrics import calculate_lrc
 
 from music_shared.models import Prompt
 
 import os
+
+PROJECT_ROOT_DIR = (
+    os.path.abspath(os.path.dirname(__file__))
+    .replace("diffrhythm", "")
+    .replace("infer", "")
+)
 
 
 from diffrhythm.infer.infer_utils import (
@@ -105,6 +112,8 @@ def generate(
     elif torch.mps.is_available():
         device = "mps"
 
+    assert device != "cpu", "CPU is not supported for inference. Please use GPU or MPS."
+
     if audio_length == 95:
         max_frames = 2048
     elif audio_length == 285:  # current not available
@@ -135,6 +144,7 @@ def generate(
     latent_prompt = get_reference_latent(device, max_frames)
 
     s_t = time.time()
+    logging.info(f"start inference with {tags}")
     generated_song = inference(
         cfm_model=cfm,
         vae_model=vae,
@@ -149,11 +159,12 @@ def generate(
         chunked=chunked,
     )
     e_t = time.time() - s_t
-    print(f"inference cost {e_t} seconds")
+    logging.info(f"inference cost {e_t} seconds")
 
     id = str(uuid.uuid4())
 
-    output_path = os.path.join("app", "static", "music", "{}.wav".format(id))
+    output_path = os.path.join(PROJECT_ROOT_DIR, "music_output", "{}.wav".format(id))
+    logging.info(f"Writing file to {output_path}")
 
     torchaudio.save(output_path, generated_song, sample_rate=44100)
     return id

@@ -17,8 +17,6 @@ def register_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    logging.info(f"Pipeline source -> {os.getenv("LLM_SOURCE")}")
-
     from music_shared.models import (
         Music,
         Prompt,

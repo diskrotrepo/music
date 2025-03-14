@@ -1,10 +1,11 @@
+import uuid
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from music_queue.config import config
-from music_queue.extensions import register_extensions
-from music_queue.apiv1 import blueprint as api1
+from music_inferencing.config import config
+from music_inferencing.extensions import register_extensions
+from music_inferencing.apiv1 import blueprint as api1
 import time
-from music_queue.extensions import db
+from music_inferencing.extensions import db
 from music_shared.lrc import get_default_lrc_prompt
 from music_shared.models import Music, Prompt
 from diffrhythm.infer import generate
@@ -13,7 +14,7 @@ import time
 import logging
 import os
 import signal
-from music_queue.background_thread import (
+from music_inferencing.background_thread import (
     BackgroundThreadFactory,
     TASKS_QUEUE,
     BackgroundThreadType,
@@ -38,7 +39,25 @@ def create_app():
         task = request.json
         logging.info(f"Received task: {task}")
 
-        TASKS_QUEUE.put(task)
+        generation_id = str(uuid.uuid4())
+
+        new_music = Music(
+            filename=f"{generation_id}.wav",
+            title=task.get("title"),
+            lyrics=task.get("lyrics"),
+            prompt=task.get("tags"),
+            negative_prompt=task.get("negative_tags"),
+            input_file=task.get("input"),
+            duration=task.get("duration"),
+            steps=task.get("steps"),
+            cfg_strength=task.get("cfg_strength"),
+            model="unknown",
+        )
+
+        db.session.add(new_music)
+        db.session.commit()
+
+        # TASKS_QUEUE.put(task)
         return jsonify({"success": "OK"})
 
     notification_thread = BackgroundThreadFactory.create(

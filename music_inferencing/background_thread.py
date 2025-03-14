@@ -6,11 +6,12 @@ import time
 from queue import Queue
 from abc import abstractmethod, ABC
 from typing import Dict
+import os
 
 from diffrhythm.infer.infer import generate
 from music_shared.lrc import get_default_lrc_prompt
 from music_shared.models import Music, MusicProcessingEnum, Prompt
-from music_queue.extensions import db
+from music_inferencing.extensions import db
 
 
 TASKS_QUEUE = Queue()
@@ -62,13 +63,11 @@ class InferenceThread(BackgroundThread):
         try:
 
             with self.app.app_context():
-                task = TASKS_QUEUE.get(block=False)
+
                 query = db.session.query(Music).filter_by(
                     processing_status=MusicProcessingEnum.NEW
                 )
                 songs = query.all()
-
-                logging.info("InferenceThread processing song")
 
                 for song in songs:
                     song.status = MusicProcessingEnum.IN_PROGRESS
@@ -80,10 +79,18 @@ class InferenceThread(BackgroundThread):
                         .filter_by(is_default=True)
                         .filter_by(category="LRC")
                     )
-                    lrcPrompt = query.first()
+                    lrcPromptResult = query.first()
 
-                    if lrcPrompt == None:
-                        lrcPrompt = get_default_lrc_prompt()
+                    if lrcPromptResult == None:
+                        model = os.environ.get("LLM_MODEL")
+                        lrcPrompt = Prompt(
+                            prompt=get_default_lrc_prompt(),
+                            category="LRC",
+                            model=model,
+                            is_default=True,
+                        )
+                    else:
+                        lrcPrompt = lrcPromptResult
 
                     generate(
                         lyrics=song.lyrics,
