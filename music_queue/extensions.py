@@ -1,10 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-import logging
-
 import transformers
 import torch
 import os
+import logging
 
 lrc_pipeline = None
 
@@ -17,7 +16,7 @@ if os.getenv("LLM_SOURCE") == "huggingface":
             model_kwargs={"torch_dtype": torch.float32},
             device_map="auto",
         )
-        print(f"LRC Model {lrc_model_id} loaded successfully!")
+
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -31,7 +30,7 @@ def register_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    logging.info(f"Pipeline source -> {os.getenv("LLM_SOURCE")}")
+    app.logger.info(f"Pipeline source -> {os.getenv("LLM_SOURCE")}")
 
     from music_shared.models import (
         Music,

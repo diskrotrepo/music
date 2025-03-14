@@ -1,6 +1,6 @@
 accelerate==1.4.0
 torchdiffeq==0.2.5
-torchaudio
+torchaudio==2.6.0
 x-transformers==2.1.2
 transformers==4.49.0
 librosa==0.10.2.post1

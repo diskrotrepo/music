@@ -13,6 +13,7 @@ class Config:
     PORT = os.getenv("MUSIC_QUEUE_PORT", "5001")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     HF_LRC_MODEL = os.getenv("HF_LRC_MODEL")
+    SCHEDULER_API_ENABLED = True
 
 
 class DevelopmentConfig(Config):
