@@ -38,6 +38,43 @@ From the terminal go to the `music_queue` directory.
 
 By default this will run at http://127.0.0.1:5001 with API documents available at http://127.0.0.1:5001/api/v1/docs
 
+## Installation RunPod
+
+1. Select your GPU
+2. Select: Torch 2.4.0 
+3. Edit the template and expose port 5001
+3. SSH to the Machine
+
+```bash
+apt-get update && apt-get upgrade -y
+apt-get install espeak-ng
+cd /workspace
+git clone https://github.com/diskrotrepo/music.git
+cd music/music_inferencing
+python -m venv music
+source music/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+; Replace abc123 with your hugging face access token
+sed -i 's/<yourToken>/abc123/g' .env
+source .env
+; Note this will download some of the models and complain about 
+flask db migrate
+flask db update
+flask run --port=5001 --host=0.0.0.0
+```
+
+## Running Post Install RunPod
+
+1. SSH to machine
+
+```bash
+cd /workspace/music/music_inferencing
+source music/bin/activate
+flask run --port=5001 --host=0.0.0.0
+```
+
+
 # Common Errors
 
 **Troubleshooting Windows**
