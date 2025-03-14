@@ -2,7 +2,6 @@ from flask import Blueprint
 from flask_restx import Api
 
 from music_backend.controllers.v1.music import api as music_api
-from music_backend.controllers.v1.lyrics import api as lyric_api
 from music_backend.controllers.v1.prompt import api as prompt_api
 from music_backend.controllers.v1.library import api as library_api
 
@@ -17,6 +16,5 @@ api = Api(
 )
 
 api.add_namespace(music_api)
-api.add_namespace(lyric_api)
 api.add_namespace(prompt_api)
 api.add_namespace(library_api)

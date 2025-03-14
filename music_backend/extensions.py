@@ -2,23 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import logging
 
-import transformers
-import torch
 import os
-
-poet_pipeline = None
-
-if os.getenv("LLM_SOURCE") == "huggingface":
-
-    if poet_pipeline is None:
-        poet_model_id = os.getenv("HF_POET_MODEL")
-        poet_pipeline = transformers.pipeline(
-            "text-generation",
-            model=poet_model_id,
-            model_kwargs={"torch_dtype": torch.float32},
-            device_map="auto",
-        )
-        print(f"Poet Model {poet_model_id} loaded successfully!")
 
 
 db = SQLAlchemy()
