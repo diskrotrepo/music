@@ -28,7 +28,7 @@ logging.basicConfig()
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
 
-def register_extensions(app, worker=False):
+def register_extensions(app):
 
     db.init_app(app)
     migrate.init_app(app, db)

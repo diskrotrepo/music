@@ -63,6 +63,29 @@ From the music_frontend
 1. Run npm install: `npm install`
 2. Start the server: `npm run dev`
 
+# Database
+
+The project is using SQLite which can access with the following command: `sqlite music_database/diskrot.db`
+
+# Common Errors
+
+**NumPy Errors on Mac**
+
+If you get this error:
+
+```text
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.1.3 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+```
+
+run: `pip install "numpy<2"`
+
 ## License & Disclaimer
 
 DiffRhythm (code and DiT weights) is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). This open-source license allows you to freely use, modify, and distribute the model, as long as you include the appropriate copyright notice and disclaimer.

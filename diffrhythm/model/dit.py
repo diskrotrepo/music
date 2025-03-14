@@ -31,7 +31,7 @@ from transformers.models.llama.modeling_llama import (
 )
 from transformers.models.llama import LlamaConfig
 
-from model.modules import (
+from diffrhythm.model.modules import (
     TimestepEmbedding,
     ConvNeXtV2Block,
     ConvPositionEmbedding,

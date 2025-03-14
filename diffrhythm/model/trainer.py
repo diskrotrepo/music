@@ -31,14 +31,14 @@ from torch.optim.lr_scheduler import LinearLR, SequentialLR, ConstantLR
 
 from accelerate import Accelerator
 from accelerate.utils import DistributedDataParallelKwargs
-from dataset.dataset import DiffusionDataset
+from diffrhythm.dataset.dataset import DiffusionDataset
 
 from torch.utils.data import DataLoader
 
 from ema_pytorch import EMA
 
-from model import CFM
-from model.utils import exists, default
+from diffrhythm.model import CFM
+from diffrhythm.model.utils import exists, default
 
 
 class Trainer:

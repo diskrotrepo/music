@@ -31,7 +31,7 @@ from torch.nn.utils.rnn import pad_sequence
 
 from torchdiffeq import odeint
 
-from model.utils import (
+from diffrhythm.model.utils import (
     exists,
     list_str_to_idx,
     list_str_to_tensor,

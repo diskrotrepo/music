@@ -24,7 +24,7 @@ import os
 import numpy as np
 from huggingface_hub import hf_hub_download
 
-from model import DiT, CFM
+from diffrhythm.model import DiT, CFM
 
 
 def decode_audio(latents, vae_model, chunked=False, overlap=32, chunk_size=128):

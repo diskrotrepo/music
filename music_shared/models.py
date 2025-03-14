@@ -1,12 +1,14 @@
-from music_backend.extensions import db
+from music_shared.extensions import db
 import uuid
 import enum
 from datetime import datetime
 
+
 class MusicProcessingEnum(enum.Enum):
     NEW = "NEW"
-    IN_PROGRESS = "IN_PROGRESS"   
-    COMPLETE = "COMPLETE" 
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETE = "COMPLETE"
+
 
 class Music(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
@@ -23,11 +25,15 @@ class Music(db.Model):
     dt_created = db.Column(db.DateTime, nullable=False, default=datetime.now())
     is_favorite = db.Column(db.Boolean, nullable=False, default=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
-    processing_status = db.Column(db.Enum(MusicProcessingEnum), nullable=False, default=MusicProcessingEnum.NEW)
+    processing_status = db.Column(
+        db.Enum(MusicProcessingEnum), nullable=False, default=MusicProcessingEnum.NEW
+    )
+
 
 class PromptyCategoryEnum(enum.Enum):
     LRC = "LRC"
     POET = "POET"
+
 
 class Prompt(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))

@@ -18,7 +18,7 @@ library_definition = api.model(
         "dt_created": fields.DateTime(
             required=False,
             description="The date the song was created",
-            example="2025-03-12T00:00:00+05:00",  
+            example="2025-03-12T00:00:00+05:00",
         ),
         "lyrics": fields.String(
             required=False,
@@ -45,8 +45,14 @@ library_definition = api.model(
             description="The LRC system prompt id applied to the incoming lyrics",
             example="b7e6a5d9-5f42-4a8b-9a38-47ef2e2a8df1",
         ),
+        "status": fields.String(
+            required=True,
+            description="Current status of the song in the library",
+            example="NEW",
+        ),
     },
 )
+
 
 @api.route("")
 class LibraryController(Resource):
@@ -57,7 +63,7 @@ class LibraryController(Resource):
             "list_view": "Required: 'library' (is_deleted=False) or 'trash' (is_deleted=True)",
             "favorite": "Optional: true or false to filter favorites",
         },
-        tags=["Music Library"]
+        tags=["Music Library"],
     )
     @api.response(200, "Success", [library_definition])
     def get(self):
@@ -82,7 +88,7 @@ class LibraryController(Resource):
             # Apply optional favorite filter
             if favorite_filter is not None:
                 query = query.filter_by(is_favorite=True)
-           
+
             # Fetch results
             library = query.all()
 
@@ -95,14 +101,19 @@ class LibraryController(Resource):
                     "id": song.id,
                     "title": song.title,
                     "filename": song.filename,
-                    "dt_created": song.dt_created.isoformat() if song.dt_created else None,
+                    "dt_created": (
+                        song.dt_created.isoformat() if song.dt_created else None
+                    ),
                     "lyrics": song.lyrics,
                     "duration": song.duration,
                     "tags": song.prompt,
-                    "negative_tags": song.negative_tags if hasattr(song, "negative_tags") else None,
+                    "negative_tags": (
+                        song.negative_tags if hasattr(song, "negative_tags") else None
+                    ),
                     "lrc_id": song.lrc_id if hasattr(song, "lrc_id") else None,
                     "is_favorite": song.is_favorite,
                     "is_deleted": song.is_deleted,
+                    "processing_status": song.processing_status.value,
                 }
                 for song in library
             ]
@@ -112,17 +123,21 @@ class LibraryController(Resource):
         except Exception as e:
             return {"error": str(e)}, 500
 
+
 class SongAction(str, Enum):
     FAVORITE = "favorite"
     DELETE = "delete"
     RESTORE = "restore"
     UNFAVORITE = "unfavorite"
 
+
 @api.route("/song/<uuid:song>/action/<string:action>")
-@api.doc(params={
-    "song": "UUID of the song",
-    "action": f"Action to perform ({', '.join([a.value for a in SongAction])})"
-})
+@api.doc(
+    params={
+        "song": "UUID of the song",
+        "action": f"Action to perform ({', '.join([a.value for a in SongAction])})",
+    }
+)
 class SongActionController(Resource):
 
     def update_song(self, songId, action):
@@ -145,13 +160,13 @@ class SongActionController(Resource):
                 song.is_deleted = False
             case _:
                 return {"error": "Invalid action"}, 400
-        
+
         db.session.commit()
         return {"success": True}, 200
 
     @api.doc(
         description="Handles song actions such as favorite, delete, restore, and unfavorite.",
-        tags=["Music Library"]
+        tags=["Music Library"],
     )
     @api.response(200, "Success")
     def post(self, song, action):
@@ -159,7 +174,7 @@ class SongActionController(Resource):
         try:
             if action not in SongAction._value2member_map_:
                 return {"error": "Invalid action"}, 400
-            
+
             return self.update_song(song, action)
 
         except Exception as e:

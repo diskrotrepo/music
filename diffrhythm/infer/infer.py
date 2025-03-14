@@ -20,14 +20,14 @@ from einops import rearrange
 import os
 import time
 import uuid
-from music_backend.lyrics import calculate_lrc
+from music_shared.lrc import calculate_lrc
 
 from music_shared.models import Prompt
 
 import os
 
 
-from infer.infer_utils import (
+from diffrhythm.infer.infer_utils import (
     get_reference_latent,
     get_lrc_token,
     get_style_prompt,
@@ -35,8 +35,6 @@ from infer.infer_utils import (
     get_negative_style_prompt,
     decode_audio,
 )
-
-from embedding import get_embeddings
 
 
 def inference(
@@ -127,12 +125,7 @@ def generate(
         input_path = os.path.join("input", input_file)
         style_prompt = get_style_prompt(muq, input_path)
     else:
-        if use_embeddings:
-            print("use_embeddings ")
-            style_prompt = get_embeddings(tags)
-        else:
-            print("use tags")
-            style_prompt = get_style_prompt(muq, prompt=tags)
+        style_prompt = get_style_prompt(muq, prompt=tags)
 
     if negative_tags:
         negative_style_prompt = get_style_prompt(muq, prompt=negative_tags)

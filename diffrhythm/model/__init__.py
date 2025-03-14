@@ -1,6 +1,6 @@
-from model.cfm import CFM
-from model.dit import DiT
-from model.trainer import Trainer
+from diffrhythm.model.cfm import CFM
+from diffrhythm.model.dit import DiT
+from diffrhythm.model.trainer import Trainer
 
 
-__all__ = ["CFM"]
+__all__ = ["CFM", "DiT", "Trainer"]

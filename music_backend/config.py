@@ -1,14 +1,19 @@
 import os
 
+
 class Config:
     DEBUG = False
-    PROJECT_ROOT_DIR = os.path.abspath(os.path.dirname(__file__)).replace("/music_backend","")
+    PROJECT_ROOT_DIR = os.path.abspath(os.path.dirname(__file__)).replace(
+        "/music_backend", ""
+    )
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     SQLALCHEMY_DATABASE_URI = (
         f"sqlite:///{os.path.join(PROJECT_ROOT_DIR,'music_database', 'diskrot.db')}"
     )
+    PORT = os.getenv("MUSIC_BACKEND_PORT", "5000")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     HF_POET_MODEL = os.getenv("HF_POET_MODEL")
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
