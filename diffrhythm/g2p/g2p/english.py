@@ -175,7 +175,7 @@ def _english_to_ipa(text):
 # special map
 def special_map(text):
     for regex, replacement in _special_map:
-        regex = regex.replace("|", "\|")
+        regex = regex.replace("|", r"\|")
         while re.search(r"(^|[_|]){}([_|]|$)".format(regex), text):
             text = re.sub(
                 r"(^|[_|]){}([_|]|$)".format(regex), r"\1{}\2".format(replacement), text

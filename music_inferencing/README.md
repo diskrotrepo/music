@@ -34,13 +34,27 @@ From the terminal go to the `music_queue` directory.
 8. Create an empty database file: `touch ../music_database/diskrot.db`
 9. Run database migration: `flask db migrate`
 10. Run database upgrade: `flask db upgrade`
-11. Run flask: `flask run`
+11. Run flask: `flask run --port=5001`
 
 By default this will run at http://127.0.0.1:5001 with API documents available at http://127.0.0.1:5001/api/v1/docs
 
 # Common Errors
 
-**NumPy Errors on Mac**
+**Troubleshooting Windows**
+
+If you get this error:
+
+```text
+```
+
+Run these commands:
+
+```bash
+pip uninstall torch torchvision torchaudio
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```
+
+**NumPy Errors**
 
 If you get this error:
 

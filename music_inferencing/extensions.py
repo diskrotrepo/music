@@ -9,6 +9,9 @@ import logging
 lrc_pipeline = None
 poet_pipeline = None
 
+if torch.version.cuda is None:
+    logging.warning("CUDA is not available. Please check your PyTorch installation.")
+
 if os.getenv("LLM_SOURCE") == "huggingface":
 
     device = "cpu"

@@ -604,7 +604,7 @@ class JapanesePhoneConverter(object):
         self.ipa_dict = {}
         for curr_line in jp_xphone2ipa:
             k, v = curr_line.strip().split(" ", 1)
-            self.ipa_dict[k] = re.sub("\s", "", v)
+            self.ipa_dict[k] = re.sub(r"\s", "", v)
         # kakasi1 = kakasi()
         # kakasi1.setMode("H","K")
         # kakasi1.setMode("J","K")
