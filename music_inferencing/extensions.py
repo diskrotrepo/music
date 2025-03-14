@@ -10,13 +10,26 @@ lrc_pipeline = None
 poet_pipeline = None
 
 if os.getenv("LLM_SOURCE") == "huggingface":
+
+    device = "cpu"
+
+    if torch.cuda.is_available():
+        device = "cuda"
+        torch_dtype = torch.float16
+
+    elif torch.mps.is_available():
+        device = "mps"
+        torch_dtype = torch.float32
+
+    assert device != "cpu", "CPU is not supported for inference. Please use GPU or MPS."
+
     if lrc_pipeline is None:
         lrc_model_id = os.getenv("HF_LRC_MODEL")
         lrc_pipeline = transformers.pipeline(
             "text-generation",
             model=lrc_model_id,
-            model_kwargs={"torch_dtype": torch.float32},
-            device_map="auto",
+            model_kwargs={"torch_dtype": torch_dtype},
+            device_map=device,
         )
     logging.info(f"LRC Model {lrc_model_id} loaded successfully!")
 
@@ -25,8 +38,8 @@ if os.getenv("LLM_SOURCE") == "huggingface":
         poet_pipeline = transformers.pipeline(
             "text-generation",
             model=poet_model_id,
-            model_kwargs={"torch_dtype": torch.float32},
-            device_map="auto",
+            model_kwargs={"torch_dtype": torch_dtype},
+            device_map=device,
         )
         logging.info(f"Poet Model {poet_model_id} loaded successfully!")
 

@@ -30,7 +30,11 @@ From the terminal go to the `music_queue` directory.
 **Windows**:
 6b. Run: `env.bat`
 
-7. Run flask: `flask run`
+7. From the music_backend directory: `flask db init`
+8. Create an empty database file: `touch ../music_database/diskrot.db`
+9. Run database migration: `flask db migrate`
+10. Run database upgrade: `flask db upgrade`
+11. Run flask: `flask run`
 
 By default this will run at http://127.0.0.1:5001 with API documents available at http://127.0.0.1:5001/api/v1/docs
 
