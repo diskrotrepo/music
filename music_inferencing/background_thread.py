@@ -111,13 +111,13 @@ class InferenceThread(BackgroundThread):
                     )
 
                     file_path = os.path.join(
-                        PROJECT_ROOT_DIR, "music_output", f"{song.id}.wav"
+                        PROJECT_ROOT_DIR, "music_output", song.filename
                     )
 
                     s3_enabled = os.environ.get("S3_ENABLED")
 
                     if s3_enabled == "true":
-                        logging.info(f"Uploading song {song.id} to S3")
+                        logging.info(f"Uploading song {song.filename} to S3")
                         with open(file_path, "rb") as f:
                             file_data = f.read()
                             upload_file(
