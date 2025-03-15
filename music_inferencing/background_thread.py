@@ -123,7 +123,7 @@ class InferenceThread(BackgroundThread):
                             upload_file(
                                 file_data,
                                 os.environ.get("S3_BUCKET_NAME"),
-                                f"{song.id}.wav",
+                                song.filename,
                             )
 
                         os.remove(file_path)
