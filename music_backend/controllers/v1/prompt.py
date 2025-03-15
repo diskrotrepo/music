@@ -3,7 +3,7 @@ from flask import request, jsonify
 from music_shared.lrc import get_default_lrc_prompt
 import os
 
-from music_shared.models import (
+from music_backend.models import (
     Prompt,
     PromptyCategoryEnum,
 )

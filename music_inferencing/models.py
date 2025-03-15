@@ -1,4 +1,4 @@
-from music_shared.extensions import db
+from music_inferencing.extensions import db
 import uuid
 import enum
 from datetime import datetime
@@ -25,6 +25,9 @@ class Music(db.Model):
     dt_created = db.Column(db.DateTime, nullable=False, default=datetime.now())
     is_favorite = db.Column(db.Boolean, nullable=False, default=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
+    inference_server = db.Column(db.String(256), nullable=False, default="")
+    lrc_prompt = db.Column(db.String(2048), nullable=False, default="")
+    lrc_model = db.Column(db.String(256), nullable=False, default="")
     processing_status = db.Column(
         db.Enum(MusicProcessingEnum), nullable=False, default=MusicProcessingEnum.NEW
     )

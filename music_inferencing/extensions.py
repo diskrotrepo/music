@@ -56,7 +56,7 @@ def register_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from music_shared.models import (
+    from music_inferencing.models import (
         Music,
         Prompt,
     )

@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from flask import request
 from music_inferencing.background_thread import BackgroundThreadFactory
 from music_inferencing.extensions import db
-from music_shared.models import Music
+from music_inferencing.models import Music
 
 api = Namespace("status", description="Queue Status related APIs")
 

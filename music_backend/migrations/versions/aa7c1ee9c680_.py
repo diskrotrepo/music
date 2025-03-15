@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: b7fd671aef1a
+Revision ID: aa7c1ee9c680
 Revises: 
-Create Date: 2025-03-13 18:52:09.150120
+Create Date: 2025-03-15 09:22:25.232158
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b7fd671aef1a'
+revision = 'aa7c1ee9c680'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,6 +33,9 @@ def upgrade():
     sa.Column('dt_created', sa.DateTime(), nullable=False),
     sa.Column('is_favorite', sa.Boolean(), nullable=False),
     sa.Column('is_deleted', sa.Boolean(), nullable=False),
+    sa.Column('inference_server', sa.String(length=256), nullable=False),
+    sa.Column('lrc_prompt', sa.String(length=2048), nullable=False),
+    sa.Column('lrc_model', sa.String(length=256), nullable=False),
     sa.Column('processing_status', sa.Enum('NEW', 'IN_PROGRESS', 'COMPLETE', name='musicprocessingenum'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )

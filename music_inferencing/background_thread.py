@@ -79,24 +79,6 @@ class InferenceThread(BackgroundThread):
                     db.session.commit()
                     logging.info(f"Processing song {song.id}")
 
-                    query = (
-                        db.session.query(Prompt)
-                        .filter_by(is_default=True)
-                        .filter_by(category="LRC")
-                    )
-                    lrcPromptResult = query.first()
-
-                    if lrcPromptResult == None:
-                        model = os.environ.get("LLM_MODEL")
-                        lrcPrompt = Prompt(
-                            prompt=get_default_lrc_prompt(),
-                            category="LRC",
-                            model=model,
-                            is_default=True,
-                        )
-                    else:
-                        lrcPrompt = lrcPromptResult
-
                     file_path = generate(
                         lyrics=song.lyrics,
                         input_file=song.input_file,
@@ -105,7 +87,7 @@ class InferenceThread(BackgroundThread):
                         cfg_strength=song.cfg_strength,
                         chunked=True,
                         tags=song.prompt,
-                        lrcPrompt=lrcPrompt,
+                        lrcPrompt=Prompt(prompt=song.lrc_prompt, model=song.lrc_model),
                         negative_tags=song.negative_prompt,
                         use_embeddings=False,
                     )

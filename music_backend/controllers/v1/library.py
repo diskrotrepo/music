@@ -2,7 +2,7 @@ from enum import Enum
 from flask_restx import Namespace, Resource, fields
 from flask import request
 from music_backend.extensions import db
-from music_shared.models import Music
+from music_backend.models import Music
 import logging
 
 api = Namespace("library", description="Library related APIs")

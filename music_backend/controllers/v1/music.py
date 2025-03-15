@@ -6,7 +6,8 @@ import os
 import logging
 
 from music_backend.extensions import db
-from music_shared.models import Music
+from music_shared.lrc import get_default_lrc_prompt
+from music_backend.models import Music, Prompt
 
 
 api = Namespace("music", description="Music related APIs")
@@ -91,6 +92,25 @@ class MusicGenerationController(Resource):
 
             logging.info(f"Submitting task to {submit_task_url}")
 
+            query = (
+                db.session.query(Prompt)
+                .filter_by(is_default=True)
+                .filter_by(category="LRC")
+            )
+
+            lrcPromptResult = query.first()
+
+            if lrcPromptResult == None:
+                model = os.environ.get("LLM_MODEL")
+                lrc_prompt = Prompt(
+                    prompt=get_default_lrc_prompt(),
+                    category="LRC",
+                    model=model,
+                    is_default=True,
+                )
+            else:
+                lrc_prompt = lrcPromptResult
+
             try:
                 response = requests.post(
                     submit_task_url,
@@ -101,6 +121,8 @@ class MusicGenerationController(Resource):
                         "title": data.get("title"),
                         "cfg_strength": data.get("cfg_strength"),
                         "tags": data.get("tags"),
+                        "lrc_prompt": lrc_prompt.prompt,
+                        "lrc_model": lrc_prompt.model,
                         "negative_tags": data.get("negative_tags"),
                     },
                 )
@@ -113,6 +135,9 @@ class MusicGenerationController(Resource):
                     title=data.get("title"),
                     lyrics=data.get("lyrics"),
                     prompt=data.get("tags"),
+                    inference_server=submit_task_url,
+                    lrc_prompt=lrc_prompt.prompt,
+                    lrc_model=lrc_prompt.model,
                     negative_prompt=data.get("negative_tags"),
                     input_file=data.get("input"),
                     duration=data.get("duration"),
