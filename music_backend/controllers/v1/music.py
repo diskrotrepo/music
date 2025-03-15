@@ -1,11 +1,12 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
+import requests
 import uuid
+import os
+import logging
 
 from music_backend.extensions import db
-from music_shared.models import (
-    Music
-)
+from music_shared.models import Music
 
 
 api = Namespace("music", description="Music related APIs")
@@ -81,26 +82,53 @@ class MusicGenerationController(Resource):
     def post(self):
         try:
             data = request.json or {}
-           
-            generation_id = str(uuid.uuid4())
 
-            new_music = Music(
-                filename=f"{generation_id}.wav",
-                title=data.get("title"),
-                lyrics=data.get("lyrics"),
-                prompt=data.get("tags"),
-                negative_prompt = data.get("negative_tags"),
-                input_file = data.get("input"),
-                duration=data.get("duration"),
-                steps=data.get("steps"),
-                cfg_strength=data.get("cfg_strength"),
-                model="unknown",
-            )
+            base_url = os.environ.get("MUSIC_QUEUE_URL")
+            port = os.environ.get("MUSIC_QUEUE_PORT")
+            endpoint = "/task"
 
-            db.session.add(new_music)
-            db.session.commit()
+            submit_task_url = f"{base_url}:{port}{endpoint}"
 
-            return {"id": generation_id}
+            logging.info(f"Submitting task to {submit_task_url}")
+
+            try:
+                response = requests.post(
+                    submit_task_url,
+                    json={
+                        "lyrics": data.get("lyrics"),
+                        "duration": data.get("duration"),
+                        "steps": data.get("steps"),
+                        "title": data.get("title"),
+                        "cfg_strength": data.get("cfg_strength"),
+                        "tags": data.get("tags"),
+                        "negative_tags": data.get("negative_tags"),
+                    },
+                )
+
+                task_id = response.json().get("id")
+
+                new_music = Music(
+                    id=task_id,
+                    filename="not available",
+                    title=data.get("title"),
+                    lyrics=data.get("lyrics"),
+                    prompt=data.get("tags"),
+                    negative_prompt=data.get("negative_tags"),
+                    input_file=data.get("input"),
+                    duration=data.get("duration"),
+                    steps=data.get("steps"),
+                    cfg_strength=data.get("cfg_strength"),
+                    model="unknown",
+                )
+
+                db.session.add(new_music)
+                db.session.commit()
+
+                return {"id": task_id}
+            except Exception as e:
+                return {
+                    "error": f"Unable to submit task to inference server {submit_task_url}"
+                }, 500
 
         except Exception as e:
             return {"error": str(e)}, 500

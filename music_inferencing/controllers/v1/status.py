@@ -51,15 +51,13 @@ class StatusController(Resource):
                 return {"error": "No song found"}, 404
 
             return {
-                "status": {
-                    "id": song.id,
-                    "title": song.title,
-                    "dt_created": (
-                        song.dt_created.isoformat() if song.dt_created else None
-                    ),
-                    "filename": song.filename,
-                    "processing_status": song.processing_status.value,
-                }
+                "id": song.id,
+                "title": song.title,
+                "dt_created": (
+                    song.dt_created.isoformat() if song.dt_created else None
+                ),
+                "filename": song.filename,
+                "processing_status": song.processing_status.value,
             }, 200
 
         except Exception as e:

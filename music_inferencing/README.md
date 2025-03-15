@@ -13,7 +13,7 @@ From the terminal go to the `music_queue` directory.
 
 **Note**: The first time run will be slow because it needs to download the models.
 
-1. Create an virtual environment with conda: `conda create -n music_inferencing python=3.12`
+1. Create an virtual environment with conda: `conda create -n music_inferencing python=3.11.10`
 2. Activate the environment: `conda activate music_inferencing`
 3. Install requirements: `pip install -r requirements.txt`
 
@@ -139,6 +139,7 @@ source music/bin/activate
 flask run --port=5001 --host=0.0.0.0
 ```
 
+or run: `./runpod_start.sh`
 
 # Common Errors
 
