@@ -116,7 +116,8 @@ class InferenceThread(BackgroundThread):
 
                     s3_enabled = os.environ.get("S3_ENABLED")
 
-                    if s3_enabled == "True":
+                    if s3_enabled == "true":
+                        logging.info(f"Uploading song {song.id} to S3")
                         with open(file_path, "rb") as f:
                             file_data = f.read()
                             upload_file(
