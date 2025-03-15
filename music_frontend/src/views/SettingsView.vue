@@ -32,18 +32,14 @@ export default {
 
 
         const submitForm = async (formData) => {
-             lrc = formData.lrc;
-             lrcModel = formData.lrcModel;
-             poet = formData.poet;
-             poetModel = formData.poetModel;
 
             if (!formData || !formData.lrc || !formData.poet || !formData.lrcModel || !formData.poetModel) {
                 console.warn('submitForm received empty data, ignoring.');
                 return;
             }
 
-            await updateModel(lrc, lrcModel, "lrc");
-            await updateModel(poet, poetModel, "poet");
+            await updateModel(formData.lrc, formData.lrcModel, "LRC");
+            await updateModel(formData.poet, formData.poetModel, "POET");
 
         };
 
