@@ -41,13 +41,13 @@ By default this will run at http://127.0.0.1:5001 with API documents available a
 ## Installation RunPod
 
 1. Select your GPU
-2. Select: Torch 2.4.0 
+2. Select: Torch 2.4.0 and Ubuntu 22
 3. Edit the template and expose port 5001
 3. SSH to the Machine
 
 ```bash
 apt-get update && apt-get upgrade -y
-apt-get install espeak-ng
+apt-get install espeak-ng unzip
 cd /workspace
 git clone https://github.com/diskrotrepo/music.git
 cd music/music_inferencing
@@ -63,6 +63,71 @@ flask db migrate
 flask db update
 flask run --port=5001 --host=0.0.0.0
 ```
+
+## S3 
+
+You can write the output to S3. If you do this be sure to update the .env for these properties:
+
+```
+S3_ENABLED=true
+S3_BUCKET_NAME=<YourBucketName>
+```
+
+
+Then update the follow permissions for your bucket.
+
+**CORS**
+
+```json
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    }
+]
+```
+
+**Bucket Policy**
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::<YourBucketName>/*"
+        }
+    ]
+}
+```
+
+
+Finally create an IAM user with access to read and write data to an S3 bucket, and create credentials which you'll use when installing the AWS CLI tool.
+
+
+Then install the AWS CLI tool. 
+
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+aws configure
+```
+
+
 
 ## Running Post Install RunPod
 

@@ -12,9 +12,14 @@ from diffrhythm.infer.infer import generate
 from music_shared.lrc import get_default_lrc_prompt
 from music_shared.models import Music, MusicProcessingEnum, Prompt
 from music_inferencing.extensions import db
+from music_inferencing.s3_storage import upload_file
 
 
 TASKS_QUEUE = Queue()
+
+PROJECT_ROOT_DIR = os.path.abspath(os.path.dirname(__file__)).replace(
+    "music_inferencing", ""
+)
 
 
 class BackgroundThread(threading.Thread, ABC):
@@ -70,7 +75,7 @@ class InferenceThread(BackgroundThread):
                 songs = query.all()
 
                 for song in songs:
-                    song.status = MusicProcessingEnum.IN_PROGRESS
+                    song.processing_status = MusicProcessingEnum.IN_PROGRESS
                     db.session.commit()
                     logging.info(f"Processing song {song.id}")
 
@@ -105,7 +110,24 @@ class InferenceThread(BackgroundThread):
                         use_embeddings=False,
                     )
 
-                    song.status = MusicProcessingEnum.COMPLETE
+                    file_path = os.path.join(
+                        PROJECT_ROOT_DIR, "music_output", f"{song.id}.wav"
+                    )
+
+                    s3_enabled = os.environ.get("S3_ENABLED")
+
+                    if s3_enabled == "True":
+                        with open(file_path, "rb") as f:
+                            file_data = f.read()
+                            upload_file(
+                                file_data,
+                                os.environ.get("S3_BUCKET_NAME"),
+                                f"{song.id}.wav",
+                            )
+
+                        os.remove(file_path)
+
+                    song.processing_status = MusicProcessingEnum.COMPLETE
                     db.session.commit()
                     logging.info(f"Completed song {song.id}")
         except queue.Empty:
