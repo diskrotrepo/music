@@ -10,17 +10,27 @@ api = Namespace("status", description="Queue Status related APIs")
 queue_status_definition = api.model(
     "Queue Status",
     {
+        "id": fields.String(
+            required=True,
+            description="The id of the song in the queue",
+            example="b7e6a5d9-5f42-4a8b-9a38-47ef2e2a8df1",
+        ),
         "title": fields.String(
             required=True,
             description="Title for your song",
             example="Banger #1",
+        ),
+        "filename": fields.String(
+            required=True,
+            description="The filename of the song in the queue",
+            example="s3://bucket/folder/song.wav",
         ),
         "dt_created": fields.DateTime(
             required=False,
             description="The date the song was created",
             example="2025-03-12T00:00:00+05:00",
         ),
-        "status": fields.String(
+        "processing_status": fields.String(
             required=True,
             description="Current status of the song in the queue",
             example="NEW",

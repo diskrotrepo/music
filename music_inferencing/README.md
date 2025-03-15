@@ -3,7 +3,7 @@
 
 ## Music Inference
 
-blah blahblaha 
+This server handles the longer running inference tasks such as lyric generation (POET), LRC generation, and the music generation.
 
 ## Installation
 
@@ -66,57 +66,14 @@ flask run --port=5001 --host=0.0.0.0
 
 ## S3 
 
+**Note** This assumes you've already follow the README in `infra` to create the required resources.
+
 You can write the output to S3. If you do this be sure to update the .env for these properties:
 
 ```
 S3_ENABLED=true
 S3_BUCKET_NAME=<YourBucketName>
 ```
-
-
-Then update the follow permissions for your bucket.
-
-**CORS**
-
-```json
-[
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "GET",
-            "HEAD"
-        ],
-        "AllowedOrigins": [
-            "*"
-        ],
-        "ExposeHeaders": [],
-        "MaxAgeSeconds": 3000
-    }
-]
-```
-
-**Bucket Policy**
-
-```json
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicReadGetObject",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::<YourBucketName>/*"
-        }
-    ]
-}
-```
-
-
-Finally create an IAM user with access to read and write data to an S3 bucket, and create credentials which you'll use when installing the AWS CLI tool.
-
 
 Then install the AWS CLI tool. 
 
