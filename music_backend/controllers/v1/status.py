@@ -1,9 +1,11 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
+from music_backend.models import Music
 from music_shared.lrc import get_default_lrc_prompt
 import os
 import requests
 import logging
+from music_backend.extensions import db
 
 api = Namespace("status", description="Status related APIs")
 
@@ -69,6 +71,12 @@ class StatusController(Resource):
             if response.json().get("processing_status") == "COMPLETE":
                 data = response.json()
                 data["filename"] = data["filename"].replace("s3://", "")
+
+                db.session.query(Music).filter_by(id=id).update(
+                    {"processing_status": "COMPLETE", "filename": data["filename"]}
+                )
+                db.session.commit()
+
                 return data, 200
 
             return response.json(), 200
