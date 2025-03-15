@@ -86,7 +86,7 @@ class InferenceThread(BackgroundThread):
                         cfg_strength=song.cfg_strength,
                         chunked=True,
                         tags=song.prompt,
-                        lrcPrompt=Prompt(prompt=song.lrc_prompt, model=song.lrc_model),
+                        lrc_prompt=Prompt(prompt=song.lrc_prompt, model=song.lrc_model),
                         negative_tags=song.negative_prompt,
                         use_embeddings=False,
                     )

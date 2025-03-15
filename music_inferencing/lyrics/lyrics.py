@@ -4,14 +4,14 @@ from music_inferencing.extensions import poet_pipeline, lrc_pipeline
 import logging
 
 
-def get_pipeline_results(lyrics, lyricPrompt, pipeline):
+def get_pipeline_results(lyrics, lyric_prompt, pipeline):
 
     if pipeline is None:
         raise ValueError(
             "Pipeline is not initialized! Make sure `register_pipelines()` was called."
         )
 
-    messages = [{"role": "system", "content": lyricPrompt.prompt}]
+    messages = [{"role": "system", "content": lyric_prompt.prompt}]
     messages.append({"role": "user", "content": lyrics})
 
     logging.info(messages)
@@ -85,7 +85,7 @@ def write_lyrics(lyrics, prompt):
     return poetLyrics
 
 
-def calculate_lrc(lyrics, prompt):
+def calculate_lrc(lyrics, lrc_prompt):
 
     llm_source = os.environ.get("LLM_SOURCE")
     if llm_source not in {"huggingface", "local", "openai"}:
@@ -94,7 +94,7 @@ def calculate_lrc(lyrics, prompt):
         )
 
     if llm_source == "huggingface":
-        return get_pipeline_results(lyrics, prompt, lrc_pipeline)
+        return get_pipeline_results(lyrics, lrc_prompt, lrc_pipeline)
 
     if os.environ.get("USE_LOCAL_LLM"):
         print("Using local LLM")
@@ -112,14 +112,14 @@ def calculate_lrc(lyrics, prompt):
         messages=[
             {
                 "role": "system",
-                "content": prompt.prompt,
+                "content": lrc_prompt.prompt,
             },
             {
                 "role": "user",
                 "content": lyrics,
             },
         ],
-        model=prompt.model,
+        model=lrc_prompt.model,
     )
 
     lrc = chat_completion.choices[0].message.content

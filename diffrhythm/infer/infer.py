@@ -97,7 +97,7 @@ def generate(
     cfg_strength,
     chunked,
     tags,
-    lrcPrompt=Prompt,
+    lrc_prompt=Prompt,
     negative_tags=None,
     use_embeddings=False,
 ):
@@ -124,7 +124,7 @@ def generate(
     cfm, tokenizer, muq, vae = prepare_model(device)
 
     if lyrics != "":
-        lrc = calculate_lrc(lyrics, lrcPrompt)
+        lrc = calculate_lrc(lyrics, lrc_prompt)
     else:
         lrc = ""
 
