@@ -124,7 +124,12 @@ class InferenceThread(BackgroundThread):
 
                         os.remove(file_path)
 
-                    song.filename = f"{id}.wav"
+                        song.filename = (
+                            f"s3://{os.environ.get('S3_BUCKET_NAME')}/{song.filename}"
+                        )
+                    else:
+                        song.filename = file_path
+
                     song.processing_status = MusicProcessingEnum.COMPLETE
                     db.session.commit()
                     logging.info(f"Completed song {song.id}")
