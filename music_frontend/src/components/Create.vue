@@ -6,6 +6,10 @@
             <input v-model="tags" type="text" placeholder="tags" size="50" />
             <textarea v-model="lyrics" rows="10" cols="40" placeholder="Enter lyrics..."></textarea>
             <p>
+                <b>Duration</b>
+                <input v-model="duration" type="number" placeholder="duration" size="5" />
+            </p>
+            <p>
                 <b>Steps</b>
                 <input v-model="steps" type="number" placeholder="steps" size="5" />
             </p>
@@ -32,6 +36,7 @@ export default {
         const tags = ref("");
         const title = ref("");
         const steps = ref(32);
+        const duration = ref(95);
         const cfg_strength = ref(6.0);
 
         const handleSubmit = () => {
@@ -40,6 +45,7 @@ export default {
                 tags: tags.value,
                 title: title.value,
                 steps: steps.value,
+                duration: duration.value,
                 cfg_strength: cfg_strength.value,
             });
         };
@@ -63,7 +69,7 @@ export default {
             }
         };
 
-        return { lyrics, tags, title, steps, cfg_strength, handleSubmit, generateLyrics };
+        return { lyrics, tags, title, steps, cfg_strength, duration, handleSubmit, generateLyrics };
     },
 };
 </script>

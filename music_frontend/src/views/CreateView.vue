@@ -50,6 +50,7 @@ export default {
             const lyrics = formData.lyrics;
             const tags = formData.tags;
             const title = formData.title;
+            const duration = formData.duration == 0 ? 95 : Number(formData.duration);
             const steps = formData.steps == 0 ? 32 : Number(formData.steps);
             const cfg_strength = formData.cfg_strength == 0 ? 6.0 : Number(formData.cfg_strength);
 
@@ -62,7 +63,7 @@ export default {
                     body: JSON.stringify({
                         title: title,
                         lyrics: lyrics,
-                        duration: 95,
+                        duration: duration,
                         steps: steps,
                         cfg_strength: cfg_strength,
                         chunked: true,

@@ -97,6 +97,7 @@ def generate(
     cfg_strength,
     chunked,
     tags,
+    music_model,
     lrc_prompt=Prompt,
     negative_tags=None,
     use_embeddings=False,
@@ -121,7 +122,7 @@ def generate(
     else:
         raise ValueError(f"Unsupported audio_length: {audio_length}")
 
-    cfm, tokenizer, muq, vae = prepare_model(device)
+    cfm, tokenizer, muq, vae = prepare_model(device, music_model)
 
     if lyrics != "":
         lrc = calculate_lrc(lyrics, lrc_prompt)

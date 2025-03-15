@@ -87,7 +87,7 @@ def decode_audio(latents, vae_model, chunked=False, overlap=32, chunk_size=128):
         return y_final
 
 
-def prepare_model(device, repo_id="ASLP-lab/DiffRhythm-base"):
+def prepare_model(device, repo_id):
     # prepare cfm model
     dit_ckpt_path = hf_hub_download(
         repo_id=repo_id, filename="cfm_model.pt", cache_dir=PRETRAINED_DIR
