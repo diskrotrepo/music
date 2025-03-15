@@ -66,6 +66,11 @@ class StatusController(Resource):
                     "error": f"No song found at {check_status_url}"
                 }, response.status_code
 
+            if response.json().get("processing_status") == "COMPLETE":
+                data = response.json()
+                data["filename"] = data["filename"].replace("s3://", "")
+                return data, 200
+
             return response.json(), 200
 
         except Exception as e:

@@ -127,7 +127,7 @@ class MusicGenerationController(Resource):
                 return {"id": task_id}
             except Exception as e:
                 return {
-                    "error": f"Unable to submit task to inference server {submit_task_url}"
+                    "error": f"Unable to submit task to inference server {submit_task_url} - {str(e)}"
                 }, 500
 
         except Exception as e:
