@@ -6,8 +6,7 @@ from music_inferencing.extensions import register_extensions
 from music_inferencing.apiv1 import blueprint as api1
 import time
 from music_inferencing.extensions import db
-from music_shared.lrc import get_default_lrc_prompt
-from music_shared.models import Music, Prompt
+from music_inferencing.models import Music, Prompt
 from diffrhythm.infer import generate
 import threading
 import time

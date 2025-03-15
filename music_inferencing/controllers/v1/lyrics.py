@@ -2,9 +2,8 @@ from flask_restx import Namespace, Resource, fields
 from flask import request
 from music_backend.lyrics import write_lyrics
 from music_inferencing.models import Prompt, PromptyCategoryEnum
-from music_backend.extensions import db
-from music_backend.controllers.v1.prompt import get_default_poet_prompt
-
+from music_inferencing.extensions import db
+import os
 
 api = Namespace("lyrics", description="Lyric related APIs")
 
@@ -56,3 +55,19 @@ class PoetController(Resource):
 
         except Exception as e:
             return {"error": str(e)}, 500
+
+
+def get_default_poet_prompt():
+    """Reads the poet prompt from music_backend/config/poetDefault.txt."""
+
+    prompt_path = os.path.join("config", "poetDefault.txt")
+
+    try:
+        with open(prompt_path, "r", encoding="utf-8") as file:
+            return file.read().strip()
+    except FileNotFoundError:
+        print(f"Error: Missing {prompt_path}")
+        return None
+    except Exception as e:
+        print(f"Error reading {prompt_path}: {e}")
+        return None

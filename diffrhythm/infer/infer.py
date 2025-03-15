@@ -23,7 +23,7 @@ import uuid
 import logging
 from music_inferencing.lyrics import calculate_lrc
 
-from music_shared.models import Prompt
+from music_inferencing.models import Prompt
 
 import os
 

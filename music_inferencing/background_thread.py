@@ -9,8 +9,7 @@ from typing import Dict
 import os
 
 from diffrhythm.infer.infer import generate
-from music_shared.lrc import get_default_lrc_prompt
-from music_shared.models import Music, MusicProcessingEnum, Prompt
+from music_inferencing.models import Music, MusicProcessingEnum, Prompt
 from music_inferencing.extensions import db
 from music_inferencing.s3_storage import upload_file
 
