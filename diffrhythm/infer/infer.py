@@ -167,4 +167,4 @@ def generate(
     logging.info(f"Writing file to {output_path}")
 
     torchaudio.save(output_path, generated_song, sample_rate=44100)
-    return id
+    return output_path

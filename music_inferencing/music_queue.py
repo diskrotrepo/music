@@ -42,6 +42,7 @@ def create_app():
         generation_id = str(uuid.uuid4())
 
         new_music = Music(
+            id=generation_id,
             filename=f"{generation_id}.wav",
             title=task.get("title"),
             lyrics=task.get("lyrics"),
@@ -57,8 +58,7 @@ def create_app():
         db.session.add(new_music)
         db.session.commit()
 
-        # TASKS_QUEUE.put(task)
-        return jsonify({"success": "OK"})
+        return jsonify({"id": generation_id})
 
     notification_thread = BackgroundThreadFactory.create(
         BackgroundThreadType.INFERENCE, app

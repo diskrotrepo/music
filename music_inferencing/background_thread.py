@@ -97,7 +97,7 @@ class InferenceThread(BackgroundThread):
                     else:
                         lrcPrompt = lrcPromptResult
 
-                    id = generate(
+                    file_path = generate(
                         lyrics=song.lyrics,
                         input_file=song.input_file,
                         audio_length=song.duration,
@@ -108,10 +108,6 @@ class InferenceThread(BackgroundThread):
                         lrcPrompt=lrcPrompt,
                         negative_tags=song.negative_prompt,
                         use_embeddings=False,
-                    )
-
-                    file_path = os.path.join(
-                        PROJECT_ROOT_DIR, "music_output", f"{id}.wav"
                     )
 
                     s3_enabled = os.environ.get("S3_ENABLED")
