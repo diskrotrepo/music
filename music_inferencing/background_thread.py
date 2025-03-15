@@ -97,7 +97,7 @@ class InferenceThread(BackgroundThread):
                     else:
                         lrcPrompt = lrcPromptResult
 
-                    generate(
+                    id = generate(
                         lyrics=song.lyrics,
                         input_file=song.input_file,
                         audio_length=song.duration,
@@ -111,13 +111,13 @@ class InferenceThread(BackgroundThread):
                     )
 
                     file_path = os.path.join(
-                        PROJECT_ROOT_DIR, "music_output", song.filename
+                        PROJECT_ROOT_DIR, "music_output", f"{id}.wav"
                     )
 
                     s3_enabled = os.environ.get("S3_ENABLED")
 
                     if s3_enabled == "true":
-                        logging.info(f"Uploading song {song.filename} to S3")
+                        logging.info(f"Uploading song {file_path} to S3")
                         with open(file_path, "rb") as f:
                             file_data = f.read()
                             upload_file(
@@ -128,6 +128,7 @@ class InferenceThread(BackgroundThread):
 
                         os.remove(file_path)
 
+                    song.filename = f"{id}.wav"
                     song.processing_status = MusicProcessingEnum.COMPLETE
                     db.session.commit()
                     logging.info(f"Completed song {song.id}")
