@@ -22,3 +22,7 @@ music_queue/venv/**
 music_backend/env/**
 env.bat
 diskrot.db
+infra/aws/.terraform/**
+infra/aws/terraform.tfstate
+infra/aws/terraform.tfstate.backup
+infra/aws/.terraform.lock.hcl

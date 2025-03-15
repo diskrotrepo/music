@@ -19,6 +19,10 @@ This fork is focused on the specific needs for the diskrot community. The origin
 
 1. Clone the repo: `git clone https://github.com/diskrotrepo/music.git`
 
+**Setup Infrastructure**
+
+Follow the README within `infra`
+
 **Setup Music Backend**
 
 Follow the README within `music_backend`
