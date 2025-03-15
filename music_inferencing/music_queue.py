@@ -50,6 +50,8 @@ def create_app():
             input_file=task.get("input"),
             duration=task.get("duration"),
             steps=task.get("steps"),
+            lrc_prompt=task.get("lrc_prompt"),
+            lrc_model=task.get("lrc_model"),
             cfg_strength=task.get("cfg_strength"),
             model="unknown",
         )
