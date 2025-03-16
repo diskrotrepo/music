@@ -27,7 +27,7 @@
         >
       </li>
       <li class="socialLinks">
-        <a href="http://127.0.0.1:5000/api/v1/docs" target="_new"
+        <a href="http://localhost:3000/api/v1/docs" target="_new"
           ><i class="fa-solid fa-book socialLinks"></i> API</a
         >
       </li>

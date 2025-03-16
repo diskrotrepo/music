@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { db } from './database';
 
 
-interface Prompt {
+export interface Prompt {
     prompt: string
     model: string
     category: string
@@ -11,7 +12,17 @@ interface Prompt {
 export class PromptController {
 
     public updatePrompt(req: Request, res: Response): void {
-        const { id } = req.params;
+        const prompt: Prompt = req.body as Prompt;
+        const query = `
+        UPDATE prompt SET prompt = ?, model = ?
+        WHERE category = ?    
+        `;
+
+        db.prepare(query).run([
+            prompt.prompt,
+            prompt.model,
+            prompt.category
+        ]);
 
         const data = { success: true };
 
@@ -21,14 +32,20 @@ export class PromptController {
     public getPrompt(req: Request, res: Response): void {
         const { id } = req.params;
 
-        const data = {
-            "prompt": "Take the input, and produce an Simple LRC format file which takes into account time required to sing the previous line. \n            Time tags have the format [mm:ss.xx]lyric , where mm is minutes, ss is seconds, xx is hundredths of a second, \n            and lyric is the lyric to be played at that time. Do not provide any other information. I require just the file.\n\n            Example output:\n\n            [00:12.00]Line 1 lyrics\n            [00:17.20]Line 2 lyrics",
-            "model": "llama-3.2-3b-instruct",
-            "category": "LRC",
-            "is_default": true
+        if (!id) {
+            res.status(400).json({ error: "Missing id parameter" });
+            return;
         }
 
-        res.json(data);
+        const query = `SELECT * FROM prompt WHERE category = ? AND is_default = 1`;
+        const prompt = db.prepare(query).get(id) as Prompt | undefined;
+
+        if (!prompt) {
+            res.status(404).json({ error: `Prompt ${id} not found` });
+            return;
+        }
+
+        res.json(prompt);
     }
 
 }

@@ -1,20 +1,50 @@
 import { Request, Response } from 'express';
+import { db } from './database';
+import configuration from '../../config/configuration.json'
 
 export class StatusController {
 
-    public getStatus(req: Request, res: Response): void {
+    async getStatus(req: Request, res: Response): Promise<void> {
+
         const { id } = req.params;
 
-        const data = {
-            status: {
-                "id": "b7e6a5d9-5f42-4a8b-9a38-47ef2e2a8df1",
-                "title": "Banger #1",
-                "filename": "s3://bucket/folder/song.wav",
-                "dt_created": "2025-03-12T00:00:00+05:00",
-                "processing_status": "NEW"
-            }
-        };
+        const endpoint = `/api/v1/status/${id}`;
+        const checkStatusUrl = `${configuration.inference_server}/${endpoint}`;
 
-        res.json(data);
+        console.info(`Checking status of song with id: ${id}`);
+
+        try {
+            const response = await fetch(checkStatusUrl);
+
+
+            if (!response.ok) {
+                res.status(response.status).json({ error: `No song found at ${checkStatusUrl}` });
+                return;
+            }
+
+            const data = await response.json();
+
+
+            if (data.processing_status === "COMPLETE") {
+
+                data.filename = data.filename.replace("s3://", "");
+
+                const updateQuery = `
+                    UPDATE music
+                    SET processing_status = ?, filename = ?
+                    WHERE id = ?
+                `;
+
+                db.prepare(updateQuery).run("COMPLETE", data.filename, id);
+
+                res.status(200).json(data);
+                return;
+            }
+
+            res.status(200).json(data);
+        } catch (error: any) {
+            console.error("Error checking song status:", error);
+            res.status(500).json({ error: error.message || "Internal server error" });
+        }
     }
 }

@@ -1,4 +1,7 @@
 import { Request, Response } from 'express';
+import { db } from './database';
+import { Prompt } from './prompt';
+import configuration from '../../config/configuration.json'
 
 interface MusicGenerationRequest {
     title: string
@@ -13,12 +16,71 @@ interface MusicGenerationRequest {
 
 export class MusicController {
 
-    public generate(req: Request, res: Response): void {
-        const { id } = req.params;
+    async generate(req: Request, res: Response): Promise<void> {
+        // #swagger.tags = ['Music']
+        const data = req.body || {};
 
-        const data = { id, status: 'Active' };
+        const endpoint = "/task";
+        const submitTaskUrl = `${configuration.inference_server}/${endpoint}`;
+        console.info(`Submitting task to ${submitTaskUrl}`);
 
-        res.json(data);
+        const promptQuery = `
+        SELECT * FROM prompt 
+        WHERE is_default = 1 AND category = ? 
+        LIMIT 1
+        `;
+
+        const lrcPromptResult: Prompt | undefined = db.prepare(promptQuery).get("LRC") as Prompt;
+
+        const response = await fetch(`${configuration.api}/lyrics/poet`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                lyrics: data.lyrics,
+                duration: data.duration,
+                steps: data.steps,
+                title: data.title,
+                cfg_strength: data.cfg_strength,
+                tags: data.tags,
+                lrc_prompt: lrcPromptResult.prompt,
+                lrc_model: lrcPromptResult.model,
+                negative_tags: data.negative_tags,
+            })
+        });
+
+        if (!response.ok) {
+            res.status(500).json({ error: "Failed to submit task" });
+            return;
+        }
+
+
+        const submitTaskResponse: { id: string } = await response.json() as { id: string };
+
+        const newMusicQuery = `
+        INSERT INTO music (
+            id, filename, title, lyrics, prompt, inference_server, lrc_prompt, 
+            lrc_model, negative_prompt, input_file, duration, steps, cfg_strength, model, dt_created
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        `;
+        db.prepare(newMusicQuery).run(
+            submitTaskResponse.id,
+            "not available",
+            data.title,
+            data.lyrics,
+            data.tags,
+            submitTaskUrl,
+            lrcPromptResult.prompt,
+            lrcPromptResult.model,
+            data.negative_tags,
+            data.input,
+            data.duration,
+            data.steps,
+            data.cfg_strength,
+            "unknown"
+        );
+
+        res.json({ id: submitTaskResponse.id });
+
     }
-
 }

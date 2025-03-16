@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
 import started from 'electron-squirrel-startup'
 import { startServer } from './server/server';
-//import { initDatabase } from './server/database';
+import { initDatabase } from './server/database';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -28,14 +28,14 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  // initDatabase();
+  initDatabase();
   createWindow();
   startServer();
 
