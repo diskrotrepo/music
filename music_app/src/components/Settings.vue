@@ -87,7 +87,11 @@ export default {
 
 <style scoped>
 .content {
-  margin-left: 220px;
-  padding: 20px;
+  margin-left: 20px;
+  padding: 10px;
+}
+
+h1 {
+  color: white;
 }
 </style>

@@ -48,18 +48,23 @@ export class MusicController {
             })
         });
 
+        /*
         if (!response.ok) {
+
             res.status(500).json({ error: "Failed to submit task" });
             return;
         }
 
 
         const submitTaskResponse: { id: string } = await response.json() as { id: string };
+        */
+        const submitTaskResponse: { id: string } = { id: "yup" }
+
 
         const newMusicQuery = `
         INSERT INTO music (
-            id, filename, title, lyrics, prompt, inference_server, lrc_prompt, 
-            lrc_model, negative_prompt, input_file, duration, steps, cfg_strength, model, dt_created
+            id, filename, title, lyrics, tags, inference_server, lrc_prompt, 
+            lrc_model, negative_tags, input_file, duration, steps, cfg_strength, model, dt_created
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
         `;

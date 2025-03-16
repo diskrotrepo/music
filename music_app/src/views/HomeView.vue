@@ -1,6 +1,14 @@
 <template>
   <div class="content">
-    <h1>Home</h1>
-    <p>Welcome to the Home Page!</p>
+    <h1>diskrot</h1>
+    <p></p>
   </div>
 </template>
+
+<style scoped>
+
+h1 {
+  color: white
+}
+
+</style>

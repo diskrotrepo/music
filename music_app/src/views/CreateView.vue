@@ -155,35 +155,25 @@ export default {
 .content {
   display: flex;
   height: 100vh;
-}
-
-.response {
-  margin-top: 10px;
-  font-weight: bold;
-  color: green;
+  width: 100%;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 
 .column.left {
-  flex: 0 0 400px; /* Fixed width; adjust as needed */
+  flex: 0 0 500px; 
   overflow: hidden;
- 
- 
 }
 
 .column.right {
-  flex: 1;  
+  flex: 0 0 auto;  
   overflow-y: auto;
   width: 100%;
 }
 
-.library-column {
-  background-color: green;
-  height: 100px;
-}
+
+
 </style>

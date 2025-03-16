@@ -1,24 +1,17 @@
 <template>
-  <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6">Music Library</h1>
+  <div class="content">
+    <div class="column left">
+      <Create @submit="submitForm" />
+      <p v-if="generatingMusic" class="response">{{ generatingMusic }}</p>
 
-    <!-- Buttons to toggle between Library/Trash & Favorites -->
-    <div class="mb-4 flex space-x-4">
-      <button @click="toggleListView" class="px-4 py-2 bg-blue-500 text-white rounded">
-        {{ listView === 'library' ? 'View Trash' : 'View Library' }}
-      </button>
-
-      <button @click="toggleFavorite" class="px-4 py-2 bg-green-500 text-white rounded">
-        {{ showFavorites ? 'Show All Songs' : 'Show Favorites' }}
-      </button>
+      <audio v-if="taskId && !generatingMusic" controls>
+        <source :src="`${soundFile}`" type="audio/wav" />
+        Your browser does not support the audio element.
+      </audio>
     </div>
-
-    <!-- Loading & Error Messages -->
-    <p v-if="loading" class="text-gray-500">Loading...</p>
-    <p v-if="error" class="text-red-500">{{ error }}</p>
-
-    <!-- Music Library Component -->
-    <Library v-if="!loading && !error" :songs="songs" />
+    <div class="column right">
+      <Library v-if="!loading && !error" :songs="songs" />
+    </div>
   </div>
 </template>
 
@@ -26,6 +19,7 @@
 import { ref, onMounted, watch } from 'vue'
 import Library from '../components/Library.vue'
 import configuration from '../../config/configuration.json'
+
 
 export default {
   components: {
@@ -88,3 +82,31 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.content {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.column.left {
+  flex: 0 0 500px; 
+  overflow: hidden;
+  background-color: blue;
+}
+
+.column.right {
+  flex: 0 0 auto;  
+  overflow-y: auto;
+  width: 100%;
+  background-color: red;
+}
+
+</style>

@@ -55,4 +55,8 @@ export default {
   font-weight: bold;
   color: green;
 }
+
+body{
+  color: white
+}
 </style>
