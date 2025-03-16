@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import configuration from '../../config/configuration.json'
+
 export default {
   props: {
     songs: {
@@ -38,7 +40,7 @@ export default {
     },
     async favoriteSong(id) {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/v1/library/song/${id}/action/favorite`,
+        `${configuration.api}/library/song/${id}/action/favorite`,
         {
           method: 'POST'
         }
@@ -50,7 +52,7 @@ export default {
 
     async deleteSong(id) {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/v1/library/song/${id}/action/delete`,
+        `${configuration.api}/library/song/${id}/action/delete`,
         {
           method: 'POST'
         }
@@ -61,7 +63,7 @@ export default {
     },
     async unfavoriteSong(id) {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/v1/library/song/${id}/action/unfavorite`,
+        `${configuration.api}/library/song/${id}/action/unfavorite`,
         {
           method: 'POST'
         }
@@ -72,7 +74,7 @@ export default {
     },
     async restoreSong(id) {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/v1/library/song/${id}/action/restore`,
+        `${configuration.api}/library/song/${id}/action/restore`,
         {
           method: 'POST'
         }

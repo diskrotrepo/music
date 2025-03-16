@@ -25,6 +25,7 @@
 <script>
 import { ref, onMounted, watch } from 'vue'
 import Library from '../components/Library.vue'
+import configuration from '../../config/configuration.json'
 
 export default {
   components: {
@@ -42,7 +43,7 @@ export default {
       error.value = null
 
       try {
-        let url = `http://127.0.0.1:5000/api/v1/library?list_view=${listView.value}`
+        let url = `${configuration.api}/library?list_view=${listView.value}`
         if (showFavorites.value) {
           url += '&favorite=true' // Apply favorite filter if toggled on
         }

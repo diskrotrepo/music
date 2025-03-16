@@ -15,6 +15,7 @@
 
 <script>
 import { ref, onMounted } from 'vue'
+import configuration from '../../config/configuration.json'
 
 export default {
   setup(_, { emit }) {
@@ -25,7 +26,7 @@ export default {
 
     const fetchPrompt = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/v1/prompt/LRC')
+        const response = await fetch(`${configuration.api}/prompt/LRC`)
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
@@ -46,7 +47,7 @@ export default {
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/v1/prompt/POET')
+        const response = await fetch(`${configuration.api}/prompt/POET`)
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)

@@ -30,6 +30,7 @@
     "@electron-forge/plugin-fuses": "^7.7.0",
     "@electron-forge/plugin-vite": "^7.7.0",
     "@electron/fuses": "^1.8.0",
+    "@types/sqlite3": "^3.1.11",
     "@vitejs/plugin-vue": "^5.2.1",
     "electron": "35.0.1",
     "eslint": "^8.34.0",
@@ -41,8 +42,13 @@
     "vue-tsc": "^1.2.0"
   },
   "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.10",
     "electron-squirrel-startup": "^1.0.1",
+    "express": "^4.21.2",
     "pinia": "^2.0.32",
+    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
     "vue": "^3.5.13",
     "vue-router": "^4.1.6"
   }

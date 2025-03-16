@@ -19,6 +19,7 @@
 import { ref, onMounted, watch } from 'vue'
 import Create from '../components/Create.vue'
 import Library from '../components/Library.vue'
+import configuration from '../../config/configuration.json'
 
 
 export default {
@@ -40,7 +41,7 @@ export default {
       error.value = null
 
       try {
-        let url = `http://127.0.0.1:5000/api/v1/library?list_view=${listView.value}`
+        let url = `${configuration.api}/library?list_view=${listView.value}`
         if (showFavorites.value) {
           url += '&favorite=true' // Apply favorite filter if toggled on
         }
@@ -60,7 +61,7 @@ export default {
 
     const pollStatus = async (id, intervalId) => {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/api/v1/status/${id}`)
+        const response = await fetch(`${configuration.api}/status/${id}`)
         if (!response.ok) throw new Error('Failed to check status.')
 
         const data = await response.json()
@@ -95,7 +96,7 @@ export default {
       generatingMusic.value = `${percentComplete.value}% - Generating music...`
 
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/v1/music/generate', {
+        const response = await fetch(`${configuration.api}/music/generate`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

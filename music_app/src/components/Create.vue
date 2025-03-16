@@ -56,7 +56,7 @@
 
 <script>
 import { ref } from 'vue'
-
+import configuration from '../../config/configuration.json'
 
 export default {
   setup(_, { emit }) {
@@ -85,7 +85,7 @@ export default {
 
     const generateLyrics = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/v1/lyrics/poet', {
+        const response = await fetch(`${configuration.api}/lyrics/poet`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ lyrics: lyrics.value })
