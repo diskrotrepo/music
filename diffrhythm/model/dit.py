@@ -43,7 +43,7 @@ from diffrhythm.model.modules import (
 
 # Text embedding
 class TextEmbedding(nn.Module):
-    def __init__(self, text_num_embeds, text_dim, conv_layers=0, conv_mult=2):
+    def __init__(self, text_num_embeds, text_dim, max_pos, conv_layers=0, conv_mult=2):
         super().__init__()
         self.text_embed = nn.Embedding(
             text_num_embeds + 1, text_dim
@@ -51,7 +51,7 @@ class TextEmbedding(nn.Module):
 
         if conv_layers > 0:
             self.extra_modeling = True
-            self.precompute_max_pos = 4096  # ~44s of 24khz audio
+            self.precompute_max_pos = max_pos  # ~44s of 24khz audio
             self.register_buffer(
                 "freqs_cis",
                 precompute_freqs_cis(text_dim, self.precompute_max_pos),
@@ -133,17 +133,18 @@ class DiT(nn.Module):
         text_dim=None,
         conv_layers=0,
         long_skip_connection=False,
+        max_frames=2048
     ):
         super().__init__()
 
+        self.max_frames = max_frames
+        
         cond_dim = 512
         self.time_embed = TimestepEmbedding(cond_dim)
         self.start_time_embed = TimestepEmbedding(cond_dim)
         if text_dim is None:
             text_dim = mel_dim
-        self.text_embed = TextEmbedding(
-            text_num_embeds, text_dim, conv_layers=conv_layers
-        )
+        self.text_embed = TextEmbedding(text_num_embeds, text_dim, conv_layers=conv_layers, max_pos=self.max_frames,)
         self.input_embed = InputEmbedding(mel_dim, text_dim, dim, cond_dim=cond_dim)
 
         self.dim = dim

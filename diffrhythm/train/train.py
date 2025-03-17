@@ -37,12 +37,13 @@ def main():
         model_cls = DiT
 
     model = CFM(
-        transformer=model_cls(**model_config["model"]),
+        transformer=model_cls(**model_config["model"], max_frames=args.max_frames),
         num_channels=model_config["model"]["mel_dim"],
         audio_drop_prob=args.audio_drop_prob,
         cond_drop_prob=args.cond_drop_prob,
         style_drop_prob=args.style_drop_prob,
         lrc_drop_prob=args.lrc_drop_prob,
+        max_frames=args.max_frames
     )
 
     total_params = sum(p.numel() for p in model.parameters())

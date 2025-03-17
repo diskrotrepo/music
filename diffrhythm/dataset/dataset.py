@@ -80,7 +80,8 @@ class DiffusionDataset(torch.utils.data.Dataset):
         else:
             raise
         
-        lrc_with_time = lrc_with_time[:-1] if len(lrc_with_time) >= 1 else lrc_with_time # drop last, can be empty
+        if self.max_frames == 2048:
+            lrc_with_time = lrc_with_time[:-1] if len(lrc_with_time) >= 1 else lrc_with_time # drop last, can be empty
 
         lrc = torch.zeros((self.max_frames,), dtype=torch.long)
         
