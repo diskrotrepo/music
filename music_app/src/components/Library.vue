@@ -77,7 +77,7 @@ export default {
 }
 
 .song {
-  flex-basis: 500px;
+
   background-color: rgb(32, 32, 38);
   margin-bottom: 10px;
   padding: 10px;
@@ -89,8 +89,6 @@ export default {
   font-size: 1.1em;
   font-weight: bold;
 }
-
-
 
 button {
   background: none;

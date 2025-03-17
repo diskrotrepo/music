@@ -26,3 +26,4 @@ infra/aws/.terraform/**
 infra/aws/terraform.tfstate
 infra/aws/terraform.tfstate.backup
 infra/aws/.terraform.lock.hcl
+music_app/diskrot.db-shm

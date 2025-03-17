@@ -3,12 +3,13 @@
     <h1>Settings</h1>
     <form @submit.prevent="handleSubmit">
       <textarea v-model="lrc" rows="15" cols="45" placeholder="LRC Prompt"></textarea>
-      <input v-model="lrcModel" type="text" placeholder="lrc model" size="50" />
       <textarea v-model="poet" rows="15" cols="45" placeholder="Lyric Generator"></textarea>
-      <input v-model="poetModel" type="text" placeholder="poet model" size="50" />
-      <p>
-        <input type="submit" value="Save" />
-      </p>
+
+      <div class="save-button">
+        <button class="submitButton pulse" type="submit">
+          Save
+        </button>
+      </div>
     </form>
   </div>
 </template>
@@ -94,4 +95,62 @@ export default {
 h1 {
   color: white;
 }
+
+.save-button {
+  position: relative;
+  left: 330px;
+  margin-top: 40px;
+}
+
+input {
+  background-color: rgb(29, 29, 29);
+  border: none;
+  border-bottom: rgb(203, 203, 203) solid 0.1em;
+  color: rgb(250, 91, 250);
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0.5em 0.5em;
+  outline: none;
+}
+
+textarea {
+  margin: 0.5em 0.5em;
+  background-color: rgb(27, 27, 27);
+  border: none;
+  color: rgb(250, 91, 250);
+  width: 400px;
+  height: 200px;
+  font-size: 1em;
+  font-family: Arial, Helvetica, sans-serif;
+  resize: none;
+}
+
+.submitButton {
+  background-color: rgb(29, 29, 29);
+  border-radius: 0.6em;
+  border: rgb(250, 91, 250) solid 0.1em;
+  padding: 0.5em 0.5em;
+  font-size: 1.2em;
+  color: rgb(255, 255, 255);
+  transition: 0.25s;
+
+  &:hover,
+  &:focus {
+    border-color: rgb(236, 54, 130);
+    color: rgb(250, 91, 250);
+  }
+  
+}
+
+.pulse:hover,
+.pulse:focus {
+  animation: pulse 1s;
+  box-shadow: 0 0 0 1em transparent;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(250, 91, 250);
+  }
+}
+
 </style>

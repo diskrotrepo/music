@@ -8,7 +8,8 @@
 <style scoped>
 
 h1 {
-  color: white
+  color: white;
+  padding-left: 40px;
 }
 
 </style>

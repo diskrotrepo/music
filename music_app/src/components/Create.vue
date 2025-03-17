@@ -149,13 +149,11 @@ h1 {
 .advanced {
   display: none;
   padding: 0.6em;
-  text-align: right;
-  
+  text-align: right; 
 }
 
 .show-advanced {
   display: block;
-  
 }
 
 .options {
@@ -168,7 +166,6 @@ h1 {
   position: relative;
   left: 270px;
   margin-top: 40px;
-
 }
 
 input {
