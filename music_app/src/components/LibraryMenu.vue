@@ -1,8 +1,26 @@
 <template>
     <div class="content">
-        <a href="Songs" class="library-menu">Songs</a> <a href="" class="library-menu">Favorites</a><a href="" class="library-menu">Trash</a> 
+        <a @click="showSongs" class="library-menu">Songs</a>
+        <a @click="showFavorites" class="library-menu">Favorites</a>
+        <a @click="showTrash" class="library-menu">Trash</a>
     </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    showSongs() {
+      this.$emit('menu-select', 'songs')
+    },
+    showFavorites() {
+      this.$emit('menu-select', 'favorites')
+    },
+    showTrash() {
+      this.$emit('menu-select', 'trash')
+    }
+  }
+}
+</script>
 
 <style scoped>
 

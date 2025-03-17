@@ -2,7 +2,7 @@
 
     <div class="content-column">
       <div class="content-row">
-        <LibraryMenu></LibraryMenu>
+        <LibraryMenu @menu-select="handleMenuSelect" />
         <Library v-if="!loading && !error" :songs="songs" />
       </div>
       <div class="lyrics">
@@ -142,6 +142,20 @@ export default {
       toggleFavorite,
       submitForm
     }
+  },
+  methods: {
+    handleMenuSelect(selection) {
+      if (selection === 'songs') {
+        this.listView = 'library'
+        this.showFavorites = false
+      } else if (selection === 'favorites') {
+        this.listView = 'library'
+        this.showFavorites = true
+      } else if (selection === 'trash') {
+        this.listView = 'trash'
+        this.showFavorites = false
+      }
+    },
   }
 }
 </script>

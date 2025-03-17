@@ -8,7 +8,6 @@
             <div class="song-tags"><b>Tags</b> {{ song.tags }}</div>
           </div>
           
-          <!-- Only show progress bar when processing_status is truthy -->
           <div class="progress-bar" v-if="song.processing_status"></div>
         </div>
       </li>
