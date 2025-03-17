@@ -164,7 +164,7 @@ export default {
 }
 
 .column.left {
-  flex: 0 0 500px; 
+  flex: 0 0 490px; 
   overflow: hidden;
 }
 

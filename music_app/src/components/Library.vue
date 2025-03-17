@@ -7,8 +7,11 @@
             <span class="song-title">{{ song.title }}</span>
             <div class="song-tags"><b>Tags</b> {{ song.tags }}</div>
           </div>
+          <div class="song-generating" v-if="song.processing_status === 'COMPLETE'">
+            generating song
+          </div>
           
-          <div class="progress-bar" v-if="song.processing_status"></div>
+          <div class="progress-bar" v-if="song.processing_status === 'COMPLETE'"></div>
         </div>
       </li>
     </ul>
@@ -76,12 +79,16 @@ export default {
 }
 
 .song {
-
   background-color: rgb(32, 32, 38);
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 8px;
   border-radius: 0.8em;
   position: relative; 
+  width: 500px;
+}
+
+.song:hover {
+  background-color: rgba(128, 47, 128, 0.15);
 }
 
 .song-title {
@@ -121,5 +128,13 @@ li {
 @keyframes progressAnimation {
   0% { width: 0%; }
   100% { width: 100%; }
+}
+
+.song-generating {
+  text-align: center;
+  font-weight: bold;
+  background-color: rgb(189, 85, 174);
+  border-radius: 0.4em;
+  font-size: 0.8em;
 }
 </style>

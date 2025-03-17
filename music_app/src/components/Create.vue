@@ -132,7 +132,7 @@ h1 {
 
 .not-advanced {
   position: absolute;
-  left: 400px;  
+  left: 480px;  
 }
 
 .advanced-option-title {
@@ -164,7 +164,7 @@ h1 {
 
 .create-button {
   position: relative;
-  left: 270px;
+  left: 360px;
   margin-top: 40px;
 }
 
@@ -176,6 +176,7 @@ input {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0.5em 0.5em;
   outline: none;
+  width: 480px;
 }
 
 textarea {
@@ -183,7 +184,7 @@ textarea {
   background-color: rgb(27, 27, 27);
   border: none;
   color: rgb(250, 91, 250);
-  width: 400px;
+  width: 480px;
   height: 200px;
   font-size: 1em;
   font-family: Arial, Helvetica, sans-serif;
