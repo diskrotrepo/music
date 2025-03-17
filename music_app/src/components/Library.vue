@@ -2,7 +2,8 @@
   <div class="library">
     <ul v-if="songs.length">
       <li v-for="song in songs" :key="song.lrc_id">
-        <div class="song" :class="{ loading: song.processing_status }">
+
+        <div class="song" :class="{ loading: song.processing_status }" @click="playSong(song)">
           <div class="song-left">
             <span class="song-title">{{ song.title }}</span>
             <div class="song-tags"><b>Tags</b> {{ song.tags }}</div>
@@ -21,6 +22,7 @@
 
 <script>
 import configuration from '../../config/configuration.json'
+import { usePlayerStore } from '../stores/playerStore'
 
 export default {
   props: {
@@ -30,6 +32,12 @@ export default {
     }
   },
   methods: {
+    playSong(song) {
+      song.title = "The summer is warming, the summer is";
+      song.filename = "https://cdn1.suno.ai/c4aa166f-6a12-4d68-89d0-6ecb3c7c375f.mp3";
+      const playerStore = usePlayerStore();
+      playerStore.setCurrentSong(song);
+    },
     formatDate(date) {
       return date ? new Date(date).toLocaleString() : 'Unknown'
     },
