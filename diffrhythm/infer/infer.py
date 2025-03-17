@@ -122,14 +122,14 @@ def generate(
     else:
         raise ValueError(f"Unsupported audio_length: {audio_length}")
 
-    cfm, tokenizer, muq, vae = prepare_model(device, music_model)
+    cfm, tokenizer, muq, vae = prepare_model(max_frames,device, music_model)
 
     if lyrics != "":
         lrc = calculate_lrc(lyrics, lrc_prompt)
     else:
         lrc = ""
 
-    lrc_prompt, start_time = get_lrc_token(lrc, tokenizer, device)
+    lrc_prompt, start_time = get_lrc_token(max_frames,lrc, tokenizer, device)
 
     if input_file:
         input_path = os.path.join("input", input_file)
