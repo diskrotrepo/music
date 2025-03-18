@@ -1,16 +1,40 @@
 <template>
   <div class="content">
-    <h1>Settings</h1>
-    <form @submit.prevent="handleSubmit">
-      <textarea v-model="lrc" rows="15" cols="45" placeholder="LRC Prompt"></textarea>
-      <textarea v-model="poet" rows="15" cols="45" placeholder="Lyric Generator"></textarea>
 
-      <div class="save-button">
-        <button class="submitButton pulse" type="submit">
-          Save
-        </button>
-      </div>
-    </form>
+    <div>
+      <h1>Registration Code</h1>
+
+      <form @submit.prevent="handleRegister">
+        <input type="text" placeholder="Registration Code" />
+        <div class="save-button">
+          <button class="submitButton pulse" type="submit">
+            Register
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <form @submit.prevent="handleSubmit">
+
+        <h3>LRC Prompt</h3>
+        <div class="text">
+          This prompt is used to generate an <a href="https://en.wikipedia.org/wiki/LRC_(file_format)" target="_top">LRC
+            file</a> which determines where your words are placed within a song in time. You can customize this however
+          you want, but of course if it results in an invalid LRC file, then you should expect an error when your
+          request it processed.
+          <textarea v-model="lrc" rows="15" cols="45" placeholder="LRC Prompt"></textarea>
+        </div>
+        <!---<h1>Lyric Generation</h1>
+      <textarea v-model="poet" rows="15" cols="45" placeholder="Lyric Generator"></textarea>
+    -->
+        <div class="save-button">
+          <button class="submitButton pulse" type="submit">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -92,8 +116,19 @@ export default {
   padding: 10px;
 }
 
-h1 {
+h1,
+h3 {
   color: white;
+}
+
+.text {
+  color: white;
+}
+
+a {
+  color: white;
+  text-decoration: underline;
+  font-weight: bolder;
 }
 
 .save-button {
@@ -138,7 +173,7 @@ textarea {
     border-color: rgb(236, 54, 130);
     color: rgb(250, 91, 250);
   }
-  
+
 }
 
 .pulse:hover,
@@ -152,5 +187,4 @@ textarea {
     box-shadow: 0 0 0 0 rgb(250, 91, 250);
   }
 }
-
 </style>

@@ -1,0 +1,37 @@
+{
+  "name": "music_networking",
+  "version": "0.0.1",
+  "description": "networking",
+  "keywords": [
+    "diskrot"
+  ],
+  "homepage": "https://github.com/diskrotrepo/music#readme",
+  "bugs": {
+    "url": "https://github.com/diskrotrepo/music/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diskrotrepo/music.git"
+  },
+  "license": "MIT",
+  "author": "Alex Ayers",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "dev": "node ./build/server.js",
+    "start": "tsc && npm run dev"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
