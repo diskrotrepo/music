@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 23
-          working-directory: ./music_app
 
       - name: Build/release Electron app
         working-directory: ./music_app
