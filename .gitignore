@@ -30,3 +30,4 @@ music_app/diskrot.db-shm
 music_networking/node_modules/** 
 music_networking/build/**
 music_app/diskrot.db-wal
+music_app/dist/** 
