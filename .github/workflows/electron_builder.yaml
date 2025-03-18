@@ -1,8 +1,6 @@
 name: Build/release
 description: Build and release Electron app
-on:
-  push:
-    - main
+on: push
 
 jobs:
   release:
