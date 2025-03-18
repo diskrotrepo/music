@@ -3,7 +3,7 @@
   "productName": "diskrot: music",
   "version": "1.0.0",
   "description": "diskrot",
-  "main": ".vite/build/main.js",
+  "main": "./src/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/diskrotrepo/music.git"
