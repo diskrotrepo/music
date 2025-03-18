@@ -24,5 +24,5 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          package_root: ./app_music
+          package_root: ./music_app
 
