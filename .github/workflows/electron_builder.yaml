@@ -16,6 +16,6 @@ jobs:
 
       - name: Install Node.js, NPM and Yarn
         working-directory: ./music_app
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 23
