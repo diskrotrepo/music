@@ -22,7 +22,7 @@ jobs:
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.DEPLOY_TOKEN }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
           package_root: ./music_app
 
