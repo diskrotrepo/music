@@ -7,8 +7,10 @@ This server handles the longer running inference tasks such as lyric generation 
 
 ## Linux Prerequisites
 
-1. sudo apt-get update && sudo apt-get upgrade -y
-2. sudo apt install build-essential cmake -y
+```bash
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt install build-essential cmake g++ make pkg-config
+```
 
 ## Installation
 
