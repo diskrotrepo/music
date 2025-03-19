@@ -5,6 +5,11 @@
 
 This server handles the longer running inference tasks such as lyric generation (POET), LRC generation, and the music generation.
 
+## Linux Prerequisites
+
+1. sudo apt-get update && sudo apt-get upgrade -y
+2. sudo apt install build-essential cmake -y
+
 ## Installation
 
 **Setup Music Queue**
