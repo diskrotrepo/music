@@ -1,21 +1,22 @@
 import { Router } from "express";
 import { InvitationController } from "../controllers/invitation_controller";
+import { invitationService } from "../services";
 
 
 
 class InvitationRoutes {
     router = Router();
-    invitationController = new InvitationController();
+    invitationController = new InvitationController(invitationService);
 
     constructor() {
         this.intializeRoutes();
     }
 
     intializeRoutes() {
-        this.router.post("/invitation", this.invitationController.acceptInvitation);
-        this.router.post("/confirm", this.invitationController.createInvitation);
-        this.router.get("/confirm", this.invitationController.getInvitations);
-        this.router.delete("/confirm", this.invitationController.rejectInvitation);
+        this.router.post("/invitation/:code", this.invitationController.acceptInvitation);
+        this.router.post("", this.invitationController.createInvitation);
+        this.router.get("", this.invitationController.getInvitations);
+        this.router.delete("/:code", this.invitationController.rejectInvitation);
     }
 }
 

@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { RegistrationController } from "../controllers/registration_controller";
+import { registrationService } from "../services";
 
 
 class RegistrationRoutes {
     router = Router();
-    registrationController = new RegistrationController();
+    registrationController = new RegistrationController(registrationService);
 
     constructor() {
         this.intializeRoutes();

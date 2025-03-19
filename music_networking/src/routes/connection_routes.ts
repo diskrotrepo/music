@@ -1,19 +1,20 @@
 import { Router } from "express";
 import { ConnectionController } from "../controllers/connection_controller";
+import { connectionService } from "../services";
 
 
 
 class ConnectionRoutes {
     router = Router();
-    connectionController = new ConnectionController();
+    connectionController = new ConnectionController(connectionService);
 
     constructor() {
         this.intializeRoutes();
     }
 
     intializeRoutes() {
-        this.router.delete("/confirm", this.connectionController.deleteConnection);
-        this.router.get("/confirm", this.connectionController.getConnections);
+        this.router.delete("/:id", this.connectionController.deleteConnection);
+        this.router.get("", this.connectionController.getConnections);
     }
 }
 

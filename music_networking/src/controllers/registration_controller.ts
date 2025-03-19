@@ -1,7 +1,15 @@
 import { Request, Response } from "express";
+import { RegistrationService } from "../services/registration.service";
 
 
 export class RegistrationController {
+
+    private registrationService: RegistrationService;
+
+    constructor(registrationService: RegistrationService) {
+        this.registrationService = registrationService;
+    }
+
     async registerClient(req: Request, res: Response): Promise<void> {
         res.status(200).json({ message: "" });
     }

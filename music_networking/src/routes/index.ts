@@ -8,12 +8,12 @@ import InvitationRoutes from "./invitation_routes";
 
 export default class Routes {
     constructor(app: Application) {
-        app.use("/registration", RegistrationRoutes);
-        app.use("/generation", GenerationRoutes);
-        app.use("/client", ClientRoutes);
-        app.use("/connection", ConnectionRoutes);
-        app.use("/queue", QueueRoutes);
-        app.use("/invitation", InvitationRoutes);
+        app.use("/api/v1/registration", RegistrationRoutes);
+        app.use("/api/v1/generation", GenerationRoutes);
+        app.use("/api/v1/client", ClientRoutes);
+        app.use("/api/v1/connection", ConnectionRoutes);
+        app.use("/api/v1/queue", QueueRoutes);
+        app.use("/api/v1/invitation", InvitationRoutes);
 
     }
 }

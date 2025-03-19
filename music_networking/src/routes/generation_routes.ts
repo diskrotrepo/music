@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { GenerationCotroller } from "../controllers/generation_controller";
+import { generationService } from "../services";
 
 
 
 class GenerationRoutes {
     router = Router();
-    generationController = new GenerationCotroller();
+    generationController = new GenerationCotroller(generationService);
 
     constructor() {
         this.intializeRoutes();

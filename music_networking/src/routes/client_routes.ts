@@ -1,19 +1,20 @@
 import { Router } from "express";
 import { ClientController } from "../controllers/client_controller";
+import { clientService } from "../services";
 
 
 
 class ClientRoutes {
     router = Router();
-    clientController = new ClientController();
+    clientController = new ClientController(clientService);
 
     constructor() {
         this.intializeRoutes();
     }
 
     intializeRoutes() {
-        this.router.post("/settings", this.clientController.updateSettings);
-        this.router.get("/settings", this.clientController.getSettings);
+        this.router.post("", this.clientController.updateSettings);
+        this.router.get("", this.clientController.getSettings);
     }
 }
 
