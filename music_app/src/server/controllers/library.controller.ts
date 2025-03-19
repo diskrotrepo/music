@@ -1,9 +1,9 @@
 
 import { Request, Response } from 'express';
-import { db } from './database';
+import { db } from '../database';
 
 
-interface Song {
+export interface Song {
     id: string
     title: string
     dt_created: string
@@ -18,14 +18,14 @@ interface Song {
     processing_status: ProcessingStatus
 }
 
-enum ProcessingStatus {
+export enum ProcessingStatus {
     NEW,
     IN_PROGRESS,
     COMPLETE,
     ERROR
 }
 
-enum SongAction {
+export enum SongAction {
     FAVORITE,
     UNFAVORITE,
     DELETE,

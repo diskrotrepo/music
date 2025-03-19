@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { db } from './database';
+import { db } from '../database';
 
 
 export interface Prompt {

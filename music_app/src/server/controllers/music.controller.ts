@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { db } from './database';
-import { Prompt } from './prompt';
-import configuration from '../../config/configuration.json'
+import { db } from '../database';
+import { Prompt } from './prompt.controller';
+import configuration from '../../../config/configuration.json'
 
-interface MusicGenerationRequest {
+export interface MusicGenerationRequest {
     title: string
     lyrics: string
     duration: number

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { db } from './database';
-import configuration from '../../config/configuration.json'
+import { db } from '../database';
+import configuration from '../../../config/configuration.json'
 
 export class StatusController {
 

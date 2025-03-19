@@ -1,18 +1,20 @@
 import { Router } from "express";
-import { RegistrationCntroller } from "../controllers/registration_controller";
+import { RegistrationController } from "../controllers/registration_controller";
 
 
 class RegistrationRoutes {
     router = Router();
-    homeController = new RegistrationCntroller();
+    registrationController = new RegistrationController();
 
     constructor() {
         this.intializeRoutes();
     }
 
     intializeRoutes() {
-        this.router.post("/register", this.homeController.register);
-        this.router.get("/confirm", this.homeController.register);
+        this.router.post("/client", this.registrationController.registerClient);
+        this.router.post("/activate/:code", this.registrationController.activateRegistration);
+        this.router.get("/status/:clientID", this.registrationController.getRegistrationStatus);
+        this.router.delete("/client/:clientID", this.registrationController.deleteRegistration);
     }
 }
 

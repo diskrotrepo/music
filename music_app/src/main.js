@@ -1,8 +1,9 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
 import started from 'electron-squirrel-startup'
-import { startServer } from './server/server';
+import './server/server';
 import { initDatabase } from './server/database';
+import { startServer } from './server/app';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
