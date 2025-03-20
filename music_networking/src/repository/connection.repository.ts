@@ -1,11 +1,15 @@
+import { BaseRepository } from "./repository";
 
-
-export class ConnectionRepository {
-    async connect(): Promise<void> {
-        console.log("connect");
+export class ConnectionRepository extends BaseRepository<Connection> {
+    constructor(tableName: string) {
+        super(tableName);
     }
 
-    async disconnect(): Promise<void> {
-        console.log("disconnect");
-    }
+}
+
+export interface Connection {
+    client_id: string
+    connected_to_client: string
+    created_at: string
+    updated_at: string
 }

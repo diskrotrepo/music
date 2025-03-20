@@ -1,20 +1,20 @@
 import { Router } from "express";
-import { ClientController } from "../controllers/client_controller";
-import { clientService } from "../services";
+import { clientController } from "../controllers";
 
 
 
 class ClientRoutes {
     router = Router();
-    clientController = new ClientController(clientService);
 
     constructor() {
         this.intializeRoutes();
     }
 
     intializeRoutes() {
-        this.router.post("", this.clientController.updateSettings);
-        this.router.get("", this.clientController.getSettings);
+        this.router.post("", clientController.updateSettings);
+        this.router.get("", clientController.getSettings);
+        this.router.get("/:id", clientController.getClient);
+        this.router.delete("/:id", clientController.deleteClient);
     }
 }
 

@@ -1,11 +1,16 @@
+import { BaseRepository } from "./repository";
 
 
-export class QueueRepository {
-    async getQueuedItem(): Promise<void> {
-        console.log("getQueuedItem");
+export class QueueRepository extends BaseRepository<Queue> {
+    constructor(tableName: string) {
+        super(tableName);
     }
+}
 
-    async updateQueuedItem(): Promise<void> {
-        console.log("updateQueuedItem");
-    }
+
+export interface Queue {
+    id: string
+    client_id: string
+    created_at: string
+    updated_at: string
 }

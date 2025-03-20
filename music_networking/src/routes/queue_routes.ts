@@ -1,19 +1,18 @@
 import { Router } from "express";
-import { QueueController } from "../controllers/queue_controller";
-import { queueService } from "../services";
+import { queueController } from "../controllers";
 
 
 class QueueRoutes {
     router = Router();
-    queueController = new QueueController(queueService);
+
 
     constructor() {
         this.intializeRoutes();
     }
 
     intializeRoutes() {
-        this.router.get("/queue", this.queueController.getQueuedItem);
-        this.router.patch("/queue/:id", this.queueController.updateQueuedItem);
+        this.router.get("/queue", queueController.getQueuedItem);
+        this.router.patch("/queue/:id", queueController.updateQueuedItem);
     }
 }
 

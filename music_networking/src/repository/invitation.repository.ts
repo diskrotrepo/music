@@ -1,11 +1,15 @@
+import { BaseRepository } from "./repository";
 
 
-export class InvitationRepository {
-    async createInvitation(): Promise<void> {
-        console.log("createInvitation");
+export class InvitationRepository extends BaseRepository<Invitation> {
+    constructor(tableName: string) {
+        super(tableName);
     }
+}
 
-    async getInvitation(): Promise<void> {
-        console.log("getInvitation");
-    }
+export interface Invitation {
+    id: string
+    client_id: string
+    created_at: string
+    updated_at: string
 }

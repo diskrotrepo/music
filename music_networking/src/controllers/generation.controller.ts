@@ -9,11 +9,11 @@ export class GenerationCotroller {
         this.generationService = generationService;
     }
 
-    async generateMusic(req: Request, res: Response): Promise<void> {
+    generateMusic = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ message: "" });
     }
 
-    async generalLyrics(req: Request, res: Response): Promise<void> {
+    generalLyrics = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ message: "" });
     }
 }

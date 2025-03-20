@@ -3,13 +3,9 @@ import { ConnectionRepository } from "./connection.repository";
 import { GenerationRepository } from "./generation.repository";
 import { InvitationRepository } from "./invitation.repository";
 import { QueueRepository } from "./queue.repository";
-import { RegistrationRepository } from "./registration.repository";
 
-
-
-export const clientRepository = new ClientRepository();
-export const connectionRepository = new ConnectionRepository();
-export const generationRepository = new GenerationRepository();
-export const invitationRepository = new InvitationRepository();
-export const queueRepository = new QueueRepository();
-export const registrationRepository = new RegistrationRepository();
+export const clientRepository = new ClientRepository("client-table");
+export const connectionRepository = new ConnectionRepository("connection-table");
+export const generationRepository = new GenerationRepository("generation-table");
+export const invitationRepository = new InvitationRepository("invitation-table");
+export const queueRepository = new QueueRepository("queue-table");

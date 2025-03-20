@@ -21,16 +21,24 @@
     "test": "jest",
     "build": "tsc",
     "dev": "node ./build/server.js",
-    "start": "tsc && npm run dev"
+    "watch": "nodemon src/app.ts",
+    "start": "npx ts-node src/app.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.767.0",
+    "@aws-sdk/lib-dynamodb": "^3.767.0",
+    "@types/jest": "^29.5.14",
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }

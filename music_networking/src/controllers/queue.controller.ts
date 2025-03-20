@@ -11,11 +11,11 @@ export class QueueController {
         this.queueService = queueService;
     }
 
-    async getQueuedItem(req: Request, res: Response): Promise<void> {
+    getQueuedItem = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ message: "" });
     }
 
-    async updateQueuedItem(req: Request, res: Response): Promise<void> {
+    updateQueuedItem = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ message: "" });
     }
 }

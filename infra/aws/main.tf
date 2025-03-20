@@ -68,36 +68,6 @@ module "dynamodb_tables" {
         Environment = var.environment
       }
     },
-    invitation = {
-      name         = "invitation-table"
-      billing_mode = "PROVISIONED"
-      hash_key     = "pkey"
-      range_key    = "skey"
-      attributes = [
-        { name = "pkey", type = "S" },
-        { name = "skey", type = "S" }
-      ]
-      read_capacity  = 1
-      write_capacity = 1
-      tags = {
-        Environment = var.environment
-      }
-    }
-    settings = {
-      name         = "settings-table"
-      billing_mode = "PROVISIONED"
-      hash_key     = "pkey"
-      range_key    = "skey"
-      attributes = [
-        { name = "pkey", type = "S" },
-        { name = "skey", type = "S" }
-      ]
-      read_capacity  = 1
-      write_capacity = 1
-      tags = {
-        Environment = var.environment
-      }
-    }
     connection = {
       name         = "connection-table"
       billing_mode = "PROVISIONED"
