@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS music (
       dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       is_favorite BOOLEAN NOT NULL DEFAULT false,
       is_deleted BOOLEAN NOT NULL DEFAULT false,
-      inference_server VARCHAR(256) NOT NULL DEFAULT '',
+      client_processing_id VARCHAR(256) NOT NULL DEFAULT '',
       lrc_prompt VARCHAR(2048) NOT NULL DEFAULT '',
       lrc_model VARCHAR(256) NOT NULL DEFAULT '',
       processing_status VARCHAR(36) NOT NULL DEFAULT 'NEW'
@@ -71,7 +71,69 @@ INSERT INTO prompt (id, prompt, category, model, is_default, dt_created) VALUES 
                     1,
                     new Date().toISOString(),
                 ]
-            }
+            },
+            {
+                sql: `
+CREATE TABLE IF NOT EXISTS client (
+      id VARCHAR(36) PRIMARY KEY,
+      shared_secret VARCHAR(64) NOT NULL,
+      nickname VARCHAR(36) NOT NULL,
+      dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+                `
+            },
+
+
+            {
+                sql: `
+CREATE TABLE IF NOT EXISTS invitations (
+      id VARCHAR(36) PRIMARY KEY,
+      code VARCHAR(64) NOT NULL,
+      client_accepted_id VARCHAR(36) NULL,
+      dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+                `
+            },
+            {
+                sql: `
+CREATE TABLE IF NOT EXISTS settings (
+      key VARCHAR(64) NOT NULL,
+      value VARCHAR(36) NULL,
+      dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+                `
+            },
+            {
+                sql: `INSERT INTO settings (key, value) VALUES ('inference_hostname', 'http://localhost');`,
+            },
+            {
+                sql: `INSERT INTO settings (key, value) VALUES ('inference_port', 'http://localhost:8080');`,
+            },
+            {
+                sql: `INSERT INTO settings (key, value) VALUES ('inference_queue_size', '20');`,
+            },
+            {
+                sql: `
+CREATE TABLE IF NOT EXISTS queue (
+      id VARCHAR(36) PRIMARY KEY,
+      filename VARCHAR(255) NOT NULL DEFAULT '',
+      title VARCHAR(255) NOT NULL DEFAULT '',
+      lyrics VARCHAR(3000),
+      tags VARCHAR(2048) NOT NULL DEFAULT '',
+      negative_tags VARCHAR(2048),
+      input_file VARCHAR(2048),
+      model VARCHAR(128) NOT NULL DEFAULT '',
+      steps INTEGER NOT NULL DEFAULT 0,
+      cfg_strength REAL NOT NULL DEFAULT 0,
+      duration INTEGER NOT NULL DEFAULT 0,
+      dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      client_requested_id VARCHAR(256) NOT NULL DEFAULT '',
+      lrc_prompt VARCHAR(2048) NOT NULL DEFAULT '',
+      lrc_model VARCHAR(256) NOT NULL DEFAULT '',
+      processing_status VARCHAR(36) NOT NULL DEFAULT 'NEW'
+);
+                `
+            },
         ]
     }
 }

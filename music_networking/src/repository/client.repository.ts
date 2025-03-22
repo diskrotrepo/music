@@ -1,6 +1,7 @@
 import { DeleteCommand, DeleteCommandInput, GetCommand, GetCommandInput, PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import { Repository, BaseRepository } from "./repository";
 import { docClient } from "./dynamodb";
+import { Client } from "../models/client.model";
 
 
 export class ClientRepository extends BaseRepository<Client> implements Repository<Client> {
@@ -9,35 +10,30 @@ export class ClientRepository extends BaseRepository<Client> implements Reposito
     }
 
     async getById(id: string): Promise<Client | null> {
-        const queryCommandInput: QueryCommandInput = {
-            TableName: this.tableName,
-            KeyConditionExpression: "pkey = :pkey",
-            ExpressionAttributeValues: {
-                ":pkey": id
-            }
-        };
 
-        const { Items } = await docClient.send(new QueryCommand(queryCommandInput));
+        let filter = new Map<string, string>([
+            ["pkey", "id"],
+            ["skey", ""]
+        ]);
 
-        if (Items === undefined || Items.length === 0) {
+        let data = await super.getByPkey(id, filter);
+
+        if (data === null) {
             return null;
         }
 
-        Items[0].id = Items[0].pkey;
-        Items[0].email = Items[0].skey;
-        delete Items[0].skey;
-        delete Items[0].pkey;
-        delete Items[0].sharedSecret;
+        let client: Client = data as Client;
 
+        delete client.sharedSecret;
 
-        return Items[0] as Client;
+        return client;
     }
 
     async create(data: Client): Promise<void> {
 
         await super.persist({
             pkey: data.id,
-            skey: data.email,
+            skey: "client#",
             nickname: data.nickname,
             sharedSecret: data.sharedSecret
         });
@@ -60,11 +56,3 @@ export class ClientRepository extends BaseRepository<Client> implements Reposito
 
 }
 
-export interface Client {
-    id?: string
-    nickname: string
-    sharedSecret: string
-    email: string
-    created_at?: string
-    updated_at?: string
-}

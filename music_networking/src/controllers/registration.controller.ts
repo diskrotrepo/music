@@ -13,9 +13,9 @@ export class RegistrationController {
 
     registerClient = async (req: Request, res: Response): Promise<void> => {
 
-        const { email, nickname } = req.body;
-        console.log(email, nickname);
-        const client = await this.registrationService.registerClient(email, nickname);
+        const nickname = req.body.nickname;
+        console.log(nickname);
+        const client = await this.registrationService.registerClient(nickname);
 
 
         res.status(200).json({ client: client });
@@ -30,6 +30,7 @@ export class RegistrationController {
     }
 
     deleteRegistration = async (req: Request, res: Response): Promise<void> => {
+        console.log("deleteRegistration");
         res.status(200).json({ message: "" });
     }
 

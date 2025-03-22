@@ -1,6 +1,7 @@
-import { Client, ClientRepository } from "../repository/client.repository";
+import { ClientRepository } from "../repository/client.repository";
 import { v4 as uuid } from "uuid";
 import * as crypto from 'crypto';
+import { Client } from "../models/client.model";
 
 
 export class RegistrationService {
@@ -11,12 +12,11 @@ export class RegistrationService {
         this.clientRepository = clientRepository;
     }
 
-    async registerClient(email: string, nickanme: string): Promise<Client> {
+    async registerClient(nickname: string): Promise<Client> {
 
         let client: Client = {
             id: uuid(),
-            email: email,
-            nickname: nickanme,
+            nickname: nickname,
             sharedSecret: crypto.randomBytes(16).toString('hex')
         }
 

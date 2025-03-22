@@ -29,7 +29,6 @@
          
           <b>Duration</b><input class="advanced-input" v-model="duration" type="number" placeholder="duration" size="5" />         
           <b>Steps</b>
-
           <input v-model="steps" class="advanced-input" type="number" placeholder="steps" size="5" />
        
           <b>cfg strength</b>
@@ -57,6 +56,7 @@
 <script>
 import { ref } from 'vue'
 import configuration from '../../config/configuration.json'
+
 
 export default {
   setup(_, { emit }) {

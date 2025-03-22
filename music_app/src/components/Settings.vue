@@ -1,38 +1,102 @@
 <template>
-  <div class="content">
+  <div class="settings-container">
+    <h1>Settings</h1>
 
-    <div>
-      <h1>Registration Code</h1>
+    <ul class="tabs" >
+      
+      <li 
+        :class="{ active: activeTab === 'network' }" 
+        @click="activeTab = 'network'">
+        Network
+      </li>
+      <li 
+        :class="{ active: activeTab === 'gpu' }" 
+        @click="activeTab = 'gpu'">
+        GPU
+      </li>
+      <li 
+        :class="{ active: activeTab === 'prompts' }" 
+        @click="activeTab = 'prompts'">
+        Prompts
+      </li>
+    </ul>
 
-      <form @submit.prevent="handleRegister">
-        <input type="text" placeholder="Registration Code" />
-        <div class="save-button">
-          <button class="submitButton pulse" type="submit">
-            Register
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <div>
-      <form @submit.prevent="handleSubmit">
-
+    <div v-if="activeTab === 'prompts'" class="tab-content">
+      <form @submit.prevent="handlePromptsSubmit">
         <h3>LRC Prompt</h3>
-        <div class="text">
-          This prompt is used to generate an <a href="https://en.wikipedia.org/wiki/LRC_(file_format)" target="_top">LRC
-            file</a> which determines where your words are placed within a song in time. You can customize this however
-          you want, but of course if it results in an invalid LRC file, then you should expect an error when your
-          request it processed.
-          <textarea v-model="lrc" rows="15" cols="45" placeholder="LRC Prompt"></textarea>
-        </div>
-        <!---<h1>Lyric Generation</h1>
-      <textarea v-model="poet" rows="15" cols="45" placeholder="Lyric Generator"></textarea>
-    -->
+        <p>
+          This prompt is used to generate an 
+          <a 
+            href="https://en.wikipedia.org/wiki/LRC_(file_format)" 
+            target="_top">
+              LRC file
+          </a> 
+          which determines where your words are placed within a song in time.
+        </p>
+
+        <textarea 
+          v-model="lrc" 
+          placeholder="LRC Prompt">
+        </textarea>
+
         <div class="save-button">
           <button class="submitButton pulse" type="submit">
             Save
           </button>
         </div>
+      </form>
+    </div>
+
+    <!-- Network Tab -->
+    <div v-if="activeTab === 'network'" class="tab-content">
+      <h2>Sharing</h2>
+      <p>In order to share your GPU you need to enable sharing. Your nickname will be seen by anyone that connects to you.</p>
+      <label>
+            Nickname:
+            </label>
+            <input 
+              v-model="sharing.nickname" 
+              type="text"
+              placeholder="nickname"/>
+          
+      <button @click="handleEnableSharing" class="submitButton pulse">{{ sharing.nickname ? 'Disable' : 'Enable' }}</button>
+    </div>
+
+    <!-- GPU Tab -->
+    <div v-if="activeTab === 'gpu'" class="tab-content">
+      <h2>Inference Service</h2>
+      <form @submit.prevent="handleGpuSubmit">
+
+          <label>
+            Hostname:
+            <input 
+              v-model="gpuSettings.hostname" 
+              type="text"
+              value="localhost"
+              placeholder="Hostname"/>
+          </label>
+          <label>
+            Port:
+            <input 
+              v-model="gpuSettings.port" 
+              type="number"
+              value="5001"
+              placeholder="5001"/>
+          </label>
+          <p>
+            <label>
+              Max Queue Size:
+              <input 
+                v-model="gpuSettings.maxQueueSize" 
+                type="number"
+                value="10"
+                placeholder="Max Queue Size"/>
+            </label>
+          </p>
+         
+        <button class="submitButton pulse right-button" type="submit">
+          Save
+        </button>
       </form>
     </div>
   </div>
@@ -44,86 +108,117 @@ import configuration from '../../config/configuration.json'
 
 export default {
   setup(_, { emit }) {
+
+    const activeTab = ref('network')
+
     const lrc = ref('')
-    const poet = ref('')
-    const lrcModel = ref('')
-    const poetModel = ref('')
+    const lrcModel = ref('')  
 
-    const fetchPrompt = async () => {
+    const gpuSettings = ref({
+      hostname: 'localhost',
+      port: 5001,
+      maxQueueSize: 10,
+    })
+
+    const sharing = ref({
+      nickname: '',
+    })
+
+
+    const fetchPrompts = async () => {
       try {
-        const response = await fetch(`${configuration.api}/prompt/LRC`)
-
+        const response = await fetch(`${configuration.api}/settings/prompt/LRC`)
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
-
-        const lrcData = await response.json()
-        if (lrcData && typeof lrcData === 'object') {
-          lrc.value = lrcData.prompt || ''
-          lrcModel.value = lrcData.model || ''
-        } else {
-          lrc.value = ''
-          lrcModel.value = ''
-        }
+        const data = await response.json()
+        lrc.value = data?.prompt || ''
+        lrcModel.value = data?.model || ''
       } catch (e) {
         console.error('Error fetching LRC:', e)
         lrc.value = ''
         lrcModel.value = ''
       }
+    }
 
+     const fetchGpu = async () => {
       try {
-        const response = await fetch(`${configuration.api}/prompt/POET`)
-
+        const response = await fetch(`${configuration.api}/settings/inference_server`)
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
+        const data = await response.json()
 
-        const poetData = await response.json()
-        if (poetData && typeof poetData === 'object') {
-          poet.value = poetData.prompt || ''
-          poetModel.value = poetData.model || ''
-        } else {
-          poet.value = ''
-          poetModel.value = ''
+        gpuSettings.value.hostname = data.hostname;
+        gpuSettings.value.port = data.port;
+        gpuSettings.value.maxQueueSize = data.maxQueueSize;
+
+        
+      } catch (e) {
+        console.error('Error fetching inference_server:', e)
+      }
+     }
+
+     const fetchClient = async () => {
+      try {
+        const response = await fetch(`${configuration.api}/settings/client`)
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+        const data = await response.json()
+
+        if (data !== undefined) {
+          sharing.value.nickname = data.nickname
         }
       } catch (e) {
-        console.error('Error fetching POET:', e)
-        poet.value = ''
-        poetModel.value = ''
+        console.error('Error fetching clien:', e)
       }
     }
 
-    onMounted(fetchPrompt)
+    onMounted(() => {
+      fetchPrompts()
+      fetchGpu()
+      fetchClient()
+    });
 
-    const handleSubmit = (event) => {
-      event.preventDefault()
+    const handlePromptsSubmit = () => {
+     
       emit('submit', {
         lrc: lrc.value,
-        lrcModel: lrcModel.value,
-        poet: poet.value,
-        poetModel: poetModel.value
       })
     }
 
-    return { lrc, lrcModel, poet, poetModel, handleSubmit }
+    const handleEnableSharing = () => {
+      emit('gpu-shared', sharing.value)
+    }
+
+    const handleGpuSubmit = () => {
+      emit('gpu-save', gpuSettings.value)
+    }
+
+    return {
+      activeTab,
+      lrc,
+      lrcModel,
+      gpuSettings,
+      sharing,
+      handlePromptsSubmit,
+      handleEnableSharing,
+      handleGpuSubmit,
+    }
   }
 }
 </script>
 
 <style scoped>
-.content {
+
+
+
+.settings-container {
   margin-left: 20px;
   padding: 10px;
 }
 
-h1,
-h3 {
-  color: white;
-}
-
-.text {
-  color: white;
-}
 
 a {
   color: white;
@@ -137,54 +232,7 @@ a {
   margin-top: 40px;
 }
 
-input {
-  background-color: rgb(29, 29, 29);
-  border: none;
-  border-bottom: rgb(203, 203, 203) solid 0.1em;
-  color: rgb(250, 91, 250);
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0.5em 0.5em;
-  outline: none;
-}
-
-textarea {
-  margin: 0.5em 0.5em;
-  background-color: rgb(27, 27, 27);
-  border: none;
-  color: rgb(250, 91, 250);
-  width: 400px;
-  height: 200px;
-  font-size: 1em;
-  font-family: Arial, Helvetica, sans-serif;
-  resize: none;
-}
-
-.submitButton {
-  background-color: rgb(29, 29, 29);
-  border-radius: 0.6em;
-  border: rgb(250, 91, 250) solid 0.1em;
-  padding: 0.5em 0.5em;
-  font-size: 1.2em;
-  color: rgb(255, 255, 255);
-  transition: 0.25s;
-
-  &:hover,
-  &:focus {
-    border-color: rgb(236, 54, 130);
-    color: rgb(250, 91, 250);
-  }
-
-}
-
-.pulse:hover,
-.pulse:focus {
-  animation: pulse 1s;
-  box-shadow: 0 0 0 1em transparent;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgb(250, 91, 250);
-  }
+.gpu-form {
+  margin: 0.5em 0;
 }
 </style>

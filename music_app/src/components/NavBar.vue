@@ -12,6 +12,9 @@
         <router-link to="/library"><i class="fa-solid fa-record-vinyl"></i> Library</router-link>
       </li>
       <li>
+        <router-link to="/network"><i class="fa-solid fa-server"></i> Network</router-link>
+      </li>
+      <li>
         <router-link to="/settings"><i class="fa-solid fa-sliders"></i> Settings</router-link>
       </li>
     </ul>
@@ -61,7 +64,7 @@ li {
 
 nav a {
   display: block;
-  width: 200%;
+  width: 100%;
   box-sizing: border-box;
   padding: 5px;
   color: #fff;

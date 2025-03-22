@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { MusicController } from "../controllers/music.controller";
+import { musicController } from "../controllers";
 
 
 
 class MusicRoutes {
     router = Router();
-    musicController = new MusicController();
+    musicController = musicController;
 
     constructor() {
         this.intializeRoutes();

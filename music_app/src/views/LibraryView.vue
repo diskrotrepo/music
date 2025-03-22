@@ -29,8 +29,8 @@ export default {
     const songs = ref([])
     const loading = ref(true)
     const error = ref(null)
-    const listView = ref('library') // Default: show library
-    const showFavorites = ref(false) // Default: show all songs
+    const listView = ref('library') 
+    const showFavorites = ref(false) 
 
     const fetchSongs = async () => {
       loading.value = true
@@ -39,7 +39,7 @@ export default {
       try {
         let url = `${configuration.api}/library?list_view=${listView.value}`
         if (showFavorites.value) {
-          url += '&favorite=true' // Apply favorite filter if toggled on
+          url += '&favorite=true' 
         }
 
         const response = await fetch(url)

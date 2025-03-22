@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { db } from '../database';
-import { Prompt } from './prompt.controller';
 import configuration from '../../../config/configuration.json'
+import { Prompt } from './settings.controller';
 
 export interface MusicGenerationRequest {
     title: string

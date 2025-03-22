@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { LibraryController } from "../controllers/library.controller";
+import { libraryController } from "../controllers";
+
 
 
 
 class LibraryRoutes {
     router = Router();
-    libraryController = new LibraryController();
+    libraryController = libraryController;
 
     constructor() {
         this.intializeRoutes();

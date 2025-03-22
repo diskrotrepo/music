@@ -1,6 +1,7 @@
-import { Client, ClientRepository } from "../repository/client.repository";
+import { ClientRepository } from "../repository/client.repository";
 import { v4 as uuid } from "uuid";
 import * as crypto from 'crypto';
+import { Client } from "../models/client.model";
 
 export class ClientService {
 

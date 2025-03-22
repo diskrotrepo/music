@@ -11,19 +11,36 @@ export class InvitationController {
     }
 
     createInvitation = async (req: Request, res: Response): Promise<void> => {
-        res.status(200).json({ message: "" });
+        let clientId = req.headers.clientId as string;
+        const code = await this.invitationService.createInvitation(clientId);
+
+        res.status(200).json({ code: code });
     }
 
     acceptInvitation = async (req: Request, res: Response): Promise<void> => {
-        res.status(200).json({ message: "" });
+
+        const code = req.params.code;
+        await this.invitationService.acceptInvitation(code);
+
+
+        res.status(200).json({ success: true });
     }
 
     rejectInvitation = async (req: Request, res: Response): Promise<void> => {
-        res.status(200).json({ message: "" });
+        const code = req.params.code;
+
+        await this.invitationService.rejectInvitation(code);
+
+        res.status(200).json({ success: true });
     }
 
     getInvitations = async (req: Request, res: Response): Promise<void> => {
-        res.status(200).json({ message: "" });
+
+        let clientId = req.headers.clientId as string;
+
+        const invitations = await this.invitationService.getInvitations(clientId);
+
+        res.status(200).json({ invitations: invitations });
     }
 
 

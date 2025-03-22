@@ -13,7 +13,7 @@ class RegistrationRoutes {
         this.router.post("/client", registrationController.registerClient);
         this.router.post("/activate/:code", registrationController.activateRegistration);
         this.router.get("/status/:clientID", registrationController.getRegistrationStatus);
-        this.router.delete("/client/:clientID", registrationController.deleteRegistration);
+        this.router.delete("/client", registrationController.deleteRegistration);
     }
 }
 

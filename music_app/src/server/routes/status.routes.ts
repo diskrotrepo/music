@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { StatusController } from "../controllers/status.controller";
+import { statusController } from "../controllers";
+
 
 
 
 class StatusRoutes {
     router = Router();
-    statusController = new StatusController();
+    statusController = statusController;
 
     constructor() {
         this.intializeRoutes();

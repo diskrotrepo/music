@@ -1,5 +1,10 @@
 <template>
-  <Settings @submit="submitForm" />
+
+  <Settings
+    @submit="submitForm"
+    @gpu-shared="enableSharing"
+    @gpu-save="saveGpuSettings"
+  />
 </template>
 
 <script>
@@ -8,55 +13,100 @@ import configuration from '../../config/configuration.json'
 
 export default {
   components: { Settings },
+
   setup() {
+
     const updateModel = async (prompt, model, category) => {
       try {
-        const response = await fetch(`${configuration.api}/prompt`, {
+        const response = await fetch(`${configuration.api}/settings/prompt`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify({
-            prompt: prompt,
-            model: model,
+            prompt,
             is_default: true,
-            category: category
+            category
           })
         })
-
-        if (!response.ok) throw new Error('Failed to save prompt.')
+        if (!response.ok) {
+          throw new Error('Failed to save prompt.')
+        }
       } catch (error) {
         console.error('Error updating model:', error)
       }
     }
 
+ 
     const submitForm = async (formData) => {
-      if (
-        !formData ||
-        !formData.lrc ||
-        !formData.poet ||
-        !formData.lrcModel ||
-        !formData.poetModel
-      ) {
-        console.warn('submitForm received empty data, ignoring.')
+
+      if (!formData || !formData.lrc) {
+       
         return
       }
-
       await updateModel(formData.lrc, formData.lrcModel, 'LRC')
-      await updateModel(formData.poet, formData.poetModel, 'POET')
     }
 
-    return { submitForm }
+  
+    const enableSharing = (sharingData) => {
+      
+      
+
+      if (sharingData.nickname) {
+        console.log('Disable sharing with data:', sharingData)
+
+        fetch(`${configuration.api}/settings/register`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then(() => {
+          console.log('Sharing disabled.')
+        });
+
+        return;
+      }
+
+      console.log('Enabling sharing with data:', sharingData)
+
+      fetch(`${configuration.api}/settings/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nickname: sharingData.nickname
+        })
+      })
+
+    }
+
+    const saveGpuSettings = (gpuSettings) => {
+     
+      console.log('Saving GPU settings:', gpuSettings)
+
+      fetch(`${configuration.api}/settings/inference_server`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          hostname: gpuSettings.hostname,
+          port: gpuSettings.port,
+          max_queue_size: gpuSettings.maxQueueSize
+        })
+      })
+    }
+
+    return {
+      submitForm,
+      enableSharing,
+      saveGpuSettings
+    }
   }
 }
 </script>
 
 <style scoped>
-.response {
-  margin-top: 10px;
-  font-weight: bold;
-  color: green;
-}
 
-body{
-  color: white
-}
 </style>
