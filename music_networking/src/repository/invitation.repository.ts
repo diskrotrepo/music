@@ -9,17 +9,18 @@ export class InvitationRepository extends BaseRepository<Invitation> {
     }
 
     async delete(code: string) {
-        throw new Error("Method not implemented.");
+
     }
     async getInvitations(clientId: string): Promise<Array<Invitation>> {
-        throw new Error("Method not implemented.");
+
+        return [];
     }
 
     async acceptInvitation(invitation: any): Promise<void> {
-        throw new Error("Method not implemented.");
+
     }
     async createInvitation(code: string, clientId: string) {
-        throw new Error("Method not implemented.");
+
     }
 
 }

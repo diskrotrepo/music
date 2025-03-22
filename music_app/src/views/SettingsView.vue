@@ -49,23 +49,6 @@ export default {
 
   
     const enableSharing = (sharingData) => {
-      
-      
-
-      if (sharingData.nickname) {
-        console.log('Disable sharing with data:', sharingData)
-
-        fetch(`${configuration.api}/settings/register`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }).then(() => {
-          console.log('Sharing disabled.')
-        });
-
-        return;
-      }
 
       console.log('Enabling sharing with data:', sharingData)
 
@@ -78,7 +61,6 @@ export default {
           nickname: sharingData.nickname
         })
       })
-
     }
 
     const saveGpuSettings = (gpuSettings) => {

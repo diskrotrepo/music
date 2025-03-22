@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { db } from '../database';
 import configuration from '../../../config/configuration.json'
 import { Prompt } from './settings.controller';
+import DiskrotNetwork from '../network';
+import { BaseController } from './base.controller';
 
 export interface MusicGenerationRequest {
     title: string
@@ -14,7 +16,14 @@ export interface MusicGenerationRequest {
     negative_tags: string
 }
 
-export class MusicController {
+export class MusicController extends BaseController {
+
+
+
+
+    constructor() {
+        super();
+    }
 
     async generate(req: Request, res: Response): Promise<void> {
         // #swagger.tags = ['Music']

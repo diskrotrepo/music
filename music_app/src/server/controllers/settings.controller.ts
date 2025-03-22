@@ -1,15 +1,29 @@
 import { Request, Response } from 'express';
 import configuration from '../../../config/configuration.json'
 import { db } from '../database';
+import DiskrotNetwork from '../network';
+import { BaseController } from './base.controller';
 
-export class SettingsController {
+export class SettingsController extends BaseController {
+
+
+
+
+    constructor() {
+        super();
+    }
 
     async register(req: Request, res: Response): Promise<void> {
 
         const data = req.body || {};
 
+
+        let fullUrl = configuration.diskrot.secure == true ? "https://" : "http://";
+        fullUrl += configuration.diskrot.hostname + ":" + configuration.diskrot.port;
+        fullUrl += configuration.diskrot.api + "/registration/client";
+
         const response = await fetch(
-            `${configuration.diskrot}/registration/client`,
+            fullUrl,
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

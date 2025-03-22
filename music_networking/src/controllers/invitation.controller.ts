@@ -11,8 +11,11 @@ export class InvitationController {
     }
 
     createInvitation = async (req: Request, res: Response): Promise<void> => {
+
         let clientId = req.headers.clientId as string;
         const code = await this.invitationService.createInvitation(clientId);
+
+        console.log("code: ", code);
 
         res.status(200).json({ code: code });
     }

@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS client (
       id VARCHAR(36) PRIMARY KEY,
       shared_secret VARCHAR(64) NOT NULL,
       nickname VARCHAR(36) NOT NULL,
+      is_external BOOLEAN NOT NULL DEFAULT false,
       dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
                 `
@@ -90,6 +91,16 @@ CREATE TABLE IF NOT EXISTS invitations (
       id VARCHAR(36) PRIMARY KEY,
       code VARCHAR(64) NOT NULL,
       client_accepted_id VARCHAR(36) NULL,
+      dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+                `
+            },
+            {
+                sql: `
+CREATE TABLE IF NOT EXISTS connections (
+      id VARCHAR(36) PRIMARY KEY,
+      client_connected_id VARCHAR(36) NULL,
+      direction VARCHAR(36) NOT NULL,
       dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
                 `

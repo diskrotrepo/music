@@ -1,8 +1,17 @@
 import { Request, Response } from 'express';
 import { db } from '../database';
 import configuration from '../../../config/configuration.json'
+import DiskrotNetwork from '../network';
+import { BaseController } from './base.controller';
 
-export class StatusController {
+export class StatusController extends BaseController {
+
+
+
+
+    constructor() {
+        super();
+    }
 
     async getStatus(req: Request, res: Response): Promise<void> {
 

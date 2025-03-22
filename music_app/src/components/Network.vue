@@ -1,8 +1,13 @@
 <template>
-  <div class="settings-container">
+  <div class="tab-container">
     <h1>Network</h1>
     
     <ul class="tabs">
+      <li
+        :class="{ active: activeTab === 'connections' }"
+        @click="activeTab = 'connections'">
+        Connections
+      </li>
       <li
         :class="{ active: activeTab === 'invitations' }"
         @click="activeTab = 'invitations'">
@@ -14,17 +19,23 @@
         Queue
       </li>
     </ul>
-
-  
-    <div v-if="activeTab === 'invitations'" class="tab-content">
+    <div v-if="activeTab === 'connections'" class="tab-content">
       <div class="text">
-        You should only share your invitation code with people you trust.
+        This is a list of people who have agreed to share their GPU with you. You should only accept invitation codes from people you trust.
       </div>
-      <button @click="$emit('create-invitation')" class="submitButton pulse right-button">
-        Create Invite
+
+      <input
+        v-model="inviteCode"
+        type="text"
+        placeholder="Enter invitation code"
+        class="invite-code-input"
+      />
+      <button @click="$emit('accept-invitation', inviteCode)" class="submitButton pulse right-button">
+        Accept Invite
       </button>
+
       <p v-if="invitationCode">
-        Your invitation code is: <strong>{{ invitationCode }}</strong>
+        Last accepted code: <strong>{{ invitationCode }}</strong>
       </p>
 
       <table>
@@ -32,7 +43,43 @@
           <tr>
             <th>Nickname</th>
             <th>Status</th>
-            <th>Accepted Date</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item, index) in connectionItems"
+            :key="index"
+            :class="index % 2 === 0 ? 'even-row' : 'odd-row'"
+          >
+            <td>{{ item.nickname }}</td>
+            <td>{{ item.status }}</td>
+            <td>
+              <button @click="$emit('delete-invitation', index)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  
+    <div v-if="activeTab === 'invitations'" class="tab-content">
+      <div class="text">
+        This is a list of people who are using your GPU. You should only share your invitation code with people you trust.
+      </div>
+      <button @click="$emit('create-invitation')" class="submitButton pulse right-button">
+        Create Invite
+      </button>
+      <p v-if="invitationCode">
+        Your newly created invitation code is: <strong>{{ invitationCode }}</strong>
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nickname</th>
+            <th>Code</th>
+            <th>Status</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -43,8 +90,8 @@
             :class="index % 2 === 0 ? 'even-row' : 'odd-row'"
           >
             <td>{{ item.nickname }}</td>
+             <td>{{ item.code }}</td>
             <td>{{ item.status }}</td>
-            <td>{{ item.acceptedDate || '-' }}</td>
             <td>
               <button @click="$emit('delete-invitation', index)">Delete</button>
             </td>
@@ -52,7 +99,6 @@
         </tbody>
       </table>
     </div>
-
     <div v-if="activeTab === 'queue'" class="tab-content">
       <div class="text">
         These are current items set to be processed by the inference server.
@@ -63,7 +109,7 @@
       <table>
         <thead>
           <tr>
-            <th>Title</th>
+            <th>#</th>
             <th>Status</th>
             <th>Nickname</th>
             <th>Submitted</th>
@@ -73,9 +119,8 @@
           <tr
             v-for="(item, index) in queueItems"
             :key="index"
-            :class="index % 2 === 0 ? 'even-row' : 'odd-row'"
-          >
-            <td>{{ item.title }}</td>
+            :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
+            <td>{{ key }}</td>
             <td>{{ item.status }}</td>
             <td>{{ item.nickname }}</td>
             <td>{{ item.submitted }}</td>
@@ -88,6 +133,7 @@
 
 <script>
 import { ref } from 'vue'
+
 
 export default {
   name: 'Network',
@@ -109,10 +155,14 @@ export default {
 
   setup() {
    
-    const activeTab = ref('invitations')
+    const activeTab = ref('connections')
+
+   
+    const inviteCode = ref('')
 
     return {
-      activeTab
+      activeTab,
+      inviteCode
     }
   }
 }
@@ -139,6 +189,7 @@ th,
 td {
   padding: 8px;
   border: 1px solid #ccc;
+  text-align: center;
 }
 
 .even-row {
@@ -155,5 +206,12 @@ td {
 
 .text {
   color: #fff;
+  margin-bottom: 8px;
+}
+
+.invite-code-input {
+  margin-right: 8px;
+  padding: 4px;
+  width: 300px;
 }
 </style>

@@ -1,38 +1,19 @@
 
 import { Request, Response } from 'express';
 import { db } from '../database';
+import DiskrotNetwork from '../network';
+import { BaseController } from './base.controller';
 
 
-export interface Song {
-    id: string
-    title: string
-    dt_created: string
-    lyrics: string
-    negative_tags: string
-    filename: string
-    duration: number
-    tags: string
-    is_favorite: number
-    is_deleted: number
-    lrc_id: string
-    processing_status: ProcessingStatus
-}
 
-export enum ProcessingStatus {
-    NEW,
-    IN_PROGRESS,
-    COMPLETE,
-    ERROR
-}
+export class LibraryController extends BaseController {
 
-export enum SongAction {
-    FAVORITE,
-    UNFAVORITE,
-    DELETE,
-    RESTORE
-}
 
-export class LibraryController {
+
+
+    constructor() {
+        super();
+    }
 
     public getLibrary(req: Request, res: Response): void {
         // #swagger.tags = ['Library']
@@ -116,4 +97,34 @@ export class LibraryController {
         res.status(200).json({ success: true });
     }
 
+}
+
+
+export interface Song {
+    id: string
+    title: string
+    dt_created: string
+    lyrics: string
+    negative_tags: string
+    filename: string
+    duration: number
+    tags: string
+    is_favorite: number
+    is_deleted: number
+    lrc_id: string
+    processing_status: ProcessingStatus
+}
+
+export enum ProcessingStatus {
+    NEW,
+    IN_PROGRESS,
+    COMPLETE,
+    ERROR
+}
+
+export enum SongAction {
+    FAVORITE,
+    UNFAVORITE,
+    DELETE,
+    RESTORE
 }

@@ -23,9 +23,6 @@ export class ClientRepository extends BaseRepository<Client> implements Reposito
         }
 
         let client: Client = data as Client;
-
-        delete client.sharedSecret;
-
         return client;
     }
 

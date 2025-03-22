@@ -1,9 +1,10 @@
 <template>
-  
   <Network
     :invitationCode="invitationCode"
     :queueItems="queueItems"
     :invitationItems="invitationItems"
+    :connectionItems="connectionItems"
+    @accept-invitation="handleAcceptInvitation"
     @create-invitation="handleCreateInvitation"
     @clear-queue="handleClearQueue"
     @delete-invitation="handleDeleteInvitation"
@@ -11,55 +12,165 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Network from '../components/Network.vue'
-import configuration from '../../config/configuration.json'
+import configuration from "../../config/configuration.json";
 
 export default {
   name: 'NetworkParent',
   components: { Network },
   setup() {
-    
-    const invitationCode = ref('')
-    const invitationItems = ref([
-      { nickname: 'Friend1', status: 'Unused', acceptedDate: null },
-      { nickname: 'Friend2', status: 'Accepted', acceptedDate: '2025-01-20' }
-    ])
-
-    const queueItems = ref([
-      { title: 'Song A', status: 'Pending', nickname: 'User123', submitted: '2025-01-15' },
-      { title: 'Song B', status: 'Processing', nickname: 'DJMike', submitted: '2025-01-16' },
-      { title: 'Song C', status: 'Completed', nickname: 'JaneDoe', submitted: '2025-01-17' }
-    ])
-
    
-    const handleCreateInvitation = async () => {
+    const invitationCode = ref('')
+    const invitationItems = ref([])
+    const connectionItems = ref([])
+    const queueItems = ref([])
+
+  
+    onMounted(async () => {
+      await fetchInvitations()
+      await fetchQueue()
+      await fetchConnections()
+    })
+
+    const fetchConnections = async () => {
+      try {
+        const response = await fetch(`${configuration.api}/connections`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        if (!response.ok) {
+          throw new Error(`Error fetching connections: ${response.statusText}`)
+        }
+        const data = await response.json()
+       
+        connectionItems.value = data
+      } catch (error) {
+        console.error('Error fetching connections:', error)
+      }
+    }
+ 
+    const fetchInvitations = async () => {
+      try {
+        const response = await fetch(`${configuration.api}/invitations`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        if (!response.ok) {
+          throw new Error(`Error fetching invitations: ${response.statusText}`)
+        }
+        const data = await response.json()
+       
+        invitationItems.value = data
+      } catch (error) {
+        console.error('Error fetching invitations:', error)
+      }
+    }
+    const fetchQueue = async () => {
+      try {
+        const response = await fetch(`${configuration.api}/queue`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        if (!response.ok) {
+          throw new Error(`Error fetching queue items: ${response.statusText}`)
+        }
+        const data = await response.json()
+
+        
+       
+        queueItems.value = data
+      } catch (error) {
+        console.error('Error fetching queue:', error)
+      }
+    }
+
+  
+    const handleAcceptInvitation = async (code) => {
       try {
       
-        invitationCode.value = 'ABC123'
+        const response = await fetch(`${configuration.api}/invitations/accept/${code}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        if (!response.ok) {
+          throw new Error(`Error accepting invitation: ${response.statusText}`)
+        }
+        const newInvitation = await response.json()
+       
+        invitationItems.value.push(newInvitation)
+
+       
+        invitationCode.value = code
+
+      } catch (error) {
+        console.error('Error accepting invitation:', error)
+      }
+    }
+
+  
+    const handleCreateInvitation = async () => {
+      try {
+        const response = await fetch(`${configuration.api}/invitations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        if (!response.ok) {
+          throw new Error(`Error creating invitation: ${response.statusText}`)
+        }
+       
+        const data = await response.json()
+
+        invitationCode.value = data.code || '' 
+       
+
       } catch (error) {
         console.error('Error creating invitation:', error)
       }
     }
 
+ 
     const handleClearQueue = async () => {
       try {
+        const response = await fetch(`${configuration.api}/queue`, {
+          method: 'DELETE'
+        })
+        if (!response.ok) {
+          throw new Error(`Error clearing queue: ${response.statusText}`)
+        }
        
         queueItems.value = []
+
       } catch (error) {
         console.error('Error clearing queue:', error)
       }
     }
 
-    const handleDeleteInvitation = (index) => {
-    
-      invitationItems.value.splice(index, 1)
+   
+    const handleDeleteInvitation = async (index) => {
+      try {
+      
+        const itemToDelete = invitationItems.value[index]
+        
+       
+        const response = await fetch(`${configuration.api}/invitations/${itemToDelete.id}`, {
+          method: 'DELETE'
+        })
+        if (!response.ok) {
+          throw new Error(`Error deleting invitation: ${response.statusText}`)
+        }
+        
+        invitationItems.value.splice(index, 1)
+      } catch (error) {
+        console.error('Error deleting invitation:', error)
+      }
     }
 
     return {
       invitationCode,
       invitationItems,
       queueItems,
+      handleAcceptInvitation,
       handleCreateInvitation,
       handleClearQueue,
       handleDeleteInvitation

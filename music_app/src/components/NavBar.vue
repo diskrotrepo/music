@@ -12,7 +12,7 @@
         <router-link to="/library"><i class="fa-solid fa-record-vinyl"></i> Library</router-link>
       </li>
       <li>
-        <router-link to="/network"><i class="fa-solid fa-server"></i> Network</router-link>
+        <router-link v-if="showNetwork" to="/network"><i class="fa-solid fa-server"></i> Network</router-link>
       </li>
       <li>
         <router-link to="/settings"><i class="fa-solid fa-sliders"></i> Settings</router-link>
@@ -21,22 +21,37 @@
     <ul class="bottomNav">
       <li class="socialLinks">
         <a href="https://github.com/diskrotrepo/music" target="_new"
-          ><i class="fa-brands fa-github socialLinks"></i> source</a
-        >
+          ><i class="fa-brands fa-github socialLinks"></i> source</a>
       </li>
       <li class="socialLinks">
         <a href="https://txt.diskrot.com" target="_new"
-          ><i class="fa-brands fa-mastodon socialLinks"></i> community</a
-        >
+          ><i class="fa-brands fa-mastodon socialLinks"></i> community</a>
       </li>
       <li class="socialLinks">
         <a href="http://localhost:3000/api/v1/docs" target="_new"
-          ><i class="fa-solid fa-book socialLinks"></i> API</a
-        >
+          ><i class="fa-solid fa-book socialLinks"></i> API</a>
       </li>
     </ul>
   </nav>
 </template>
+
+<script>
+
+import { useClientStore } from '../stores/clientStore'
+
+export default {
+  
+  name: "NavBar",
+  data() {
+    return {
+      showNetwork: true //useClientStore().client != null,
+    };
+  },
+  
+}
+
+</script>
+
 
 <style scoped>
 .sidebar {

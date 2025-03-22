@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { invitationController } from "../controllers";
+import { authorizer } from "../authorization";
 
 
 
@@ -13,10 +14,10 @@ class InvitationRoutes {
     }
 
     intializeRoutes() {
-        this.router.post("/invitation/:code", invitationController.acceptInvitation);
-        this.router.post("", invitationController.createInvitation);
-        this.router.get("", invitationController.getInvitations);
-        this.router.delete("/:code", invitationController.rejectInvitation);
+        this.router.post("/invitation/:code", authorizer(), invitationController.acceptInvitation);
+        this.router.post("", authorizer(), invitationController.createInvitation);
+        this.router.get("", authorizer(), invitationController.getInvitations);
+        this.router.delete("/:code", authorizer(), invitationController.rejectInvitation);
     }
 }
 
