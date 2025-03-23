@@ -1,3 +1,4 @@
+import { Queue } from "../models/queue.model";
 import { BaseRepository } from "./repository";
 
 
@@ -10,16 +11,28 @@ export class QueueRepository extends BaseRepository<Queue> {
 
         await super.persist({
             pkey: destinationClientId,
-            skey: `queue#${requestingClientId}`,
-            data: data
+            skey: `queue#${Date.now()}`,
+            status: 'NEW',
+            data: data,
+            client_id: data.client_id,
+            music_id: data.music_id
         });
+    }
+
+    async getByMusicId(queueId: string): Promise<Queue | null> {
+
+        const results = await super.getByGSI('music_id-index', "music_id", queueId);
+
+        if (results === null) {
+            return null;
+        }
+
+        if (results.length !== 1) {
+            throw new Error("Expected 1 result, got " + results.length);
+        }
+
+        return results[0];
     }
 }
 
 
-export interface Queue {
-    id: string
-    client_id: string
-    created_at: string
-    updated_at: string
-}

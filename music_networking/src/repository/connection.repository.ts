@@ -1,3 +1,4 @@
+import { Connection } from "../models/connection.model";
 import { BaseRepository } from "./repository";
 
 export class ConnectionRepository extends BaseRepository<Connection> {
@@ -19,12 +20,21 @@ export class ConnectionRepository extends BaseRepository<Connection> {
             invitation_code: invitationCode
         });
     }
+
+    async getById(id: string): Promise<Array<Connection>> {
+
+        let filter = new Map<string, string>([
+            ["pkey", "client_id"],
+            ["skey", ""]
+        ]);
+
+        let data = await super.getByPkey(id, filter);
+
+        if (data === null) {
+            return [];
+        }
+
+        return data as Array<Connection>;
+    }
 }
 
-export interface Connection {
-    client_id: string
-    connected_to_client: string
-    invitationCode: string
-    created_at: string
-    updated_at: string
-}

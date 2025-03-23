@@ -13,8 +13,8 @@ class QueueRoutes {
 
     intializeRoutes() {
         this.router.post("", authorizer(), queueController.queue);
-        this.router.get("/queue", authorizer(), queueController.getQueuedItem);
-        this.router.patch("/queue/:id", authorizer(), queueController.updateQueuedItem);
+        this.router.get("/:id", authorizer(), queueController.getQueuedItem);
+        this.router.patch("/:id", authorizer(), queueController.updateQueuedItem);
     }
 }
 

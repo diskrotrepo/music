@@ -12,7 +12,13 @@ export class QueueController {
     }
 
     getQueuedItem = async (req: Request, res: Response): Promise<void> => {
-        res.status(200).json({ message: "" });
+        const clientId = req.headers['client-id'] as string;
+        const musicId = req.params.id;
+
+        console.log("Getting queued item for client: ", clientId);
+        let queuedItem = await this.queueService.getQueuedItem(musicId);
+
+        res.status(200).json(queuedItem);
     }
 
     updateQueuedItem = async (req: Request, res: Response): Promise<void> => {
@@ -29,7 +35,7 @@ export class QueueController {
 
         const queueItem = await this.queueService.queue(clientId, body);
 
-        res.status(200).json({ message: "" });
+        res.status(200).json({ id: queueItem });
     }
 }
 

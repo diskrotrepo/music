@@ -74,7 +74,6 @@ export class MusicController extends BaseController {
     }
 
     isRunningLocally = (): boolean => {
-
         const connectionsCheck = ` SELECT count(*) as connections FROM connections`;
         const result: { connections: number } = db.prepare(connectionsCheck).get() as { connections: number };
         return result.connections === 0;

@@ -93,6 +93,32 @@ export class BaseRepository<T> {
     }
 
 
+    async getByGSI(indexName: string, columnName: string, value: any): Promise<Array<T> | null> {
+
+        const queryCommandInput: QueryCommandInput = {
+            TableName: this.tableName,
+            IndexName: indexName,
+            KeyConditionExpression: `${columnName} = :value`,
+            ExpressionAttributeValues: {
+                ":value": value,
+            },
+        };
+
+        try {
+            const data = await docClient.send(new QueryCommand(queryCommandInput));
+
+            if (data.Items === undefined || data.Items.length === 0) {
+                return null;
+            }
+
+            return data.Items as Array<T>;
+        } catch (err) {
+            console.error("Unable to query. Error:", err);
+        }
+
+        return null;
+    }
+
 
     async persist(data: any): Promise<void> {
 

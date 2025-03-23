@@ -13,10 +13,34 @@ export class StatusController extends BaseController {
         super();
     }
 
-    async getStatus(req: Request, res: Response): Promise<void> {
+    getStatus = async (req: Request, res: Response): Promise<void> => {
 
         const { id } = req.params;
 
+        if (this.isRunningLocally()) {
+            console.log("Running locally");
+            this.localStatus(id, res);
+        } else {
+            console.log("checking status on diskrot network");
+            const response = await this.diskrotNetwork.get(`/queue/${id}`);
+
+            const status = {
+                processing_status: response.status,
+            }
+
+            res.status(200).json(status);
+        }
+
+
+    }
+
+    isRunningLocally = (): boolean => {
+        const connectionsCheck = ` SELECT count(*) as connections FROM connections`;
+        const result: { connections: number } = db.prepare(connectionsCheck).get() as { connections: number };
+        return result.connections === 0;
+    }
+
+    async localStatus(id: string, res: Response): Promise<void> {
         const endpoint = `/api/v1/status/${id}`;
         const checkStatusUrl = `${configuration.inference_server}/${endpoint}`;
 
@@ -24,7 +48,6 @@ export class StatusController extends BaseController {
 
         try {
             const response = await fetch(checkStatusUrl);
-
 
             if (!response.ok) {
                 res.status(response.status).json({ error: `No song found at ${checkStatusUrl}` });

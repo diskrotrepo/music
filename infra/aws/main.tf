@@ -56,8 +56,26 @@ module "dynamodb_tables" {
       range_key    = "skey"
       attributes = [
         { name = "pkey", type = "S" },
-        { name = "skey", type = "S" }
+        { name = "skey", type = "S" },
+        { name = "client_id", type = "S" },
+        { name = "music_id", type = "S" }
       ]
+      global_secondary_indexes = [
+        {
+          name            = "client_id-index",
+          hash_key        = "client_id",
+          projection_type = "ALL",
+          write_capacity  = 1,
+          read_capacity   = 1
+        },
+        {
+          name            = "music_id-index",
+          hash_key        = "music_id",
+          projection_type = "ALL",
+          write_capacity  = 1,
+          read_capacity   = 1
+      }]
+
       ttl = {
         attribute_name = "dt_created"
         enabled        = true
