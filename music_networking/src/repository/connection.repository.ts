@@ -5,6 +5,17 @@ export class ConnectionRepository extends BaseRepository<Connection> {
         super(tableName);
     }
 
+    async delete(clientId: string, connectedToClientId: string): Promise<void> {
+
+    }
+
+    async createConnection(clientId: string, connectedToClientId: string): Promise<void> {
+        await super.persist({
+            pkey: clientId,
+            skey: `connection#${connectedToClientId}`,
+            connected_to_client: connectedToClientId
+        });
+    }
 }
 
 export interface Connection {

@@ -34,15 +34,11 @@
         Accept Invite
       </button>
 
-      <p v-if="invitationCode">
-        Last accepted code: <strong>{{ invitationCode }}</strong>
-      </p>
-
       <table>
         <thead>
           <tr>
             <th>Nickname</th>
-            <th>Status</th>
+            <th>Direction</th>
             <th>Delete</th>
           </tr>
         </thead>
@@ -50,12 +46,11 @@
           <tr
             v-for="(item, index) in connectionItems"
             :key="index"
-            :class="index % 2 === 0 ? 'even-row' : 'odd-row'"
-          >
+            :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
             <td>{{ item.nickname }}</td>
-            <td>{{ item.status }}</td>
+            <td>{{ item.direction }}</td>
             <td>
-              <button @click="$emit('delete-invitation', index)">Delete</button>
+              <button @click="$emit('delete-connection', index)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -70,10 +65,7 @@
       <button @click="$emit('create-invitation')" class="submitButton pulse right-button">
         Create Invite
       </button>
-      <p v-if="invitationCode">
-        Your newly created invitation code is: <strong>{{ invitationCode }}</strong>
-      </p>
-
+    
       <table>
         <thead>
           <tr>
@@ -132,6 +124,7 @@
 </template>
 
 <script>
+
 import { ref } from 'vue'
 
 
@@ -148,6 +141,10 @@ export default {
       default: () => []
     },
     invitationItems: {
+      type: Array,
+      default: () => []
+    },
+    connectionItems: {
       type: Array,
       default: () => []
     }

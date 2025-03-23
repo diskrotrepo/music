@@ -9,6 +9,7 @@ export class BaseController {
     get diskrotNetwork(): DiskrotNetwork {
 
         if (BaseController._diskrotNetwork) {
+            console.log("diskrot client already initialized");
             return BaseController._diskrotNetwork;
         }
 

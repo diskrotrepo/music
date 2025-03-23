@@ -28,8 +28,6 @@ export class ClientService {
             sharedSecret: crypto.randomBytes(16).toString('hex')
         }
 
-
-
         await this.clientRepository.create(client);
         return client;
     }

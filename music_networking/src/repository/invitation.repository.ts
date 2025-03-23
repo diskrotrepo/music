@@ -16,11 +16,19 @@ export class InvitationRepository extends BaseRepository<Invitation> {
         return [];
     }
 
+    async updateInvitation(invitation: Invitation): Promise<void> {
+        await super.persist(invitation);
+    }
+
     async acceptInvitation(invitation: any): Promise<void> {
 
     }
-    async createInvitation(code: string, clientId: string) {
-
+    async persistInvitation(code: string, clientId: string) {
+        await super.persist({
+            pkey: code,
+            skey: `invitation#`,
+            client_id: clientId
+        });
     }
 
 }

@@ -8,6 +8,7 @@
     @create-invitation="handleCreateInvitation"
     @clear-queue="handleClearQueue"
     @delete-invitation="handleDeleteInvitation"
+    @delete-connection="handleDeleteConnection"
   />
 </template>
 
@@ -122,6 +123,8 @@ export default {
         const data = await response.json()
 
         invitationCode.value = data.code || '' 
+
+        fetchInvitations()
        
 
       } catch (error) {
@@ -166,14 +169,35 @@ export default {
       }
     }
 
+    const handleDeleteConnection = async (index) => {
+      try {
+      
+        const connectionToDelete = connectionItems.value[index]
+        
+       
+        const response = await fetch(`${configuration.api}/connections/${itemToDelete.id}`, {
+          method: 'DELETE'
+        })
+        if (!response.ok) {
+          throw new Error(`Error deleting connection: ${response.statusText}`)
+        }
+        
+        connectionItems.value.splice(index, 1)
+      } catch (error) {
+        console.error('Error deleting connection:', error)
+      }
+    }
+
     return {
       invitationCode,
       invitationItems,
+      connectionItems,
       queueItems,
       handleAcceptInvitation,
       handleCreateInvitation,
       handleClearQueue,
-      handleDeleteInvitation
+      handleDeleteInvitation,
+      handleDeleteConnection
     }
   }
 }

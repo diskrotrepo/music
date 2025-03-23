@@ -2,6 +2,7 @@ import configuration from '../../config/configuration.json';
 import * as crypto from 'crypto';
 import { db } from "./database";
 import { useClientStore } from '../stores/clientStore';
+import { stat } from 'fs';
 
 interface RequestData {
     url: string;
@@ -51,9 +52,9 @@ export default class DiskrotNetwork {
             }
         );
 
+
         if (!response.ok) {
-            console.error(response);
-            throw new Error(`Networking issue communicating with Diskrot POST: ${configuration.diskrot}${url}`);
+            this.errorHandling(fullUrl, response);
         }
 
         return await response.json();
@@ -78,8 +79,7 @@ export default class DiskrotNetwork {
         );
 
         if (!response.ok) {
-            console.error(response);
-            throw new Error(`Networking issue communicating with Diskrot GET: ${configuration.diskrot}${url}`);
+            return this.errorHandling(fullUrl, response);
         }
 
         return await response.json();
@@ -105,8 +105,7 @@ export default class DiskrotNetwork {
         );
 
         if (!response.ok) {
-            console.error(response);
-            throw new Error(`Networking issue communicating with Diskrot PUT: ${configuration.diskrot}${url}`);
+            return this.errorHandling(fullUrl, response);
         }
 
         return await response.json();
@@ -132,8 +131,7 @@ export default class DiskrotNetwork {
         );
 
         if (!response.ok) {
-            console.error(response);
-            throw new Error(`Networking issue communicating with Diskrot PATCH: ${configuration.diskrot}${url}`);
+            return this.errorHandling(fullUrl, response);
         }
 
         return await response.json();
@@ -158,11 +156,17 @@ export default class DiskrotNetwork {
         );
 
         if (!response.ok) {
-            console.error(response);
-            throw new Error(`Networking issue communicating with Diskrot DELETE: ${configuration.diskrot}${url}`);
+            return this.errorHandling(fullUrl, response);
         }
 
         return await response.json();
+    }
+
+    errorHandling = (fullUrl: string, response: any) => {
+
+        if (response.status === 401) {
+            console.error(response);
+        }
     }
 
     createDigestString(data: RequestData): string {

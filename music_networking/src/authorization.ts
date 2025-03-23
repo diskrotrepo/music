@@ -11,6 +11,7 @@ export function authorizer() {
         const data = req.body;
 
         if (!req.headers['client-id']) {
+            console.error("Missing client-id");
             res.status(401).send('Unauthorized');
             return;
         }
@@ -18,23 +19,27 @@ export function authorizer() {
         const client = await clientRepository.getById(req.headers['client-id'] as string);
 
         if (!client) {
+            console.error("Client not found");
             res.status(401).send('Unauthorized');
             return;
         }
 
+
         const expectedMac = computeHMAC(
             client,
             {
-                url: req.baseUrl,
+                url: req.originalUrl,
                 payload: data
             });
 
         if (providedMac !== expectedMac) {
+            console.error(`Unauthorized request from ${client.id}`);
             console.error(`Unauthorized ${providedMac} !== ${expectedMac}`);
             res.status(401).send('Unauthorized');
             return;
         }
 
+        console.log("Request authorized");
         next();
     }
 }

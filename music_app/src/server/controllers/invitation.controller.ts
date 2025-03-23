@@ -13,7 +13,20 @@ export class InvitationController extends BaseController {
     }
 
     acceptInvitation = async (req: Request, res: Response): Promise<void> => {
+
+        let invitation = db.prepare("SELECT * FROM invitations WHERE code = ?").get([req.params.code]);
+
+        if (invitation) {
+            res.status(400).json({ error: "You can't accept your own invitations." });
+            return;
+        }
+
         console.log("Accepting invitation");
+
+        let response = await this.diskrotNetwork.post(`/invitation/${req.params.code}`, {});
+
+        db.prepare("INSERT INTO connections (id, nickname, direction) VALUES (?,?,?)").run([uuid(), response.nickname, "OUTBOUND"]);
+
         res.status(200).json({});
     }
 

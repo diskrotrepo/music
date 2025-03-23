@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS invitations (
                 sql: `
 CREATE TABLE IF NOT EXISTS connections (
       id VARCHAR(36) PRIMARY KEY,
-      client_connected_id VARCHAR(36) NULL,
+      nickname VARCHAR(36) NULL,
       direction VARCHAR(36) NOT NULL,
       dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

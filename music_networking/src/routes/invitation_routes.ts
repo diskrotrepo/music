@@ -14,7 +14,7 @@ class InvitationRoutes {
     }
 
     intializeRoutes() {
-        this.router.post("/invitation/:code", authorizer(), invitationController.acceptInvitation);
+        this.router.post("/:code", authorizer(), invitationController.acceptInvitation);
         this.router.post("", authorizer(), invitationController.createInvitation);
         this.router.get("", authorizer(), invitationController.getInvitations);
         this.router.delete("/:code", authorizer(), invitationController.rejectInvitation);

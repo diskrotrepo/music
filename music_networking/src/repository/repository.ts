@@ -18,7 +18,7 @@ export class BaseRepository<T> {
         this.tableName = tableName;
     }
 
-    async getByPkey(id: string, mapper: Map<string, string>): Promise<T | null> {
+    async getByPkey(id: string, mapper?: Map<string, string>): Promise<T | null> {
         const queryCommandInput: QueryCommandInput = {
             TableName: this.tableName,
             KeyConditionExpression: "pkey = :pkey",
@@ -35,7 +35,7 @@ export class BaseRepository<T> {
 
         let data = Items[0];
 
-        if (data["pkey"] !== undefined && mapper.has("pkey")) {
+        if (data["pkey"] !== undefined && mapper && mapper.has("pkey")) {
             const newKey = mapper.get("pkey");
             if (newKey) {
                 data[newKey] = data["pkey"];
@@ -43,7 +43,7 @@ export class BaseRepository<T> {
             }
         }
 
-        if (data["skey"] !== undefined && mapper.has("skey")) {
+        if (data["skey"] !== undefined && mapper && mapper.has("skey")) {
             const newKey = mapper.get("skey");
             if (newKey) {
                 data[newKey] = data["skey"];
@@ -56,9 +56,15 @@ export class BaseRepository<T> {
 
     async persist(data: any): Promise<void> {
 
-        data.dt_created = new Date().toISOString();
+        if (data.dt_created === undefined) {
+            data.dt_created = new Date().toISOString();
+        }
+
         data.dt_updated = new Date().toISOString();
-        data.row_identifier = uuid();
+
+        if (data.row_identifier === undefined) {
+            data.row_identifier = uuid();
+        }
 
         let putCommandInput: PutCommandInput = {
             TableName: this.tableName,
