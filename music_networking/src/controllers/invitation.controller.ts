@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { InvitationService } from "../services/invitation.service";
+import { client } from "../repository/dynamodb";
 
 
 export class InvitationController {
@@ -20,15 +21,15 @@ export class InvitationController {
     acceptInvitation = async (req: Request, res: Response): Promise<void> => {
         let clientId = req.headers['client-id'] as string;
         const code = req.params.code;
-        let connectedClientNickname = await this.invitationService.acceptInvitation(clientId, code);
+        let connection = await this.invitationService.acceptInvitation(clientId, code) as { nickname: string, client_id: string } | null;
 
 
-        if (connectedClientNickname === null) {
+        if (connection === null) {
             res.status(400).json({ error: "Unable to accept invitation" });
             return;
         }
 
-        res.status(200).json({ nickname: connectedClientNickname });
+        res.status(200).json({ nickname: connection.nickname, client_id: connection.client_id });
     }
 
     rejectInvitation = async (req: Request, res: Response): Promise<void> => {

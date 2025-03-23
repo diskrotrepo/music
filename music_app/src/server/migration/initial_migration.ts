@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS connections (
       id VARCHAR(36) PRIMARY KEY,
       nickname VARCHAR(36) NULL,
       direction VARCHAR(36) NOT NULL,
+      client_id VARCHAR(36) NOT NULL,
       dt_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
                 `

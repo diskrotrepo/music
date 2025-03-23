@@ -22,7 +22,15 @@ export class ConnectionController extends BaseController {
     }
 
     deleteConnection = async (req: Request, res: Response): Promise<void> => {
-        db.prepare("DELETE FROM connections WHERE id = ?").run([req.params.id]);
+
+        if (!req.params.id) {
+            res.status(400).json({ error: "Invalid request" });
+            return;
+        }
+
+        await this.diskrotNetwork.delete(`/connections/${req.params.id}`);
+
+        db.prepare("DELETE FROM connections WHERE client_id = ?").run([req.params.id]);
         res.status(200).json({});
     }
 }

@@ -23,9 +23,11 @@ export class InvitationController extends BaseController {
 
         console.log("Accepting invitation");
 
-        let response = await this.diskrotNetwork.post(`/invitation/${req.params.code}`, {});
+        let response = await this.diskrotNetwork.post(`/invitations/${req.params.code}`, {});
 
-        db.prepare("INSERT INTO connections (id, nickname, direction) VALUES (?,?,?)").run([uuid(), response.nickname, "OUTBOUND"]);
+        console.log(response);
+
+        db.prepare("INSERT INTO connections (id, nickname, direction, client_id) VALUES (?,?,?,?)").run([uuid(), response.nickname, "OUTBOUND", response.client_id]);
 
         res.status(200).json({});
     }
@@ -40,7 +42,7 @@ export class InvitationController extends BaseController {
 
     createInvitation = async (req: Request, res: Response): Promise<void> => {
 
-        let invitationCreateResponse = await this.diskrotNetwork.post("/invitation", {}) as InvitationCreateResponse;
+        let invitationCreateResponse = await this.diskrotNetwork.post("/invitations", {}) as InvitationCreateResponse;
 
         db.prepare("INSERT INTO invitations (id, code) VALUES (?,?)").run([uuid(), invitationCreateResponse.code]);
 

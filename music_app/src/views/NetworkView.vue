@@ -104,6 +104,8 @@ export default {
        
         invitationCode.value = code
 
+        fetchConnections();
+
       } catch (error) {
         console.error('Error accepting invitation:', error)
       }
@@ -124,7 +126,7 @@ export default {
 
         invitationCode.value = data.code || '' 
 
-        fetchInvitations()
+        fetchInvitations();
        
 
       } catch (error) {
@@ -173,9 +175,11 @@ export default {
       try {
       
         const connectionToDelete = connectionItems.value[index]
+
+        console.log(connectionToDelete);
         
        
-        const response = await fetch(`${configuration.api}/connections/${itemToDelete.id}`, {
+        const response = await fetch(`${configuration.api}/connections/${connectionToDelete.client_id}`, {
           method: 'DELETE'
         })
         if (!response.ok) {

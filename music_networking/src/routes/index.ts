@@ -11,9 +11,9 @@ export default class Routes {
         app.use("/api/v1/registration", RegistrationRoutes);
         app.use("/api/v1/generation", GenerationRoutes);
         app.use("/api/v1/client", ClientRoutes);
-        app.use("/api/v1/connection", ConnectionRoutes);
+        app.use("/api/v1/connections", ConnectionRoutes);
         app.use("/api/v1/queue", QueueRoutes);
-        app.use("/api/v1/invitation", InvitationRoutes);
+        app.use("/api/v1/invitations", InvitationRoutes);
 
     }
 }

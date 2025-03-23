@@ -15,7 +15,13 @@ export class ConnectionController {
     }
 
     deleteConnection = async (req: Request, res: Response): Promise<void> => {
-        res.status(200).json({ message: "" });
+
+        let clientId = req.headers['client-id'] as string;
+        let connectionId = req.params.id;
+
+        await this.connectionService.deleteConnection(clientId, connectionId);
+
+        res.status(200).json({ success: true });
     }
 
 }

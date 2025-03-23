@@ -22,7 +22,7 @@ export class InvitationService {
         await this.invitationRepository.persistInvitation(code, clientId);
         return code;
     }
-    async acceptInvitation(clientId: string, code: string): Promise<string | null> {
+    async acceptInvitation(clientId: string, code: string): Promise<{ nickname: string, client_id: string } | null> {
         const invitation: Invitation = await this.invitationRepository.getByPkey(code) as Invitation;
 
         if (!invitation) {
@@ -40,15 +40,26 @@ export class InvitationService {
             return null;
         }
 
-        await this.connectionRepository.createConnection(clientId, invitation.client_id);
+        await this.connectionRepository.createConnection(clientId, invitation.client_id, code);
 
         invitation.accepted_client_id = clientId;
         await this.invitationRepository.updateInvitation(invitation);
 
         let connectedClient = await this.clientRepository.getByPkey(invitation.client_id) as Client;
 
+        console.log(connectedClient);
 
-        return connectedClient.nickname;
+        if (!connectedClient) {
+            console.error("Connected client not found");
+            return null;
+        }
+
+        return {
+            nickname: connectedClient.nickname,
+
+            // @ts-ignore
+            client_id: connectedClient.pkey
+        };
 
     }
     async getInvitations(clientId: string): Promise<Array<Invitation>> {

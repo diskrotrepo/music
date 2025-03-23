@@ -9,8 +9,9 @@ export class InvitationRepository extends BaseRepository<Invitation> {
     }
 
     async delete(code: string) {
-
+        await super.deleteByPkeyAndSkey(code, "invitation#");
     }
+
     async getInvitations(clientId: string): Promise<Array<Invitation>> {
 
         return [];
@@ -30,5 +31,7 @@ export class InvitationRepository extends BaseRepository<Invitation> {
             client_id: clientId
         });
     }
+
+
 
 }

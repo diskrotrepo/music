@@ -1,4 +1,4 @@
-import { PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb"
+import { DeleteCommand, PutCommand, PutCommandInput, QueryCommand, QueryCommandInput } from "@aws-sdk/lib-dynamodb"
 import { docClient } from "./dynamodb"
 import { v4 as uuid } from 'uuid'
 
@@ -33,6 +33,8 @@ export class BaseRepository<T> {
             return null;
         }
 
+        for (let data of Items) {
+        }
         let data = Items[0];
 
         if (data["pkey"] !== undefined && mapper && mapper.has("pkey")) {
@@ -54,6 +56,44 @@ export class BaseRepository<T> {
         return Items[0] as T;
     }
 
+    async getByPkeyAndSkey(pkey: string, skey: string, mapper?: Map<string, string>): Promise<T | null> {
+        const queryCommandInput: QueryCommandInput = {
+            TableName: this.tableName,
+            KeyConditionExpression: "pkey = :pkey",
+            ExpressionAttributeValues: {
+                ":pkey": pkey
+            }
+        };
+
+        const { Items } = await docClient.send(new QueryCommand(queryCommandInput));
+
+        if (Items === undefined || Items.length === 0) {
+            return null;
+        }
+
+        let data = Items[0];
+
+        if (data["pkey"] !== undefined && mapper && mapper.has("pkey")) {
+            const newKey = mapper.get("pkey");
+            if (newKey) {
+                data[newKey] = data["pkey"];
+                delete data["pkey"];
+            }
+        }
+
+        if (data["skey"] !== undefined && mapper && mapper.has("skey")) {
+            const newKey = mapper.get("skey");
+            if (newKey) {
+                data[newKey] = data["skey"];
+                delete data["skey"];
+            }
+        }
+
+        return Items[0] as T;
+    }
+
+
+
     async persist(data: any): Promise<void> {
 
         if (data.dt_created === undefined) {
@@ -74,5 +114,18 @@ export class BaseRepository<T> {
         await docClient.send(new PutCommand(putCommandInput));
     }
 
+    async deleteByPkeyAndSkey(pkey: string, skey: string): Promise<void> {
+        const command = new DeleteCommand({
+            TableName: this.tableName,
+            Key: {
+                pkey: pkey,
+                skey: skey
+            },
+        });
+
+        await docClient.send(command);
+
+
+    }
 
 }

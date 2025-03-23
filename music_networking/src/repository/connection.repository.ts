@@ -6,14 +6,17 @@ export class ConnectionRepository extends BaseRepository<Connection> {
     }
 
     async delete(clientId: string, connectedToClientId: string): Promise<void> {
-
+        await super.deleteByPkeyAndSkey(clientId, `connection#${connectedToClientId}`);
     }
 
-    async createConnection(clientId: string, connectedToClientId: string): Promise<void> {
+
+
+    async createConnection(clientId: string, connectedToClientId: string, invitationCode: string): Promise<void> {
         await super.persist({
             pkey: clientId,
             skey: `connection#${connectedToClientId}`,
-            connected_to_client: connectedToClientId
+            connected_to_client: connectedToClientId,
+            invitation_code: invitationCode
         });
     }
 }
@@ -21,6 +24,7 @@ export class ConnectionRepository extends BaseRepository<Connection> {
 export interface Connection {
     client_id: string
     connected_to_client: string
+    invitationCode: string
     created_at: string
     updated_at: string
 }
