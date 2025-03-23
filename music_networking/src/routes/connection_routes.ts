@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { connectionController } from "../controllers";
+import { authorizer } from "../authorization";
 
 
 
@@ -12,8 +13,8 @@ class ConnectionRoutes {
     }
 
     intializeRoutes() {
-        this.router.delete("/:id", connectionController.deleteConnection);
-        this.router.get("", connectionController.getConnections);
+        this.router.delete("/:id", authorizer(), connectionController.deleteConnection);
+        this.router.get("", authorizer(), connectionController.getConnections);
     }
 }
 

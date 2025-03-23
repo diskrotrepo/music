@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { registrationController } from "../controllers";
+import { authorizer } from "../authorization";
 
 
 class RegistrationRoutes {
@@ -11,9 +12,9 @@ class RegistrationRoutes {
 
     intializeRoutes() {
         this.router.post("/client", registrationController.registerClient);
-        this.router.post("/activate/:code", registrationController.activateRegistration);
-        this.router.get("/status/:clientID", registrationController.getRegistrationStatus);
-        this.router.delete("/client", registrationController.deleteRegistration);
+        this.router.post("/activate/:code", authorizer(), registrationController.activateRegistration);
+        this.router.get("/status/:clientID", authorizer(), registrationController.getRegistrationStatus);
+        this.router.delete("/client", authorizer(), registrationController.deleteRegistration);
     }
 }
 

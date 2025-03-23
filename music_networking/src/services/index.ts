@@ -12,6 +12,6 @@ export const clientService = new ClientService(clientRepository);
 export const connectionService = new ConnectionService(connectionRepository, invitationRepository);
 export const generationService = new GenerationService(generationRepository);
 export const invitationService = new InvitationService(invitationRepository, connectionRepository, clientRepository);
-export const queueService = new QueueService(queueRepository);
+export const queueService = new QueueService(queueRepository, connectionRepository);
 export const registrationService = new RegistrationService(clientRepository);
 export const emailService = new EmailService();

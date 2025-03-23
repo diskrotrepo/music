@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { queueController } from "../controllers";
+import { authorizer } from "../authorization";
 
 
 class QueueRoutes {
@@ -11,8 +12,9 @@ class QueueRoutes {
     }
 
     intializeRoutes() {
-        this.router.get("/queue", queueController.getQueuedItem);
-        this.router.patch("/queue/:id", queueController.updateQueuedItem);
+        this.router.post("", authorizer(), queueController.queue);
+        this.router.get("/queue", authorizer(), queueController.getQueuedItem);
+        this.router.patch("/queue/:id", authorizer(), queueController.updateQueuedItem);
     }
 }
 

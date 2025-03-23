@@ -27,7 +27,7 @@ class MusicRoutes {
                     description: 'Successfully submitted a song for generation',
                      schema: { $ref: '#/definitions/MusicGenerationResponse' }
             } */
-        this.router.post("", this.musicController.generate);
+        this.router.post("/generate", this.musicController.generate);
     }
 }
 

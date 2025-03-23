@@ -23,29 +23,29 @@ export class InvitationService {
         return code;
     }
     async acceptInvitation(clientId: string, code: string): Promise<{ nickname: string, client_id: string } | null> {
-        const invitation: Invitation = await this.invitationRepository.getByPkey(code) as Invitation;
+        const invitation: Array<Invitation> = await this.invitationRepository.getByPkey(code) as Array<Invitation>;
 
-        if (!invitation) {
+        if (!invitation || invitation.length !== 1) {
             console.error("Invitation not found");
             return null;
         }
 
-        if (invitation.client_id === clientId) {
+        if (invitation[0].client_id === clientId) {
             console.error("Cannot accept your own invitation");
             return null;
         }
 
-        if (invitation.accepted_client_id) {
+        if (invitation[0].accepted_client_id) {
             console.error("Invitation already accepted");
             return null;
         }
 
-        await this.connectionRepository.createConnection(clientId, invitation.client_id, code);
+        await this.connectionRepository.createConnection(clientId, invitation[0].client_id, code);
 
-        invitation.accepted_client_id = clientId;
-        await this.invitationRepository.updateInvitation(invitation);
+        invitation[0].accepted_client_id = clientId;
+        await this.invitationRepository.updateInvitation(invitation[0]);
 
-        let connectedClient = await this.clientRepository.getByPkey(invitation.client_id) as Client;
+        let connectedClient: Array<Client> = await this.clientRepository.getByPkey(invitation[0].client_id) as Array<Client>;
 
         console.log(connectedClient);
 
@@ -55,10 +55,10 @@ export class InvitationService {
         }
 
         return {
-            nickname: connectedClient.nickname,
+            nickname: connectedClient[0].nickname,
 
             // @ts-ignore
-            client_id: connectedClient.pkey
+            client_id: connectedClient[0].pkey
         };
 
     }

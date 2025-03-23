@@ -18,20 +18,14 @@ export interface MusicGenerationRequest {
 
 export class MusicController extends BaseController {
 
-
-
-
     constructor() {
         super();
     }
 
-    async generate(req: Request, res: Response): Promise<void> {
-        // #swagger.tags = ['Music']
+    generate = async (req: Request, res: Response): Promise<void> => {
         const data = req.body || {};
-
-        const endpoint = "/task";
-        const submitTaskUrl = `${configuration.inference_server}/${endpoint}`;
-        console.info(`Submitting task to ${submitTaskUrl}`);
+        let submitTaskResponse = null;
+        const isLocal = this.isRunningLocally();
 
         const promptQuery = `
         SELECT * FROM prompt 
@@ -41,38 +35,19 @@ export class MusicController extends BaseController {
 
         const lrcPromptResult: Prompt | undefined = db.prepare(promptQuery).get("LRC") as Prompt;
 
-        const response = await fetch(`${configuration.api}/lyrics/poet`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                lyrics: data.lyrics,
-                duration: data.duration,
-                steps: data.steps,
-                title: data.title,
-                cfg_strength: data.cfg_strength,
-                tags: data.tags,
-                lrc_prompt: lrcPromptResult.prompt,
-                lrc_model: lrcPromptResult.model,
-                negative_tags: data.negative_tags,
-            })
-        });
-
-        /*
-        if (!response.ok) {
-
-            res.status(500).json({ error: "Failed to submit task" });
-            return;
+        if (isLocal) {
+            console.log("Running locally");
+            submitTaskResponse = await this.localGenerate(data, lrcPromptResult);
+        } else {
+            console.log("Submitting task to diskrot network");
+            submitTaskResponse = await this.submitTask(data, lrcPromptResult);
         }
 
-
-        const submitTaskResponse: { id: string } = await response.json() as { id: string };
-        */
-        const submitTaskResponse: { id: string } = { id: "yup" }
-
+        console.log(submitTaskResponse);
 
         const newMusicQuery = `
         INSERT INTO music (
-            id, filename, title, lyrics, tags, inference_server, lrc_prompt, 
+            id, filename, title, lyrics, tags, client_processing_id, lrc_prompt,
             lrc_model, negative_tags, input_file, duration, steps, cfg_strength, model, dt_created
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
@@ -83,7 +58,7 @@ export class MusicController extends BaseController {
             data.title,
             data.lyrics,
             data.tags,
-            submitTaskUrl,
+            isLocal ? "remote" : "local",
             lrcPromptResult.prompt,
             lrcPromptResult.model,
             data.negative_tags,
@@ -95,6 +70,45 @@ export class MusicController extends BaseController {
         );
 
         res.json({ id: submitTaskResponse.id });
+
+    }
+
+    isRunningLocally = (): boolean => {
+
+        const connectionsCheck = ` SELECT count(*) as connections FROM connections`;
+        const result: { connections: number } = db.prepare(connectionsCheck).get() as { connections: number };
+        return result.connections === 0;
+    }
+
+    async submitTask(data: any, prompt: Prompt): Promise<any> {
+
+        const response = await this.diskrotNetwork.post("/queue", {
+            lyrics: data.lyrics,
+            duration: data.duration,
+            steps: data.steps,
+            title: data.title,
+            cfg_strength: data.cfg_strength,
+            tags: data.tags,
+            lrc_prompt: prompt.prompt,
+            lrc_model: prompt.model,
+            negative_tags: data.negative_tags,
+        });
+
+
+        return response;
+    }
+
+    localGenerate = async (data: any, prompt: Prompt): Promise<any> => {
+        const endpoint = "/task";
+        const submitTaskUrl = `${configuration.inference_server}/${endpoint}`;
+        console.info(`Submitting task to ${submitTaskUrl}`);
+
+
+
+
+        //  const submitTaskResponse: { id: string } = { id: "yup" }
+
+        return "";
 
     }
 }

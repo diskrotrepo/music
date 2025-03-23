@@ -22,7 +22,7 @@ export class ClientRepository extends BaseRepository<Client> implements Reposito
             return null;
         }
 
-        let client: Client = data as Client;
+        let client: Client = data[0] as Client;
         return client;
     }
 

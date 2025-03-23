@@ -18,7 +18,7 @@ export class BaseRepository<T> {
         this.tableName = tableName;
     }
 
-    async getByPkey(id: string, mapper?: Map<string, string>): Promise<T | null> {
+    async getByPkey(id: string, mapper?: Map<string, string>): Promise<Array<T> | null> {
         const queryCommandInput: QueryCommandInput = {
             TableName: this.tableName,
             KeyConditionExpression: "pkey = :pkey",
@@ -34,26 +34,26 @@ export class BaseRepository<T> {
         }
 
         for (let data of Items) {
-        }
-        let data = Items[0];
 
-        if (data["pkey"] !== undefined && mapper && mapper.has("pkey")) {
-            const newKey = mapper.get("pkey");
-            if (newKey) {
-                data[newKey] = data["pkey"];
-                delete data["pkey"];
+            if (data["pkey"] !== undefined && mapper && mapper.has("pkey")) {
+                const newKey = mapper.get("pkey");
+                if (newKey) {
+                    data[newKey] = data["pkey"];
+                    delete data["pkey"];
+                }
             }
-        }
 
-        if (data["skey"] !== undefined && mapper && mapper.has("skey")) {
-            const newKey = mapper.get("skey");
-            if (newKey) {
-                data[newKey] = data["skey"];
-                delete data["skey"];
+            if (data["skey"] !== undefined && mapper && mapper.has("skey")) {
+                const newKey = mapper.get("skey");
+                if (newKey) {
+                    data[newKey] = data["skey"];
+                    delete data["skey"];
+                }
             }
+
         }
 
-        return Items[0] as T;
+        return Items as Array<T>;
     }
 
     async getByPkeyAndSkey(pkey: string, skey: string, mapper?: Map<string, string>): Promise<T | null> {
