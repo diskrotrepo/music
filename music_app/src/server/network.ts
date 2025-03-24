@@ -22,6 +22,10 @@ export default class DiskrotNetwork {
         this.client = client;
     }
 
+    getClient = (): Client => {
+        return this.client;
+    }
+
     buildUrl = (url: string): string => {
         let fullUrl = configuration.diskrot.secure == true ? "https://" : "http://";
         fullUrl += configuration.diskrot.hostname + ":" + configuration.diskrot.port;

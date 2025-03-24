@@ -2,10 +2,17 @@ import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import { Client } from './models/client.model';
 import { clientRepository } from './repository';
+import { DISABLE_AUTH } from './app';
 
 export function authorizer() {
 
     return async (req: Request, res: Response, next: NextFunction) => {
+
+        if (DISABLE_AUTH) {
+            console.warn("!!!AUTHORIZATION IS DISABLED!!!!");
+            next();
+            return;
+        }
 
         const providedMac = req.headers['diskrot-signature'] as string || ''
         const data = req.body;
