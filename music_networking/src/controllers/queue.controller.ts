@@ -37,5 +37,17 @@ export class QueueController {
 
         res.status(200).json({ id: queueItem });
     }
+
+    getWorkQueue = async (req: Request, res: Response): Promise<void> => {
+
+        const clientId = req.headers['client-id'] as string;
+        const body = req.body;
+
+        console.log("Getting work for client: ", clientId);
+
+        const queueItem = await this.queueService.getWorkQueue(clientId);
+
+        res.status(200).json({ id: queueItem });
+    }
 }
 

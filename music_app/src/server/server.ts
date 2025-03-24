@@ -19,3 +19,4 @@ export default class Server {
     app.use(express.urlencoded({ extended: true }));
   }
 }
+

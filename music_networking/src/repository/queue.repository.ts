@@ -1,4 +1,6 @@
+import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { Queue } from "../models/queue.model";
+import { docClient } from "./dynamodb";
 import { BaseRepository } from "./repository";
 
 
@@ -32,6 +34,76 @@ export class QueueRepository extends BaseRepository<Queue> {
         }
 
         return results[0];
+    }
+
+    async getWorkForClient(requestingClientId: string, limit: number): Promise<Array<Queue> | null> {
+
+        const inProgressCountResult = await docClient.send(
+            new QueryCommand({
+                TableName: this.tableName,
+                KeyConditionExpression: "pkey = :pkey",
+                FilterExpression: "#s = :inProgressStatus",
+                ExpressionAttributeNames: {
+                    "#s": "status",
+                },
+                ExpressionAttributeValues: {
+                    ":pkey": requestingClientId,
+                    ":inProgressStatus": "IN-PROGRESS",
+                },
+                Select: "COUNT",
+            })
+        );
+
+        const currentInProgressCount = inProgressCountResult.Count ?? 0;
+        console.log("Current in-progress count:", currentInProgressCount);
+
+        if (currentInProgressCount >= 10) {
+            console.log(`Already have ${currentInProgressCount} in-progress. Not fetching more.`);
+            return [];
+        }
+
+        const remainingSlots = 10 - currentInProgressCount;
+
+        const queryCommandInput = {
+            TableName: this.tableName,
+            KeyConditionExpression: "pkey = :pkey",
+            FilterExpression: "#s = :status",
+            ExpressionAttributeNames: {
+                "#s": "status",
+            },
+            ExpressionAttributeValues: {
+                ":pkey": requestingClientId,
+                ":status": "NEW",
+            },
+            Limit: remainingSlots,
+        };
+
+        const { Items } = await docClient.send(new QueryCommand(queryCommandInput));
+
+        if (Items && Items.length > 0) {
+            for (const item of Items) {
+
+                await docClient.send(
+                    new UpdateCommand({
+                        TableName: this.tableName,
+                        Key: {
+                            pkey: item.pkey,
+                            skey: item.skey,
+                        },
+                        UpdateExpression: "SET #s = :newStatus",
+                        ExpressionAttributeNames: {
+                            "#s": "status",
+                        },
+                        ExpressionAttributeValues: {
+                            ":newStatus": "IN-PROGRESS",
+                        },
+                    })
+                );
+            }
+        }
+
+        return Items as Array<Queue>;
+
     }
 }
 

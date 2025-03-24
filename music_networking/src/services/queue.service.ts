@@ -1,5 +1,6 @@
 import { Client } from "../models/client.model";
 import { Connection } from "../models/connection.model";
+import { Queue } from "../models/queue.model";
 import { ConnectionRepository } from "../repository/connection.repository";
 import { QueueRepository } from "../repository/queue.repository";
 import { v4 as uuid } from "uuid";
@@ -24,10 +25,17 @@ export class QueueService {
 
     async getQueuedItem(musicId: string): Promise<any> {
         const results = await this.queueRepository.getByMusicId(musicId);
-        console.log(results);
-
         return results;
+    }
 
+    async getWorkQueue(clientId: string): Promise<Array<Queue>> {
+        const results = await this.queueRepository.getWorkForClient(clientId, 10);
+
+        if (results === null) {
+            return [];
+        }
+
+        return results as Array<Queue>;
     }
 
     async queue(requestingClientId: string, data: any): Promise<string> {

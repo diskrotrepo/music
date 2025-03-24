@@ -1,8 +1,7 @@
 import configuration from '../../config/configuration.json';
 import * as crypto from 'crypto';
 import { db } from "./database";
-import { useClientStore } from '../stores/clientStore';
-import { stat } from 'fs';
+
 
 interface RequestData {
     url: string;
@@ -188,3 +187,65 @@ export default class DiskrotNetwork {
     }
 }
 
+
+
+async function poll(fetchFn: () => Promise<void>, interval = 1000) {
+    while (true) {
+        try {
+            await fetchFn();
+            await new Promise((resolve) => setTimeout(resolve, interval));
+        } catch (error) {
+            console.error("Polling error:", error);
+        }
+    }
+}
+
+async function fetchData(): Promise<void> {
+    const client = DiskrotNetworkClient.diskrotNetworkClient.getClient();
+
+    try {
+        await DiskrotNetworkClient.diskrotNetworkClient.get(`/queue`);
+    } catch (error) {
+        if (error.code == "ECONNREFUSED") {
+            console.error("diskrot network unavailable.");
+        } else {
+            console.error("Failed to fetch data:", error);
+        }
+
+    }
+}
+
+(async () => {
+    try {
+        await poll(fetchData, 2000);
+    } catch (err) {
+        console.error("Polling stopped unexpectedly:", err);
+    }
+})();
+
+
+export class DiskrotNetworkClient {
+    private static _diskrotNetwork: DiskrotNetwork = null;
+
+    static get diskrotNetworkClient(): DiskrotNetwork {
+
+        if (!DiskrotNetworkClient._diskrotNetwork) {
+
+            const result = db.prepare("SELECT * FROM client").get() as { id: string, nickname: string, shared_secret: string };
+
+            if (result) {
+                DiskrotNetworkClient._diskrotNetwork = new DiskrotNetwork({
+                    id: result.id,
+                    sharedSecret: result.shared_secret
+                });
+                console.log("diskrot client initialized");
+                return DiskrotNetworkClient._diskrotNetwork;
+            } else {
+                console.error("No client found in database");
+                return null;
+            }
+        }
+
+        return DiskrotNetworkClient._diskrotNetwork;
+    }
+}
