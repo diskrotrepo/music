@@ -325,6 +325,7 @@ async function submitWork(): Promise<void> {
         console.info(`submitWork: Submitting task to ${submitTaskUrl}`);
 
         let task = {
+            music_id: workItem.id,
             title: workItem.title,
             lyrics: workItem.lyrics,
             tags: workItem.tags,
@@ -358,9 +359,7 @@ async function submitWork(): Promise<void> {
         console.log(data);
 
 
-
-        db.prepare("UPDATE queue SET processing_status = 'IN-PROGRESS', dt_started = CURRENT_TIMESTAMP, queued_work_id = ? WHERE id = ?").run([
-            data.id,
+        db.prepare("UPDATE queue SET processing_status = 'IN-PROGRESS', dt_started = CURRENT_TIMESTAMP WHERE id = ?").run([
             workItem.id
         ]);
 
@@ -396,7 +395,7 @@ async function getInferenceProgress(): Promise<void> {
             return;
         }
 
-        const endpoint = "api/v1/queue";
+        const endpoint = "/api/v1/queue";
 
         const query = `SELECT * FROM settings WHERE key in ('inference_hostname', 'inference_port', 'inference_queue_size')`;
         const result = db.prepare(query).all() as { key: string, value: string }[];
@@ -435,7 +434,7 @@ async function getInferenceProgress(): Promise<void> {
             if (data.processing_status === 'COMPLETE') {
 
                 // Update Network
-                const networkResponse = await DiskrotNetworkClient.diskrotNetworkClient.post(`/queue/${inProgressWork.id}/complete`, {});
+                const networkResponse = await DiskrotNetworkClient.diskrotNetworkClient.post(`/queue/${data.id}/complete`, {});
 
                 if (!networkResponse) {
                     console.error("Unable to update diskrot network");
@@ -462,6 +461,7 @@ async function getInferenceProgress(): Promise<void> {
 
             console.log(response);
         } catch (error) {
+            console.error(error);
             console.error('Unable to communicate with the diskrot network.');
         }
 

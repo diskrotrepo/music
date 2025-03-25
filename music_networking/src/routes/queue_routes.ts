@@ -15,7 +15,7 @@ class QueueRoutes {
         this.router.post("", authorizer(), queueController.queue);
         this.router.get("", authorizer(), queueController.getWorkQueue);
         this.router.get("/:id", authorizer(), queueController.getQueuedItem);
-        this.router.patch("/:id", authorizer(), queueController.updateQueuedItem);
+        this.router.post("/:id/complete", authorizer(), queueController.completeQueueItem);
     }
 }
 

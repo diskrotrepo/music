@@ -54,7 +54,7 @@ By default this will run at http://127.0.0.1:5001 with API documents available a
 
 ```bash
 apt-get update && apt-get upgrade -y
-apt-get install espeak-ng unzip sqlite3
+apt-get install espeak-ng unzip sqlite3 -y
 cd /workspace
 git clone https://github.com/diskrotrepo/music.git
 cd music/music_inferencing

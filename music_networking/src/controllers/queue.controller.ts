@@ -27,7 +27,7 @@ export class QueueController {
         const musicId = req.params.id;
         await this.queueService.completeWork(musicId);
 
-        res.status(200).json({ message: "" });
+        res.status(200).json({ success: true });
     }
 
     queue = async (req: Request, res: Response): Promise<void> => {
