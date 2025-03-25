@@ -47,7 +47,7 @@ export class QueueController {
 
         const queueItem = await this.queueService.getWorkQueue(clientId);
 
-        res.status(200).json({ id: queueItem });
+        res.status(200).json({ queue: queueItem });
     }
 }
 

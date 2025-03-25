@@ -33,7 +33,7 @@ export class QueueController extends BaseController {
     }
 
     getQueue = async (req: Request, res: Response): Promise<void> => {
-        console.log("Get queue");
-        res.status(200).json({});
+        const rows = db.prepare("SELECT * FROM queue").all();
+        res.status(200).json(rows);
     }
 }

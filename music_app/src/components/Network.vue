@@ -103,7 +103,7 @@
           <tr>
             <th>#</th>
             <th>Status</th>
-            <th>Nickname</th>
+            <th>Client ID</th>
             <th>Submitted</th>
           </tr>
         </thead>
@@ -112,10 +112,10 @@
             v-for="(item, index) in queueItems"
             :key="index"
             :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
-            <td>{{ key }}</td>
-            <td>{{ item.status }}</td>
-            <td>{{ item.nickname }}</td>
-            <td>{{ item.submitted }}</td>
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.processing_status }}</td>
+            <td>{{ item.client_requested_id }}</td>
+            <td>{{ item.dt_created }}</td>
           </tr>
         </tbody>
       </table>

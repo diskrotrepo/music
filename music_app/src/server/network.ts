@@ -195,19 +195,24 @@ export class DiskrotNetworkClient {
 
         if (!DiskrotNetworkClient._diskrotNetwork) {
 
-            const result = db.prepare("SELECT * FROM client").get() as { id: string, nickname: string, shared_secret: string };
-
-            if (result) {
-                DiskrotNetworkClient._diskrotNetwork = new DiskrotNetwork({
-                    id: result.id,
-                    sharedSecret: result.shared_secret
-                });
-                console.log("diskrot client initialized");
-                return DiskrotNetworkClient._diskrotNetwork;
-            } else {
-                console.error("No client found in database");
-                return null;
+            try {
+                const result = db.prepare("SELECT * FROM client").get() as { id: string, nickname: string, shared_secret: string };
+                if (result) {
+                    DiskrotNetworkClient._diskrotNetwork = new DiskrotNetwork({
+                        id: result.id,
+                        sharedSecret: result.shared_secret
+                    });
+                    console.log("diskrot client initialized");
+                    return DiskrotNetworkClient._diskrotNetwork;
+                } else {
+                    console.error("No client found in database");
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error initializing diskrot client", error);
             }
+
+
         }
 
         return DiskrotNetworkClient._diskrotNetwork;
@@ -228,16 +233,42 @@ async function poll(fetchFn: () => Promise<void>, interval = 1000) {
 }
 
 async function fetchData(): Promise<void> {
+
+    if (!DiskrotNetworkClient.diskrotNetworkClient) {
+        return;
+    }
+
     const client = DiskrotNetworkClient.diskrotNetworkClient.getClient();
 
     try {
-        await DiskrotNetworkClient.diskrotNetworkClient.get(`/queue`);
-    } catch (error) {
-        if (error.code == "ECONNREFUSED") {
-            console.error("diskrot network unavailable.");
-        } else {
-            console.error("Failed to fetch data:", error);
+        let workItems = await DiskrotNetworkClient.diskrotNetworkClient.get(`/queue`);
+
+        console.log(workItems.queue);
+
+        for (let i: number = 0; i < workItems.queue.length; i++) {
+
+            let work = workItems.queue[i];
+
+            db.prepare("INSERT INTO queue (id, title, lyrics, tags, negative_tags, steps, cfg_strength, duration, client_requested_id, lrc_prompt) VALUES (?,?,?,?,?,?,?,?,?,?)").run(
+                [
+                    work.data.music_id,
+                    work.data.title,
+                    work.data.lyrics,
+                    work.data.tags,
+                    work.data.negative_tags,
+                    work.data.steps,
+                    work.data.cfg_strength,
+                    work.data.duration,
+                    work.data.client_id,
+                    work.data.lrc_prompt
+                ]
+            );
+
+            console.log(work);
         }
+
+    } catch (error) {
+        console.error(error);
 
     }
 }
