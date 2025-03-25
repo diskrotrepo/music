@@ -9,7 +9,6 @@
 
 from flask_restx import Namespace, Resource, fields
 from flask import request
-from music_backend.lyrics import write_lyrics
 from music_inferencing.models import Prompt, PromptyCategoryEnum
 from music_inferencing.extensions import db
 import os

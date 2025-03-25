@@ -188,6 +188,33 @@ export default class DiskrotNetwork {
 }
 
 
+export class DiskrotNetworkClient {
+    private static _diskrotNetwork: DiskrotNetwork = null;
+
+    static get diskrotNetworkClient(): DiskrotNetwork {
+
+        if (!DiskrotNetworkClient._diskrotNetwork) {
+
+            const result = db.prepare("SELECT * FROM client").get() as { id: string, nickname: string, shared_secret: string };
+
+            if (result) {
+                DiskrotNetworkClient._diskrotNetwork = new DiskrotNetwork({
+                    id: result.id,
+                    sharedSecret: result.shared_secret
+                });
+                console.log("diskrot client initialized");
+                return DiskrotNetworkClient._diskrotNetwork;
+            } else {
+                console.error("No client found in database");
+                return null;
+            }
+        }
+
+        return DiskrotNetworkClient._diskrotNetwork;
+    }
+}
+
+
 
 async function poll(fetchFn: () => Promise<void>, interval = 1000) {
     while (true) {
@@ -222,30 +249,3 @@ async function fetchData(): Promise<void> {
         console.error("Polling stopped unexpectedly:", err);
     }
 })();
-
-
-export class DiskrotNetworkClient {
-    private static _diskrotNetwork: DiskrotNetwork = null;
-
-    static get diskrotNetworkClient(): DiskrotNetwork {
-
-        if (!DiskrotNetworkClient._diskrotNetwork) {
-
-            const result = db.prepare("SELECT * FROM client").get() as { id: string, nickname: string, shared_secret: string };
-
-            if (result) {
-                DiskrotNetworkClient._diskrotNetwork = new DiskrotNetwork({
-                    id: result.id,
-                    sharedSecret: result.shared_secret
-                });
-                console.log("diskrot client initialized");
-                return DiskrotNetworkClient._diskrotNetwork;
-            } else {
-                console.error("No client found in database");
-                return null;
-            }
-        }
-
-        return DiskrotNetworkClient._diskrotNetwork;
-    }
-}

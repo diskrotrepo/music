@@ -2,10 +2,6 @@ import express, { Application } from "express";
 import Server from "./server";
 
 
-
-
-
-
 export function startServer() {
 
     const app: Application = express();

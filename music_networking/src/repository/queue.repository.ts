@@ -57,12 +57,12 @@ export class QueueRepository extends BaseRepository<Queue> {
         const currentInProgressCount = inProgressCountResult.Count ?? 0;
         console.log("Current in-progress count:", currentInProgressCount);
 
-        if (currentInProgressCount >= 10) {
+        if (currentInProgressCount >= limit) {
             console.log(`Already have ${currentInProgressCount} in-progress. Not fetching more.`);
             return [];
         }
 
-        const remainingSlots = 10 - currentInProgressCount;
+        const remainingSlots = limit - currentInProgressCount;
 
         const queryCommandInput = {
             TableName: this.tableName,
