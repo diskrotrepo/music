@@ -47,7 +47,7 @@ def create_app():
         task = request.json
         logging.info(f"Received task: {task}")
 
-        generation_id = str(uuid.uuid4())
+        generation_id = task.get("music_id")
 
         new_music = Music(
             id=generation_id,
