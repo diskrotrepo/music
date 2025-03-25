@@ -56,7 +56,6 @@ export class StatusController extends BaseController {
 
             const data = await response.json();
 
-
             if (data.processing_status === "COMPLETE") {
 
                 data.filename = data.filename.replace("s3://", "");

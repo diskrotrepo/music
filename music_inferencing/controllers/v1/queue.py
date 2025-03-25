@@ -12,7 +12,7 @@ from flask import request
 from music_inferencing.extensions import db
 from music_inferencing.models import Music
 
-api = Namespace("status", description="Queue Status related APIs")
+api = Namespace("queue", description="Queue related APIs")
 
 queue_status_definition = api.model(
     "Queue Status",
@@ -47,7 +47,7 @@ queue_status_definition = api.model(
 
 
 @api.route("/<string:id>")
-class StatusController(Resource):
+class QueueController(Resource):
 
     @api.doc(
         description="Returns status of music generation in the queue",
@@ -76,6 +76,31 @@ class StatusController(Resource):
                 "filename": song.filename,
                 "processing_status": song.processing_status.value,
             }, 200
+
+        except Exception as e:
+            return {"error": str(e)}, 500
+
+    @api.doc(
+        description="Removes task from queue",
+        tags=["Queue Library"],
+    )
+    @api.response(200, "Success")
+    def get(self, id):
+        """Retrieve queue status."""
+        try:
+
+            music = db.session.query(Music).get(id)
+            if music:
+                db.session.delete(music)
+                db.session.commit()
+
+                return {
+                    "success": True,
+                }, 200
+            else:
+                return {
+                    "error": "No song found",
+                }, 404
 
         except Exception as e:
             return {"error": str(e)}, 500

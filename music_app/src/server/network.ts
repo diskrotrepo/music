@@ -243,7 +243,10 @@ async function fetchData(): Promise<void> {
     try {
         let workItems = await DiskrotNetworkClient.diskrotNetworkClient.get(`/queue`);
 
-        console.log(workItems.queue);
+        if (!workItems || workItems.queue.length === 0) {
+            console.log("fetchData: No work items available on the diskrot network");
+            return;
+        }
 
         for (let i: number = 0; i < workItems.queue.length; i++) {
 
@@ -277,6 +280,204 @@ async function fetchData(): Promise<void> {
     try {
         await poll(fetchData, 2000);
     } catch (err) {
-        console.error("Polling stopped unexpectedly:", err);
+        console.error("Polling for work stopped unexpectedly:", err);
+    }
+})();
+
+async function submitWork(): Promise<void> {
+
+    if (!DiskrotNetworkClient.diskrotNetworkClient) {
+        return;
+    }
+
+    const client = DiskrotNetworkClient.diskrotNetworkClient.getClient();
+
+    try {
+        let inProgressWork = db.prepare("SELECT * FROM queue WHERE processing_status = 'IN-PROGRESS'").get();
+
+        if (inProgressWork) {
+            console.log("submitWork: Waiting for inference server to complete work");
+            return;
+        }
+
+        let workItem = db.prepare("SELECT * FROM queue WHERE processing_status = 'NEW' ORDER BY dt_created ASC LIMIT 1").get() as { id: string, title: string, lyrics: string, tags: string, negative_tags: string, steps: number, cfg_strength: number, duration: number, client_requested_id: string, lrc_prompt: string };
+
+        if (!workItem) {
+            console.log("submitWork: There is no available work to submit for the inference server");
+            return;
+        }
+
+        console.log(workItem);
+
+        const endpoint = "/task";
+
+        const query = `SELECT * FROM settings WHERE key in ('inference_hostname', 'inference_port', 'inference_queue_size')`;
+        const result = db.prepare(query).all() as { key: string, value: string }[];
+
+        let inferenceServer = {
+            "hostname": result.find((r) => r.key === 'inference_hostname')?.value,
+            "port": Number.parseInt(result.find((r) => r.key === 'inference_port')?.value).toFixed(0),
+            "maxQueueSize": Number.parseInt(result.find((r) => r.key === 'inference_queue_size')?.value).toFixed(0)
+        }
+
+        const submitTaskUrl = `${inferenceServer.hostname}:${inferenceServer.port}${endpoint}`;
+
+        console.info(`submitWork: Submitting task to ${submitTaskUrl}`);
+
+        let task = {
+            title: workItem.title,
+            lyrics: workItem.lyrics,
+            tags: workItem.tags,
+            negative_prompt: workItem.negative_tags,
+            // input_file: workItem.input,
+            duration: workItem.duration,
+            steps: workItem.steps,
+            lrc_prompt: workItem.lrc_prompt,
+            //   lrc_model: workItem.lrc_model,
+            cfg_strength: workItem.cfg_strength
+        }
+
+        console.log(task);
+
+
+        const response = await fetch(submitTaskUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(task)
+        });
+
+        if (!response.ok) {
+            console.error(response);
+            return;
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+
+
+
+        db.prepare("UPDATE queue SET processing_status = 'IN-PROGRESS', dt_started = CURRENT_TIMESTAMP, queued_work_id = ? WHERE id = ?").run([
+            data.id,
+            workItem.id
+        ]);
+
+
+    } catch (error) {
+        console.error(error);
+
+    }
+}
+
+(async () => {
+    try {
+        await poll(submitWork, 2000);
+    } catch (err) {
+        console.error("Sending work stopped unexpectedly:", err);
+    }
+})();
+
+
+async function getInferenceProgress(): Promise<void> {
+
+    if (!DiskrotNetworkClient.diskrotNetworkClient) {
+        return;
+    }
+
+    const client = DiskrotNetworkClient.diskrotNetworkClient.getClient();
+
+    try {
+        let inProgressWork = db.prepare("SELECT queued_work_id FROM queue WHERE processing_status = 'IN-PROGRESS'").get() as { queued_work_id: string };
+
+        if (!inProgressWork) {
+            console.log("getInferenceProgress: There is no work in progress on the inference server");
+            return;
+        }
+
+        const endpoint = "api/v1/queue";
+
+        const query = `SELECT * FROM settings WHERE key in ('inference_hostname', 'inference_port', 'inference_queue_size')`;
+        const result = db.prepare(query).all() as { key: string, value: string }[];
+
+        let inferenceServer = {
+            "hostname": result.find((r) => r.key === 'inference_hostname')?.value,
+            "port": Number.parseInt(result.find((r) => r.key === 'inference_port')?.value).toFixed(0),
+            "maxQueueSize": Number.parseInt(result.find((r) => r.key === 'inference_queue_size')?.value).toFixed(0)
+        }
+
+        const inferenceStatusUrl = `${inferenceServer.hostname}:${inferenceServer.port}${endpoint}/${inProgressWork.queued_work_id}`;
+
+        console.info(`getInferenceProgress: Checking for task on ${inferenceStatusUrl}`);
+
+        try {
+            const response = await fetch(inferenceStatusUrl);
+
+            if (!response.ok) {
+
+                if (response.status === 404) {
+                    console.log(`getInferenceProgress: Inference server has no record of the task: ${inProgressWork.queued_work_id}`);
+                    /*
+                     db.prepare("UPDATE queue SET processing_status = 'FAILED', dt_completed = CURRENT_TIMESTAMP WHERE queued_work_id = ?").run([
+                         inProgressWork.queued_work_id
+                     ]);*/
+                    db.prepare("UPDATE queue SET processing_status = 'FAILED' WHERE queued_work_id = ?").run([
+                        inProgressWork.queued_work_id
+                    ]);
+                }
+
+                return;
+            }
+
+            const data = await response.json();
+
+            if (data.processing_status === 'COMPLETE') {
+
+                // Update Network
+                const networkResponse = await DiskrotNetworkClient.diskrotNetworkClient.post(`/queue/${inProgressWork.id}/complete`, {});
+
+                if (!networkResponse) {
+                    console.error("Unable to update diskrot network");
+                    return;
+                }
+
+                // Update local database
+                db.prepare("UPDATE queue SET processing_status = 'COMPLETE' WHERE queued_work_id = ?").run([
+                    inProgressWork.queued_work_id
+                ]);
+
+
+                // Remove job from inference server
+                const response = await fetch(inferenceStatusUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                console.log(response);
+                // Music deletes task
+            }
+
+            console.log(response);
+        } catch (error) {
+            console.error('Unable to communicate with the diskrot network.');
+        }
+
+
+
+
+    } catch (error) {
+        console.error(error);
+
+    }
+}
+
+(async () => {
+    try {
+        await poll(getInferenceProgress, 2000);
+    } catch (err) {
+        console.error("Polling for inference work:", err);
     }
 })();

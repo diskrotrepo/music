@@ -21,7 +21,12 @@ export class QueueController {
         res.status(200).json(queuedItem);
     }
 
-    updateQueuedItem = async (req: Request, res: Response): Promise<void> => {
+    completeQueueItem = async (req: Request, res: Response): Promise<void> => {
+
+        const clientId = req.headers['client-id'] as string;
+        const musicId = req.params.id;
+        await this.queueService.completeWork(musicId);
+
         res.status(200).json({ message: "" });
     }
 

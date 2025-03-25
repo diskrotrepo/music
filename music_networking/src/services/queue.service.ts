@@ -23,6 +23,23 @@ export class QueueService {
         console.log("removeSong");
     }
 
+    async completeWork(musicId: string): Promise<any> {
+        const results = await this.queueRepository.getByMusicId(musicId);
+
+        if (results === null) {
+            throw new Error("No item found with music_id: " + musicId);
+        }
+
+        if (results.processing_status !== "IN-PROGRESS") {
+            throw new Error("Item is not in progress");
+        }
+
+        results.processing_status = "COMPLETED";
+        await this.queueRepository.persist(results);
+
+        return results;
+    }
+
     async getQueuedItem(musicId: string): Promise<any> {
         const results = await this.queueRepository.getByMusicId(musicId);
         return results;

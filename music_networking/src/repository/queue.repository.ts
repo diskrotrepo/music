@@ -13,8 +13,8 @@ export class QueueRepository extends BaseRepository<Queue> {
 
         await super.persist({
             pkey: destinationClientId,
-            skey: `queue#${Date.now()}`,
-            status: 'NEW',
+            skey: `queue#${Date.now()}#requesting_client_id#${data.client_id}`,
+            processing_status: 'NEW',
             data: data,
             client_id: data.client_id,
             music_id: data.music_id
@@ -42,13 +42,13 @@ export class QueueRepository extends BaseRepository<Queue> {
             new QueryCommand({
                 TableName: this.tableName,
                 KeyConditionExpression: "pkey = :pkey",
-                FilterExpression: "#s = :inProgressStatus",
+                FilterExpression: "#s = :processing_status",
                 ExpressionAttributeNames: {
-                    "#s": "status",
+                    "#s": "processing_status",
                 },
                 ExpressionAttributeValues: {
                     ":pkey": requestingClientId,
-                    ":inProgressStatus": "IN-PROGRESS",
+                    ":processing_status": "IN-PROGRESS",
                 },
                 Select: "COUNT",
             })
@@ -64,16 +64,18 @@ export class QueueRepository extends BaseRepository<Queue> {
 
         const remainingSlots = limit - currentInProgressCount;
 
+        console.log("Remaining capacity:", remainingSlots);
+
         const queryCommandInput = {
             TableName: this.tableName,
             KeyConditionExpression: "pkey = :pkey",
-            FilterExpression: "#s = :status",
+            FilterExpression: "#s = :processing_status",
             ExpressionAttributeNames: {
-                "#s": "status",
+                "#s": "processing_status",
             },
             ExpressionAttributeValues: {
                 ":pkey": requestingClientId,
-                ":status": "NEW",
+                ":processing_status": "NEW",
             },
             Limit: remainingSlots,
         };
@@ -90,16 +92,18 @@ export class QueueRepository extends BaseRepository<Queue> {
                             pkey: item.pkey,
                             skey: item.skey,
                         },
-                        UpdateExpression: "SET #s = :newStatus",
+                        UpdateExpression: "SET #s = :processing_status",
                         ExpressionAttributeNames: {
-                            "#s": "status",
+                            "#s": "processing_status",
                         },
                         ExpressionAttributeValues: {
-                            ":newStatus": "IN-PROGRESS",
+                            ":processing_status": "IN-PROGRESS",
                         },
                     })
                 );
             }
+        } else {
+            console.log("No items found for client");
         }
 
         return Items as Array<Queue>;

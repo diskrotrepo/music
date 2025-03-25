@@ -10,7 +10,7 @@
 from flask import Blueprint
 from flask_restx import Api
 
-from music_inferencing.controllers.v1.status import api as status_api
+from music_inferencing.controllers.v1.queue import api as queue_api
 
 blueprint = Blueprint("api", __name__, url_prefix="/api/v1")
 
@@ -22,4 +22,4 @@ api = Api(
     doc="/docs/",
 )
 
-api.add_namespace(status_api)
+api.add_namespace(queue_api)

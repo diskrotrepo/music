@@ -98,9 +98,7 @@ export class MusicController extends BaseController {
     }
 
     localGenerate = async (data: any, prompt: Prompt): Promise<any> => {
-        const endpoint = "/task";
-        const submitTaskUrl = `${configuration.inference_server}/${endpoint}`;
-        console.info(`Submitting task to ${submitTaskUrl}`);
+
 
 
 

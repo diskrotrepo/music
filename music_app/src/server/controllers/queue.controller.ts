@@ -7,14 +7,8 @@ import { BaseController } from './base.controller';
 export class QueueController extends BaseController {
 
 
-
-
     constructor() {
         super();
-    }
-    getNextSong = async (req: Request, res: Response): Promise<void> => {
-        console.log("Getting next song");
-        res.status(200).json({});
     }
 
     purgeQueue = async (req: Request, res: Response): Promise<void> => {

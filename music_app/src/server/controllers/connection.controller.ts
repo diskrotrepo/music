@@ -7,17 +7,12 @@ import { BaseController } from './base.controller';
 
 export class ConnectionController extends BaseController {
 
-
     constructor() {
         super();
     }
 
-
     getConnections = async (req: Request, res: Response): Promise<void> => {
-
         let connections = db.prepare("SELECT * FROM connections").all();
-
-
         res.status(200).json(connections);
     }
 

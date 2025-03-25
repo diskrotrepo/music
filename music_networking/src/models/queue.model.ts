@@ -6,4 +6,6 @@ export interface Queue extends BaseModel {
     client_id: string
     created_at: string
     updated_at: string
+    processing_status: string
+    filename?: string
 }

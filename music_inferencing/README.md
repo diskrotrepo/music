@@ -54,7 +54,7 @@ By default this will run at http://127.0.0.1:5001 with API documents available a
 
 ```bash
 apt-get update && apt-get upgrade -y
-apt-get install espeak-ng unzip
+apt-get install espeak-ng unzip sqlite3
 cd /workspace
 git clone https://github.com/diskrotrepo/music.git
 cd music/music_inferencing
@@ -66,6 +66,7 @@ cp .env.example .env
 sed -i 's/<yourToken>/abc123/g' .env
 source .env
 ; Note this will download some of the models and complain about 
+flag db init
 flask db migrate
 flask db upgrade
 flask run --port=5001 --host=0.0.0.0
