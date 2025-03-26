@@ -21,10 +21,8 @@
   "keywords": [
     "diskrot"
   ],
-  "author": {
-    "name": "Alex Ayers",
-    "email": "alex.ayers@diskrot.com"
-  },
+  "author":  "Alex Ayers",
+  
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.7.0",
