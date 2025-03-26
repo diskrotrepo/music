@@ -1,8 +1,12 @@
 import Database from "better-sqlite3";
 import { initMigration } from "./migration/initial_migration";
 
+export let migrationHasRun = false;
 export const db = Database("diskrot.db");
 db.pragma("journal_mode = WAL");
+
+
+
 
 export enum DatabaseChangeSetStatus {
     COMPLETE,
@@ -70,6 +74,11 @@ export class DatabaseMigration {
 
 export function initDatabase(): void {
 
+   if (migrationHasRun) {
+    return;
+   }
+
+    console.log("Starting database migration");
     const dataMigration = new DatabaseMigration();
 
     const createMigration = `
@@ -83,5 +92,8 @@ export function initDatabase(): void {
   `;
     db.exec(createMigration);
 
-    dataMigration.execute(initMigration())
+    dataMigration.execute(initMigration());
+
+    console.log("Database migration is complete.");
+    migrationHasRun = true;
 }

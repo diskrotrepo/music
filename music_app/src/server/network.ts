@@ -1,6 +1,6 @@
 import configuration from '../../config/configuration.json';
 import * as crypto from 'crypto';
-import { db } from "./database";
+import { db, initDatabase, migrationHasRun } from "./database";
 
 
 interface RequestData {
@@ -194,6 +194,9 @@ export class DiskrotNetworkClient {
     static get diskrotNetworkClient(): DiskrotNetwork {
 
         if (!DiskrotNetworkClient._diskrotNetwork) {
+            if (!migrationHasRun) {
+                initDatabase();
+            }
 
             try {
                 const result = db.prepare("SELECT * FROM client").get() as { id: string, nickname: string, shared_secret: string };
