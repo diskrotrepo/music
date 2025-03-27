@@ -1,18 +1,16 @@
-## diskrot: MUSIC
+# music_app
 
-This electron app is both the client and the server.
+A new Flutter project.
 
-## Installation
+## Getting Started
 
-1. Run npm install: `npm install`
-2. Start the server: `npm run start`
+This project is a starting point for a Flutter application.
 
-## Generate Swagger docs
+A few resources to get you started if this is your first Flutter project:
 
-1. Run: `npm run gen-swagger`
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-## Release Process
-
-1. Update package.json with your version `v-0.0.0`
-2. Tag the branch with your version: `git tag v-0.0.0`
-3. Push: `git push && git push --tags`
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
