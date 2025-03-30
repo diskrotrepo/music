@@ -17,7 +17,10 @@ class Music extends Table {
   IntColumn get duration => integer()();
   BoolColumn get isFavorite => boolean()();
   BoolColumn get isDeleted => boolean()();
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('Prompt')
@@ -25,7 +28,10 @@ class Prompt extends Table {
   TextColumn get id => text()();
   TextColumn get prompt => text()();
   TextColumn get category => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('Client')
@@ -34,7 +40,10 @@ class Client extends Table {
   TextColumn get nickname => text()();
   TextColumn get sharedSecret => text()();
   BoolColumn get isExternal => boolean()();
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('Invitations')
@@ -42,7 +51,10 @@ class Invitations extends Table {
   TextColumn get id => text()();
   TextColumn get clientAcceptedId => text()();
   TextColumn get code => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('Connections')
@@ -51,13 +63,21 @@ class Connections extends Table {
   TextColumn get nickname => text()();
   TextColumn get direction => text()();
   TextColumn get clientId => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('Settings')
 class Settings extends Table {
   TextColumn get key => text()();
   TextColumn get value => text()();
+
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {key};
 }
 
 @DataClassName('Queue')
@@ -77,5 +97,8 @@ class Queue extends Table {
   IntColumn get duration => integer()();
   BoolColumn get isFavorite => boolean()();
   BoolColumn get isDeleted => boolean()();
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }

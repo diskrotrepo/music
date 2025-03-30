@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:music_app/create/create_screen.dart';
-import 'package:music_app/database/database.dart';
 import 'package:music_app/dependency_context.dart';
 import 'package:music_app/home/home_screen.dart';
 import 'package:music_app/library/library_screen.dart';
 import 'package:music_app/network/network_screen.dart';
 import 'package:music_app/settings/settings_screen.dart';
-import 'package:sqlite3/sqlite3.dart' as sql;
 
 Future<void> main() async {
-  await dependencyContext.allReady();
-
-  final db = dependencyContext.getIt<AppDatabase>();
-
-  db.select(db.music).get().then((value) {
-    for (var element in value) {
-      print('Music: ${element.title}');
-    }
-  });
+  setup();
 
   runApp(const MyApp());
 }

@@ -1,11 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:music_app/library/library_repository.dart';
+import 'package:music_app/database/database.dart';
 
-class LibraryController extends ChangeNotifier {
-  LibraryController({
-    required this.libraryRepository,
-  });
-  final LibraryRepository libraryRepository;
+class LibraryRepository {
+  LibraryRepository({required AppDatabase database}) : _database = database;
+  final AppDatabase _database;
 
   /*
   public getLibrary(req: Request, res: Response): void {

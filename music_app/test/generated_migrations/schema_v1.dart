@@ -61,7 +61,9 @@ class Music extends Table with TableInfo {
           GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'));
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -87,7 +89,7 @@ class Music extends Table with TableInfo {
   String get actualTableName => $name;
   static const String $name = 'music';
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Never map(Map<String, dynamic> data, {String? tablePrefix}) {
     throw UnsupportedError('TableInfo.map in schema verification code');
@@ -115,7 +117,9 @@ class Prompt extends Table with TableInfo {
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
   @override
   List<GeneratedColumn> get $columns => [id, prompt, category, createdAt];
   @override
@@ -124,7 +128,7 @@ class Prompt extends Table with TableInfo {
   String get actualTableName => $name;
   static const String $name = 'prompt';
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Never map(Map<String, dynamic> data, {String? tablePrefix}) {
     throw UnsupportedError('TableInfo.map in schema verification code');
@@ -158,7 +162,9 @@ class Client extends Table with TableInfo {
           'CHECK ("is_external" IN (0, 1))'));
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
   @override
   List<GeneratedColumn> get $columns =>
       [id, nickname, sharedSecret, isExternal, createdAt];
@@ -168,7 +174,7 @@ class Client extends Table with TableInfo {
   String get actualTableName => $name;
   static const String $name = 'client';
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Never map(Map<String, dynamic> data, {String? tablePrefix}) {
     throw UnsupportedError('TableInfo.map in schema verification code');
@@ -196,7 +202,9 @@ class Invitations extends Table with TableInfo {
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
   @override
   List<GeneratedColumn> get $columns => [id, clientAcceptedId, code, createdAt];
   @override
@@ -205,7 +213,7 @@ class Invitations extends Table with TableInfo {
   String get actualTableName => $name;
   static const String $name = 'invitations';
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Never map(Map<String, dynamic> data, {String? tablePrefix}) {
     throw UnsupportedError('TableInfo.map in schema verification code');
@@ -236,7 +244,9 @@ class Connections extends Table with TableInfo {
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
   @override
   List<GeneratedColumn> get $columns =>
       [id, nickname, direction, clientId, createdAt];
@@ -246,7 +256,7 @@ class Connections extends Table with TableInfo {
   String get actualTableName => $name;
   static const String $name = 'connections';
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Never map(Map<String, dynamic> data, {String? tablePrefix}) {
     throw UnsupportedError('TableInfo.map in schema verification code');
@@ -269,15 +279,20 @@ class Settings extends Table with TableInfo {
   late final GeneratedColumn<String> value = GeneratedColumn<String>(
       'value', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
   @override
-  List<GeneratedColumn> get $columns => [key, value];
+  List<GeneratedColumn> get $columns => [key, value, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'settings';
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {key};
   @override
   Never map(Map<String, dynamic> data, {String? tablePrefix}) {
     throw UnsupportedError('TableInfo.map in schema verification code');
@@ -347,7 +362,9 @@ class Queue extends Table with TableInfo {
           GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'));
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -373,7 +390,7 @@ class Queue extends Table with TableInfo {
   String get actualTableName => $name;
   static const String $name = 'queue';
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Never map(Map<String, dynamic> data, {String? tablePrefix}) {
     throw UnsupportedError('TableInfo.map in schema verification code');

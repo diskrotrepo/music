@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/dependency_context.dart';
+import 'package:music_app/network/network_controller.dart';
 
 class NetworkPage extends StatelessWidget {
   const NetworkPage({super.key});
@@ -38,12 +40,19 @@ class ConnectionsTab extends StatefulWidget {
 }
 
 class _ConnectionsTabState extends State<ConnectionsTab> {
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    di.get<NetworkController>();
+  }
+
   final TextEditingController _inviteCodeController = TextEditingController();
 
-  List<ConnectionItem> connections = [
-    ConnectionItem(nickname: 'UserA', direction: 'Incoming'),
-    ConnectionItem(nickname: 'UserB', direction: 'Outgoing'),
-  ];
+  List<ConnectionItem> connections = [];
 
   @override
   Widget build(BuildContext context) {
@@ -141,10 +150,17 @@ class InvitationsTab extends StatefulWidget {
 }
 
 class _InvitationsTabState extends State<InvitationsTab> {
-  List<InvitationItem> invitations = [
-    InvitationItem(nickname: 'Friend1', code: 'ABC123', status: 'Active'),
-    InvitationItem(nickname: 'Friend2', code: 'XYZ789', status: 'Pending'),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    di.get<NetworkController>();
+  }
+
+  List<InvitationItem> invitations = [];
 
   @override
   Widget build(BuildContext context) {
@@ -180,6 +196,11 @@ class _InvitationsTabState extends State<InvitationsTab> {
 
   void _createInvite() {
     debugPrint('Creating invite...');
+    /*di.get<NetworkController>().createInvite().then((invite) {
+      setState(() {
+        invitations.add();
+      });
+    });*/
   }
 
   Widget _buildInvitationsTable() {
@@ -234,6 +255,16 @@ class QueueTab extends StatefulWidget {
 }
 
 class _QueueTabState extends State<QueueTab> {
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    di.get<NetworkController>();
+  }
+
   // Example queue items
   List<QueueItem> queueItems = [
     QueueItem(

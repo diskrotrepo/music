@@ -1,4 +1,11 @@
-/*generate = async (req: Request, res: Response): Promise<void> => {
+import 'package:music_app/database/database.dart';
+
+class CreateRepository {
+  CreateRepository({required AppDatabase database}) : _database = database;
+  final AppDatabase _database;
+
+  /*
+    generate = async (req: Request, res: Response): Promise<void> => {
         const data = req.body || {};
         let submitTaskResponse = null;
         const isLocal = this.isRunningLocally();
@@ -84,14 +91,5 @@
         return "";
 
     }
-    */
-
-import 'package:flutter/material.dart';
-import 'package:music_app/create/create_repository.dart';
-
-class CreateController extends ChangeNotifier {
-  CreateController({
-    required this.createRepository,
-  });
-  final CreateRepository createRepository;
+  */
 }

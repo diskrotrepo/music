@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/dependency_context.dart';
+import 'package:music_app/settings/settings_controller.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -39,8 +41,24 @@ class NetworkSettingsTab extends StatefulWidget {
 
 class _NetworkSettingsTabState extends State<NetworkSettingsTab> {
   final TextEditingController _nicknameController =
-      TextEditingController(text: 'alexayers');
-  bool _sharingEnabled = true;
+      TextEditingController(text: '');
+  bool _sharingEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final controller = di.get<SettingsController>();
+    controller.getNetworkSettings().then((networkSettings) {
+      if (networkSettings != null) {
+        _nicknameController.text = networkSettings;
+        _sharingEnabled = _sharingEnabled == true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +107,10 @@ class _NetworkSettingsTabState extends State<NetworkSettingsTab> {
   void _toggleSharing() {
     setState(() {
       _sharingEnabled = !_sharingEnabled;
+
+      final settingsController = di.get<SettingsController>();
+      settingsController.updateSharingSettings(
+          _sharingEnabled, _nicknameController.text.trim());
     });
   }
 }
@@ -102,11 +124,26 @@ class GPUSettingsTab extends StatefulWidget {
 
 class _GPUSettingsTabState extends State<GPUSettingsTab> {
   final TextEditingController _hostnameController =
-      TextEditingController(text: 'http://213.181.111.2');
+      TextEditingController(text: 'http://127.0.0.1');
   final TextEditingController _portController =
-      TextEditingController(text: '50688');
+      TextEditingController(text: '5001');
   final TextEditingController _queueSizeController =
       TextEditingController(text: '20');
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final settingsController = di.get<SettingsController>();
+    settingsController.getGpuSettings().then((gpuSettings) {
+      _hostnameController.text = gpuSettings.hostname;
+      _portController.text = gpuSettings.port;
+      _queueSizeController.text = gpuSettings.maxQueueSize;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,10 +196,18 @@ class _GPUSettingsTabState extends State<GPUSettingsTab> {
     );
   }
 
-  void _saveGPUSettings() {
+  Future<void> _saveGPUSettings() async {
     final hostname = _hostnameController.text.trim();
     final port = _portController.text.trim();
     final maxQueueSize = _queueSizeController.text.trim();
+
+    final settingsController = di.get<SettingsController>();
+
+    await settingsController.updateGPUSettings(
+      hostname: hostname,
+      port: port,
+      maxQueueSize: maxQueueSize,
+    );
 
     // For example, store in shared preferences or make an API call
     debugPrint('Saving GPU settings: $hostname:$port, queue=$maxQueueSize');
@@ -182,6 +227,19 @@ class _PromptsSettingsTabState extends State<PromptsSettingsTab> {
         '''Take the input, and produce a Simple LRC format file which takes into account time ...
 [example text goes here]''',
   );
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final controller = di.get<SettingsController>();
+    controller.getPromptSettings().then((prompt) {
+      _lrcPromptController.text = prompt;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,6 +283,10 @@ class _PromptsSettingsTabState extends State<PromptsSettingsTab> {
 
   void _savePrompt() {
     final promptText = _lrcPromptController.text;
+    final settingsController = di.get<SettingsController>();
+
+    settingsController.updatePromptsSettings(promptText);
+
     debugPrint('Saving LRC prompt:\n$promptText');
   }
 }

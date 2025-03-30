@@ -5,7 +5,6 @@ import 'package:drift/native.dart';
 import 'package:music_app/database/tables.dart';
 import 'package:path/path.dart' as p;
 import 'package:music_app/database/database.drift.dart';
-import 'package:path_provider/path_provider.dart';
 
 @DriftDatabase(
   tables: [

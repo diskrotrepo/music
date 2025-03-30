@@ -1,14 +1,37 @@
-import 'package:flutter/material.dart';
-import 'package:music_app/network/network_repository.dart';
+import 'package:music_app/database/database.dart';
+import 'package:music_app/database/tables.dart';
 
-class NetworkController extends ChangeNotifier {
-  NetworkController({
-    required this.networkRepository,
-  });
-  final NetworkRepository networkRepository;
+class NetworkRepository {
+  NetworkRepository({required AppDatabase database}) : _database = database;
+  final AppDatabase _database;
 
-  Future<String> createInvite() async {
+  Future<void> acceptInvitation() async {}
+
+  Future<List<Invitations>> getInvitations() async {
+    /* final invitations = _database
+        .prepare("SELECT * FROM invitations")
+        .all()
+        .cast<Invitations>();
+    return invitations;*/
+    return [];
+  }
+
+  Future<String> createInvitation() async {
+    /*
+    final invitationCreateResponse =
+        await _diskrotNetwork.post("/invitations", {});
+    _database
+        .prepare("INSERT INTO invitations (id, code) VALUES (?,?)")
+        .run([uuid(), invitationCreateResponse.code]);
+    return invitationCreateResponse;*/
     return "";
+  }
+
+  Future<void> deleteInvitation() async {
+    /*
+    _database
+        .prepare("DELETE FROM invitations WHERE id = ?")
+        .run([req.params.id]);*/
   }
 
   /*
@@ -44,4 +67,11 @@ class NetworkController extends ChangeNotifier {
         res.status(200).json({});
     }
     */
+}
+
+class Invitations {
+  final String id;
+  final String code;
+
+  Invitations({required this.id, required this.code});
 }

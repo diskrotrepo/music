@@ -3,6 +3,7 @@
 import 'package:drift/drift.dart' as i0;
 import 'package:music_app/database/tables.drift.dart' as i1;
 import 'package:music_app/database/tables.dart' as i2;
+import 'package:drift/src/runtime/query_builder/query_builder.dart' as i3;
 
 typedef $$MusicTableCreateCompanionBuilder = i1.MusicCompanion Function({
   required String id,
@@ -20,7 +21,7 @@ typedef $$MusicTableCreateCompanionBuilder = i1.MusicCompanion Function({
   required int duration,
   required bool isFavorite,
   required bool isDeleted,
-  required DateTime createdAt,
+  i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 typedef $$MusicTableUpdateCompanionBuilder = i1.MusicCompanion Function({
@@ -309,7 +310,7 @@ class $$MusicTableTableManager extends i0.RootTableManager<
             required int duration,
             required bool isFavorite,
             required bool isDeleted,
-            required DateTime createdAt,
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
               i1.MusicCompanion.insert(
@@ -357,7 +358,7 @@ typedef $$PromptTableCreateCompanionBuilder = i1.PromptCompanion Function({
   required String id,
   required String prompt,
   required String category,
-  required DateTime createdAt,
+  i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 typedef $$PromptTableUpdateCompanionBuilder = i1.PromptCompanion Function({
@@ -478,7 +479,7 @@ class $$PromptTableTableManager extends i0.RootTableManager<
             required String id,
             required String prompt,
             required String category,
-            required DateTime createdAt,
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
               i1.PromptCompanion.insert(
@@ -515,7 +516,7 @@ typedef $$ClientTableCreateCompanionBuilder = i1.ClientCompanion Function({
   required String nickname,
   required String sharedSecret,
   required bool isExternal,
-  required DateTime createdAt,
+  i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 typedef $$ClientTableUpdateCompanionBuilder = i1.ClientCompanion Function({
@@ -652,7 +653,7 @@ class $$ClientTableTableManager extends i0.RootTableManager<
             required String nickname,
             required String sharedSecret,
             required bool isExternal,
-            required DateTime createdAt,
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
               i1.ClientCompanion.insert(
@@ -690,7 +691,7 @@ typedef $$InvitationsTableCreateCompanionBuilder = i1.InvitationsCompanion
   required String id,
   required String clientAcceptedId,
   required String code,
-  required DateTime createdAt,
+  i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 typedef $$InvitationsTableUpdateCompanionBuilder = i1.InvitationsCompanion
@@ -816,7 +817,7 @@ class $$InvitationsTableTableManager extends i0.RootTableManager<
             required String id,
             required String clientAcceptedId,
             required String code,
-            required DateTime createdAt,
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
               i1.InvitationsCompanion.insert(
@@ -855,7 +856,7 @@ typedef $$ConnectionsTableCreateCompanionBuilder = i1.ConnectionsCompanion
   required String nickname,
   required String direction,
   required String clientId,
-  required DateTime createdAt,
+  i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 typedef $$ConnectionsTableUpdateCompanionBuilder = i1.ConnectionsCompanion
@@ -993,7 +994,7 @@ class $$ConnectionsTableTableManager extends i0.RootTableManager<
             required String nickname,
             required String direction,
             required String clientId,
-            required DateTime createdAt,
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
               i1.ConnectionsCompanion.insert(
@@ -1030,11 +1031,13 @@ typedef $$ConnectionsTableProcessedTableManager = i0.ProcessedTableManager<
 typedef $$SettingsTableCreateCompanionBuilder = i1.SettingsCompanion Function({
   required String key,
   required String value,
+  i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 typedef $$SettingsTableUpdateCompanionBuilder = i1.SettingsCompanion Function({
   i0.Value<String> key,
   i0.Value<String> value,
+  i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 
@@ -1052,6 +1055,9 @@ class $$SettingsTableFilterComposer
 
   i0.ColumnFilters<String> get value => $composableBuilder(
       column: $table.value, builder: (column) => i0.ColumnFilters(column));
+
+  i0.ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => i0.ColumnFilters(column));
 }
 
 class $$SettingsTableOrderingComposer
@@ -1068,6 +1074,10 @@ class $$SettingsTableOrderingComposer
 
   i0.ColumnOrderings<String> get value => $composableBuilder(
       column: $table.value, builder: (column) => i0.ColumnOrderings(column));
+
+  i0.ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt,
+      builder: (column) => i0.ColumnOrderings(column));
 }
 
 class $$SettingsTableAnnotationComposer
@@ -1084,6 +1094,9 @@ class $$SettingsTableAnnotationComposer
 
   i0.GeneratedColumn<String> get value =>
       $composableBuilder(column: $table.value, builder: (column) => column);
+
+  i0.GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
 class $$SettingsTableTableManager extends i0.RootTableManager<
@@ -1114,21 +1127,25 @@ class $$SettingsTableTableManager extends i0.RootTableManager<
           updateCompanionCallback: ({
             i0.Value<String> key = const i0.Value.absent(),
             i0.Value<String> value = const i0.Value.absent(),
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
               i1.SettingsCompanion(
             key: key,
             value: value,
+            createdAt: createdAt,
             rowid: rowid,
           ),
           createCompanionCallback: ({
             required String key,
             required String value,
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
               i1.SettingsCompanion.insert(
             key: key,
             value: value,
+            createdAt: createdAt,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -1169,7 +1186,7 @@ typedef $$QueueTableCreateCompanionBuilder = i1.QueueCompanion Function({
   required int duration,
   required bool isFavorite,
   required bool isDeleted,
-  required DateTime createdAt,
+  i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 typedef $$QueueTableUpdateCompanionBuilder = i1.QueueCompanion Function({
@@ -1458,7 +1475,7 @@ class $$QueueTableTableManager extends i0.RootTableManager<
             required int duration,
             required bool isFavorite,
             required bool isDeleted,
-            required DateTime createdAt,
+            i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
               i1.QueueCompanion.insert(
@@ -1608,7 +1625,9 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
   @override
   late final i0.GeneratedColumn<DateTime> createdAt =
       i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
+          type: i0.DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          defaultValue: i3.currentDateAndTime);
   @override
   List<i0.GeneratedColumn> get $columns => [
         id,
@@ -1740,14 +1759,12 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
     }
     return context;
   }
 
   @override
-  Set<i0.GeneratedColumn> get $primaryKey => const {};
+  Set<i0.GeneratedColumn> get $primaryKey => {id};
   @override
   i1.Music map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -2097,7 +2114,7 @@ class MusicCompanion extends i0.UpdateCompanion<i1.Music> {
     required int duration,
     required bool isFavorite,
     required bool isDeleted,
-    required DateTime createdAt,
+    this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
         title = i0.Value(title),
@@ -2113,8 +2130,7 @@ class MusicCompanion extends i0.UpdateCompanion<i1.Music> {
         cfgStrength = i0.Value(cfgStrength),
         duration = i0.Value(duration),
         isFavorite = i0.Value(isFavorite),
-        isDeleted = i0.Value(isDeleted),
-        createdAt = i0.Value(createdAt);
+        isDeleted = i0.Value(isDeleted);
   static i0.Insertable<i1.Music> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? title,
@@ -2306,7 +2322,9 @@ class $PromptTable extends i2.Prompt
   @override
   late final i0.GeneratedColumn<DateTime> createdAt =
       i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
+          type: i0.DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          defaultValue: i3.currentDateAndTime);
   @override
   List<i0.GeneratedColumn> get $columns => [id, prompt, category, createdAt];
   @override
@@ -2339,14 +2357,12 @@ class $PromptTable extends i2.Prompt
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
     }
     return context;
   }
 
   @override
-  Set<i0.GeneratedColumn> get $primaryKey => const {};
+  Set<i0.GeneratedColumn> get $primaryKey => {id};
   @override
   i1.Prompt map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -2478,12 +2494,11 @@ class PromptCompanion extends i0.UpdateCompanion<i1.Prompt> {
     required String id,
     required String prompt,
     required String category,
-    required DateTime createdAt,
+    this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
         prompt = i0.Value(prompt),
-        category = i0.Value(category),
-        createdAt = i0.Value(createdAt);
+        category = i0.Value(category);
   static i0.Insertable<i1.Prompt> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? prompt,
@@ -2586,7 +2601,9 @@ class $ClientTable extends i2.Client
   @override
   late final i0.GeneratedColumn<DateTime> createdAt =
       i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
+          type: i0.DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          defaultValue: i3.currentDateAndTime);
   @override
   List<i0.GeneratedColumn> get $columns =>
       [id, nickname, sharedSecret, isExternal, createdAt];
@@ -2630,14 +2647,12 @@ class $ClientTable extends i2.Client
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
     }
     return context;
   }
 
   @override
-  Set<i0.GeneratedColumn> get $primaryKey => const {};
+  Set<i0.GeneratedColumn> get $primaryKey => {id};
   @override
   i1.Client map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -2789,13 +2804,12 @@ class ClientCompanion extends i0.UpdateCompanion<i1.Client> {
     required String nickname,
     required String sharedSecret,
     required bool isExternal,
-    required DateTime createdAt,
+    this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
         nickname = i0.Value(nickname),
         sharedSecret = i0.Value(sharedSecret),
-        isExternal = i0.Value(isExternal),
-        createdAt = i0.Value(createdAt);
+        isExternal = i0.Value(isExternal);
   static i0.Insertable<i1.Client> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? nickname,
@@ -2897,7 +2911,9 @@ class $InvitationsTable extends i2.Invitations
   @override
   late final i0.GeneratedColumn<DateTime> createdAt =
       i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
+          type: i0.DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          defaultValue: i3.currentDateAndTime);
   @override
   List<i0.GeneratedColumn> get $columns =>
       [id, clientAcceptedId, code, createdAt];
@@ -2934,14 +2950,12 @@ class $InvitationsTable extends i2.Invitations
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
     }
     return context;
   }
 
   @override
-  Set<i0.GeneratedColumn> get $primaryKey => const {};
+  Set<i0.GeneratedColumn> get $primaryKey => {id};
   @override
   i1.Invitations map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -3077,12 +3091,11 @@ class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
     required String id,
     required String clientAcceptedId,
     required String code,
-    required DateTime createdAt,
+    this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
         clientAcceptedId = i0.Value(clientAcceptedId),
-        code = i0.Value(code),
-        createdAt = i0.Value(createdAt);
+        code = i0.Value(code);
   static i0.Insertable<i1.Invitations> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? clientAcceptedId,
@@ -3182,7 +3195,9 @@ class $ConnectionsTable extends i2.Connections
   @override
   late final i0.GeneratedColumn<DateTime> createdAt =
       i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
+          type: i0.DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          defaultValue: i3.currentDateAndTime);
   @override
   List<i0.GeneratedColumn> get $columns =>
       [id, nickname, direction, clientId, createdAt];
@@ -3223,14 +3238,12 @@ class $ConnectionsTable extends i2.Connections
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
     }
     return context;
   }
 
   @override
-  Set<i0.GeneratedColumn> get $primaryKey => const {};
+  Set<i0.GeneratedColumn> get $primaryKey => {id};
   @override
   i1.Connections map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -3379,13 +3392,12 @@ class ConnectionsCompanion extends i0.UpdateCompanion<i1.Connections> {
     required String nickname,
     required String direction,
     required String clientId,
-    required DateTime createdAt,
+    this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
         nickname = i0.Value(nickname),
         direction = i0.Value(direction),
-        clientId = i0.Value(clientId),
-        createdAt = i0.Value(createdAt);
+        clientId = i0.Value(clientId);
   static i0.Insertable<i1.Connections> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? nickname,
@@ -3476,8 +3488,16 @@ class $SettingsTable extends i2.Settings
   late final i0.GeneratedColumn<String> value = i0.GeneratedColumn<String>(
       'value', aliasedName, false,
       type: i0.DriftSqlType.string, requiredDuringInsert: true);
+  static const i0.VerificationMeta _createdAtMeta =
+      const i0.VerificationMeta('createdAt');
   @override
-  List<i0.GeneratedColumn> get $columns => [key, value];
+  late final i0.GeneratedColumn<DateTime> createdAt =
+      i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
+          type: i0.DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          defaultValue: i3.currentDateAndTime);
+  @override
+  List<i0.GeneratedColumn> get $columns => [key, value, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3500,11 +3520,15 @@ class $SettingsTable extends i2.Settings
     } else if (isInserting) {
       context.missing(_valueMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
     return context;
   }
 
   @override
-  Set<i0.GeneratedColumn> get $primaryKey => const {};
+  Set<i0.GeneratedColumn> get $primaryKey => {key};
   @override
   i1.Settings map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -3513,6 +3537,8 @@ class $SettingsTable extends i2.Settings
           .read(i0.DriftSqlType.string, data['${effectivePrefix}key'])!,
       value: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}value'])!,
+      createdAt: attachedDatabase.typeMapping.read(
+          i0.DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
   }
 
@@ -3525,12 +3551,15 @@ class $SettingsTable extends i2.Settings
 class Settings extends i0.DataClass implements i0.Insertable<i1.Settings> {
   final String key;
   final String value;
-  const Settings({required this.key, required this.value});
+  final DateTime createdAt;
+  const Settings(
+      {required this.key, required this.value, required this.createdAt});
   @override
   Map<String, i0.Expression> toColumns(bool nullToAbsent) {
     final map = <String, i0.Expression>{};
     map['key'] = i0.Variable<String>(key);
     map['value'] = i0.Variable<String>(value);
+    map['created_at'] = i0.Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -3538,6 +3567,7 @@ class Settings extends i0.DataClass implements i0.Insertable<i1.Settings> {
     return i1.SettingsCompanion(
       key: i0.Value(key),
       value: i0.Value(value),
+      createdAt: i0.Value(createdAt),
     );
   }
 
@@ -3547,6 +3577,7 @@ class Settings extends i0.DataClass implements i0.Insertable<i1.Settings> {
     return Settings(
       key: serializer.fromJson<String>(json['key']),
       value: serializer.fromJson<String>(json['value']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -3555,17 +3586,21 @@ class Settings extends i0.DataClass implements i0.Insertable<i1.Settings> {
     return <String, dynamic>{
       'key': serializer.toJson<String>(key),
       'value': serializer.toJson<String>(value),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
-  i1.Settings copyWith({String? key, String? value}) => i1.Settings(
+  i1.Settings copyWith({String? key, String? value, DateTime? createdAt}) =>
+      i1.Settings(
         key: key ?? this.key,
         value: value ?? this.value,
+        createdAt: createdAt ?? this.createdAt,
       );
   Settings copyWithCompanion(i1.SettingsCompanion data) {
     return Settings(
       key: data.key.present ? data.key.value : this.key,
       value: data.value.present ? data.value.value : this.value,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -3573,53 +3608,64 @@ class Settings extends i0.DataClass implements i0.Insertable<i1.Settings> {
   String toString() {
     return (StringBuffer('Settings(')
           ..write('key: $key, ')
-          ..write('value: $value')
+          ..write('value: $value, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(key, value);
+  int get hashCode => Object.hash(key, value, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is i1.Settings &&
           other.key == this.key &&
-          other.value == this.value);
+          other.value == this.value &&
+          other.createdAt == this.createdAt);
 }
 
 class SettingsCompanion extends i0.UpdateCompanion<i1.Settings> {
   final i0.Value<String> key;
   final i0.Value<String> value;
+  final i0.Value<DateTime> createdAt;
   final i0.Value<int> rowid;
   const SettingsCompanion({
     this.key = const i0.Value.absent(),
     this.value = const i0.Value.absent(),
+    this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   });
   SettingsCompanion.insert({
     required String key,
     required String value,
+    this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : key = i0.Value(key),
         value = i0.Value(value);
   static i0.Insertable<i1.Settings> custom({
     i0.Expression<String>? key,
     i0.Expression<String>? value,
+    i0.Expression<DateTime>? createdAt,
     i0.Expression<int>? rowid,
   }) {
     return i0.RawValuesInsertable({
       if (key != null) 'key': key,
       if (value != null) 'value': value,
+      if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   i1.SettingsCompanion copyWith(
-      {i0.Value<String>? key, i0.Value<String>? value, i0.Value<int>? rowid}) {
+      {i0.Value<String>? key,
+      i0.Value<String>? value,
+      i0.Value<DateTime>? createdAt,
+      i0.Value<int>? rowid}) {
     return i1.SettingsCompanion(
       key: key ?? this.key,
       value: value ?? this.value,
+      createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3633,6 +3679,9 @@ class SettingsCompanion extends i0.UpdateCompanion<i1.Settings> {
     if (value.present) {
       map['value'] = i0.Variable<String>(value.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = i0.Variable<DateTime>(createdAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = i0.Variable<int>(rowid.value);
     }
@@ -3644,6 +3693,7 @@ class SettingsCompanion extends i0.UpdateCompanion<i1.Settings> {
     return (StringBuffer('SettingsCompanion(')
           ..write('key: $key, ')
           ..write('value: $value, ')
+          ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3755,7 +3805,9 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
   @override
   late final i0.GeneratedColumn<DateTime> createdAt =
       i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime, requiredDuringInsert: true);
+          type: i0.DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          defaultValue: i3.currentDateAndTime);
   @override
   List<i0.GeneratedColumn> get $columns => [
         id,
@@ -3887,14 +3939,12 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
     }
     return context;
   }
 
   @override
-  Set<i0.GeneratedColumn> get $primaryKey => const {};
+  Set<i0.GeneratedColumn> get $primaryKey => {id};
   @override
   i1.Queue map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -4243,7 +4293,7 @@ class QueueCompanion extends i0.UpdateCompanion<i1.Queue> {
     required int duration,
     required bool isFavorite,
     required bool isDeleted,
-    required DateTime createdAt,
+    this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
         title = i0.Value(title),
@@ -4259,8 +4309,7 @@ class QueueCompanion extends i0.UpdateCompanion<i1.Queue> {
         cfgStrength = i0.Value(cfgStrength),
         duration = i0.Value(duration),
         isFavorite = i0.Value(isFavorite),
-        isDeleted = i0.Value(isDeleted),
-        createdAt = i0.Value(createdAt);
+        isDeleted = i0.Value(isDeleted);
   static i0.Insertable<i1.Queue> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? title,
