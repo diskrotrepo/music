@@ -1,125 +1,246 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:music_app/create/create_screen.dart';
+import 'package:music_app/database/database.dart';
+import 'package:music_app/dependency_context.dart';
+import 'package:music_app/home/home_screen.dart';
+import 'package:music_app/library/library_screen.dart';
+import 'package:music_app/network/network_screen.dart';
+import 'package:music_app/settings/settings_screen.dart';
+import 'package:sqlite3/sqlite3.dart' as sql;
 
-void main() {
+Future<void> main() async {
+  await dependencyContext.allReady();
+
+  final db = dependencyContext.getIt<AppDatabase>();
+
+  db.select(db.music).get().then((value) {
+    for (var element in value) {
+      print('Music: ${element.title}');
+    }
+  });
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'diskrot Demo',
+      theme: ThemeData.dark(),
+      home: const DiskrotApp(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class DiskrotApp extends StatefulWidget {
+  const DiskrotApp({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<DiskrotApp> createState() => _DiskrotHomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class _DiskrotHomeState extends State<DiskrotApp> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 1024),
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 200,
+                      color: const Color.fromARGB(137, 57, 57, 57),
+                      child: _buildNavigationMenu(),
+                    ),
+                    Expanded(
+                      child: _buildContent(),
+                    ),
+                  ],
+                ),
+              ),
+              _MusicPlayerBar(),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildNavigationMenu() {
+    return ListTileTheme(
+      textColor: Colors.white,
+      iconColor: Colors.white,
+      selectedColor: Colors.white,
+      selectedTileColor: Colors.pink,
+      child: ListView(
+        children: [
+          ListTile(
+            title: const Text('diskrot'),
+            tileColor: const Color.fromARGB(255, 221, 1, 1),
+          ),
+          ListTile(
+            leading: const Icon(FontAwesomeIcons.house),
+            title: const Text('Home'),
+            selected: _selectedIndex == 0,
+            onTap: () => setState(() => _selectedIndex = 0),
+            hoverColor: Colors.pink,
+          ),
+          ListTile(
+            leading: const Icon(FontAwesomeIcons.music),
+            title: const Text('Create'),
+            selected: _selectedIndex == 1,
+            onTap: () => setState(() => _selectedIndex = 1),
+            hoverColor: Colors.pink,
+          ),
+          ListTile(
+            leading: const Icon(FontAwesomeIcons.compactDisc),
+            title: const Text('Library'),
+            selected: _selectedIndex == 2,
+            onTap: () => setState(() => _selectedIndex = 2),
+            hoverColor: Colors.pink,
+          ),
+          ListTile(
+            leading: const Icon(FontAwesomeIcons.server),
+            title: const Text('Network'),
+            selected: _selectedIndex == 3,
+            onTap: () => setState(() => _selectedIndex = 3),
+            hoverColor: Colors.pink,
+          ),
+          ListTile(
+            leading: const Icon(FontAwesomeIcons.sliders),
+            title: const Text('Settings'),
+            selected: _selectedIndex == 4,
+            onTap: () => setState(() => _selectedIndex = 4),
+            hoverColor: Colors.pink,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    switch (_selectedIndex) {
+      case 0:
+        return const HomePage();
+      case 1:
+        return const CreatePage();
+      case 2:
+        return const LibraryPage();
+      case 3:
+        return const NetworkPage();
+      case 4:
+        return const SettingsPage();
+      default:
+        return const HomePage();
+    }
+  }
+}
+
+class _MusicPlayerBar extends StatelessWidget {
+  const _MusicPlayerBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 26, 25, 29),
+        border: const Border(
+          top: BorderSide(
+            color: Colors.pink,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text('No song playing'),
+          ),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.skip_previous),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.play_arrow),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.skip_next),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text('00:00 / 00:00'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  const HomeContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      alignment: Alignment.center,
+      child: const Text(
+        'Home Page Content',
+        style: TextStyle(fontSize: 20),
+      ),
+    );
+  }
+}
+
+class LibraryContent extends StatelessWidget {
+  const LibraryContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.all(16),
+      child: const Text(
+        'Library Content Here',
+        style: TextStyle(fontSize: 20),
+      ),
+    );
+  }
+}
+
+class SettingsContent extends StatelessWidget {
+  const SettingsContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.all(16),
+      child: const Text(
+        'Settings Content Here',
+        style: TextStyle(fontSize: 20),
+      ),
     );
   }
 }
