@@ -1,10 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:music_app/database/database.dart';
 import 'package:music_app/database/tables.drift.dart';
+import 'package:logger/logger.dart';
+import 'package:music_app/dependency_context.dart';
 
 class SettingsRepository {
   SettingsRepository({required AppDatabase database}) : _database = database;
   final AppDatabase _database;
+  final Logger _logger = di.get<Logger>();
 
   Future<void> updateGPUSettings(
       String hostname, String port, String maxQueueSize) async {

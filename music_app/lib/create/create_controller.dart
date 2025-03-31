@@ -87,11 +87,14 @@
     */
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:music_app/create/create_repository.dart';
+import 'package:music_app/dependency_context.dart';
 
 class CreateController extends ChangeNotifier {
   CreateController({
     required this.createRepository,
   });
   final CreateRepository createRepository;
+  final Logger _logger = di.get<Logger>();
 }

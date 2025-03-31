@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart' hide Disposable;
+import 'package:logger/logger.dart';
 import 'package:music_app/create/create_controller.dart';
 import 'package:music_app/create/create_repository.dart';
 import 'package:music_app/database/database.dart';
@@ -17,6 +18,17 @@ GetIt setup() {
     ..registerLazySingleton<AppDatabase>(
       AppDatabase.new,
       dispose: (database) => database.close(),
+    )
+    ..registerLazySingleton<Logger>(
+      () => Logger(
+        printer: PrettyPrinter(
+          methodCount: 2,
+          errorMethodCount: 8,
+          lineLength: 120,
+          colors: true,
+          dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
+        ),
+      ),
     )
     ..registerLazySingleton<SettingsRepository>(
       () => SettingsRepository(database: di.get<AppDatabase>()),

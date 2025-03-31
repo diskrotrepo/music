@@ -1,8 +1,11 @@
 import 'package:music_app/database/database.dart';
+import 'package:logger/logger.dart';
+import 'package:music_app/dependency_context.dart';
 
 class CreateRepository {
   CreateRepository({required AppDatabase database}) : _database = database;
   final AppDatabase _database;
+  final Logger _logger = di.get<Logger>();
 
   /*
     generate = async (req: Request, res: Response): Promise<void> => {

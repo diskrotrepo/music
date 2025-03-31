@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:logger/web.dart';
+import 'package:music_app/configuration/configuration.dart';
+import 'package:music_app/dependency_context.dart';
 import 'package:music_app/settings/settings_repository.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,6 +12,7 @@ class SettingsController extends ChangeNotifier {
       : _settingsRepository = settingsRepository;
 
   final SettingsRepository _settingsRepository;
+  final Logger _logger = di.get<Logger>();
 
   Future<void> updateGPUSettings({
     required String hostname,
@@ -27,11 +31,12 @@ class SettingsController extends ChangeNotifier {
   void updateSharingSettings(bool sharingEnabled, String nickname) {
     _settingsRepository.updateNetworkSettings(sharingEnabled);
 
-    final url = "http://127.0.0.1:8080/api/v1/registration/client";
+    final configuration = Configuration.fromEnvironment();
 
     http
         .post(
-      Uri.parse(url),
+      Uri.parse(
+          "${configuration.serverConfiguration.fullUrl}/registration/client"),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(
         {
@@ -41,12 +46,12 @@ class SettingsController extends ChangeNotifier {
     )
         .then((response) {
       if (response.statusCode == 200) {
-        print('Registration successful');
+        _logger.i(response.body);
       } else {
-        print('Registration failed: ${response.statusCode}');
+        _logger.i('Registration failed: ${response.statusCode}');
       }
     }).catchError((error) {
-      print('Error: $error');
+      _logger.e('Error: $error');
     });
 
     notifyListeners();

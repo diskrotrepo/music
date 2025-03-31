@@ -263,6 +263,7 @@ class _PromptsSettingsTabState extends State<PromptsSettingsTab> {
               controller: _lrcPromptController,
               maxLines: null,
               expands: true,
+              textAlignVertical: TextAlignVertical.top,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
               ),

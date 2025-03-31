@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/library/library_repository.dart';
+import 'package:logger/logger.dart';
+import 'package:music_app/dependency_context.dart';
 
 class LibraryController extends ChangeNotifier {
   LibraryController({
     required this.libraryRepository,
   });
   final LibraryRepository libraryRepository;
+  final Logger _logger = di.get<Logger>();
 
   /*
   public getLibrary(req: Request, res: Response): void {

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/network/network_repository.dart';
+import 'package:logger/logger.dart';
+import 'package:music_app/dependency_context.dart';
 
 class NetworkController extends ChangeNotifier {
   NetworkController({
     required this.networkRepository,
   });
   final NetworkRepository networkRepository;
+  final Logger _logger = di.get<Logger>();
 
   Future<String> createInvite() async {
     return "";
