@@ -11,12 +11,8 @@ class NetworkRepository {
   Future<void> acceptInvitation() async {}
 
   Future<List<Invitations>> getInvitations() async {
-    /* final invitations = _database
-        .prepare("SELECT * FROM invitations")
-        .all()
-        .cast<Invitations>();
-    return invitations;*/
-    return [];
+    final results = _database.select(_database.invitations).get();
+    return results as List<Invitations>;
   }
 
   Future<String> createInvitation() async {
@@ -30,11 +26,8 @@ class NetworkRepository {
     return "";
   }
 
-  Future<void> deleteInvitation() async {
-    /*
-    _database
-        .prepare("DELETE FROM invitations WHERE id = ?")
-        .run([req.params.id]);*/
+  Future<void> deleteInvitation(String id) async {
+    _database.delete(_database.invitations).where((tbl) => tbl.id.equals(id));
   }
 
   /*
@@ -52,23 +45,7 @@ class NetworkRepository {
         res.status(200).json({});
     }
 
-    getInvitations = async (req: Request, res: Response): Promise<void> => {
-
-        let invitations = db.prepare("SELECT * FROM invitations").all();
-        res.status(200).json(invitations);
-    }
-
-    createInvitation = async (req: Request, res: Response): Promise<void> => {
-
-        let invitationCreateResponse = await this.diskrotNetwork.post("/invitations", {}) as InvitationCreateResponse;
-        db.prepare("INSERT INTO invitations (id, code) VALUES (?,?)").run([uuid(), invitationCreateResponse.code]);
-        res.status(200).json(invitationCreateResponse);
-    }
-
-    deleteInvitation = async (req: Request, res: Response): Promise<void> => {
-        db.prepare("DELETE FROM invitations WHERE id = ?").run([req.params.id]);
-        res.status(200).json({});
-    }
+  
     */
 }
 

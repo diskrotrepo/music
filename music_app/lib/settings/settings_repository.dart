@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:drift/drift.dart';
 import 'package:music_app/database/database.dart';
 import 'package:music_app/database/tables.drift.dart';
@@ -43,13 +45,12 @@ class SettingsRepository {
   }
 
   Future<void> updateNetworkSettings(bool enabled) async {
-    await (_database.update(_database.settings)
-          ..where((tbl) => tbl.key.equals('enable_sharing')))
-        .write(
-      SettingsCompanion(
-        value: Value(enabled.toString()),
-      ),
-    );
+    await _database.into(_database.settings).insertOnConflictUpdate(
+          SettingsCompanion(
+            key: const Value('enable_sharing'),
+            value: Value(enabled.toString()),
+          ),
+        );
   }
 
   Future<GpuSettings> getGpuSettings() async {

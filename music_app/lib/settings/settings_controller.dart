@@ -1,15 +1,19 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 import 'package:music_app/configuration/configuration.dart';
 import 'package:music_app/dependency_context.dart';
+import 'package:music_app/network/network_repository.dart';
 import 'package:music_app/settings/settings_repository.dart';
 import 'package:http/http.dart' as http;
 
 class SettingsController extends ChangeNotifier {
-  SettingsController({required SettingsRepository settingsRepository})
-      : _settingsRepository = settingsRepository;
+  SettingsController({
+    required SettingsRepository settingsRepository,
+  }) : _settingsRepository = settingsRepository;
 
   final SettingsRepository _settingsRepository;
   final Logger _logger = di.get<Logger>();
@@ -29,8 +33,6 @@ class SettingsController extends ChangeNotifier {
   }
 
   void updateSharingSettings(bool sharingEnabled, String nickname) {
-    _settingsRepository.updateNetworkSettings(sharingEnabled);
-
     final configuration = Configuration.fromEnvironment();
 
     http
@@ -46,7 +48,10 @@ class SettingsController extends ChangeNotifier {
     )
         .then((response) {
       if (response.statusCode == 200) {
-        _logger.i(response.body);
+        final file = File('.diskrot_client.json');
+        file.writeAsStringSync(response.body);
+        _settingsRepository.updateNetworkSettings(true);
+        _logger.i('Registration successful: ${response.body}');
       } else {
         _logger.i('Registration failed: ${response.statusCode}');
       }
@@ -56,44 +61,6 @@ class SettingsController extends ChangeNotifier {
 
     notifyListeners();
   }
-
-  /*
-
-  async register(req: Request, res: Response): Promise<void> {
-
-        const data = req.body || {};
-
-
-        let fullUrl = configuration.diskrot.secure == true ? "https://" : "http://";
-        fullUrl += configuration.diskrot.hostname + ":" + configuration.diskrot.port;
-        fullUrl += configuration.diskrot.api + "/registration/client";
-
-        const response = await fetch(
-            fullUrl,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            }
-        );
-
-        const ClientRegistrationResponse = await response.json() as ClientRegistrationResponse;
-
-        const query = `
-        INSERT INTO client (id, nickname, shared_secret)
-        VALUES (?, ?, ?)
-        `;
-
-        db.prepare(query).run([
-            ClientRegistrationResponse.client.id,
-            ClientRegistrationResponse.client.nickname,
-            ClientRegistrationResponse.client.sharedSecret
-        ]);
-
-        res.json({ "id": ClientRegistrationResponse.client.id });
-
-    }
-    */
 
   Future<GpuSettings> getGpuSettings() async {
     return await _settingsRepository.getGpuSettings();
@@ -106,6 +73,20 @@ class SettingsController extends ChangeNotifier {
   Future<String?> getNetworkSettings() async {
     final enabled = await _settingsRepository.getNetworkSettings();
 
-    return enabled ? 'alexayers' : null;
+    _logger.i('Network settings: $enabled');
+
+    if (enabled == false) {
+      return null;
+    }
+
+    final file = File('.diskrot_client.json');
+    if (file.existsSync() == false) {
+      return null;
+    }
+    final contents = file.readAsStringSync();
+    final data = jsonDecode(contents);
+    final nickname = data['client']['nickname'] as String;
+
+    return nickname;
   }
 }
