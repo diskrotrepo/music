@@ -6,14 +6,18 @@ import 'package:music_app/configuration/configuration.dart';
 import 'package:music_app/dependency_context.dart';
 import 'package:crypto/crypto.dart';
 
+final logger = di.get<Logger>();
+
 Future<void> post(String url, String body) async {
   final configuration = Configuration.fromEnvironment();
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
+  logger.i("${configuration.serverConfiguration.fullUrl}$url");
+
   http
       .post(
-    Uri.parse("${configuration.serverConfiguration.fullUrl}/$url"),
+    Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
       'client-id': diskrotClient.id,
@@ -41,8 +45,10 @@ Future<void> get(String url) async {
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
+  logger.i("${configuration.serverConfiguration.fullUrl}$url");
+
   http.get(
-    Uri.parse("${configuration.serverConfiguration.fullUrl}/$url"),
+    Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
       'client-id': diskrotClient.id,
@@ -68,9 +74,11 @@ Future<void> put(String url, String body) async {
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
+  logger.i("${configuration.serverConfiguration.fullUrl}$url");
+
   http
       .put(
-    Uri.parse("${configuration.serverConfiguration.fullUrl}/$url"),
+    Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
       'client-id': diskrotClient.id,
@@ -98,9 +106,11 @@ Future<void> patch(String url, String body) async {
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
+  logger.i("${configuration.serverConfiguration.fullUrl}$url");
+
   http
       .patch(
-    Uri.parse("${configuration.serverConfiguration.fullUrl}/$url"),
+    Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
       'client-id': diskrotClient.id,
@@ -128,8 +138,10 @@ Future<void> delete(String url) async {
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
+  logger.i("${configuration.serverConfiguration.fullUrl}$url");
+
   http.delete(
-    Uri.parse("${configuration.serverConfiguration.fullUrl}/$url"),
+    Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
       'client-id': diskrotClient.id,

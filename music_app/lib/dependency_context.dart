@@ -75,8 +75,8 @@ DiskrotClient get _diskRotClient {
   final data = jsonDecode(contents);
 
   return DiskrotClient(
-    id: data['id'] as String,
-    sharedSecret: data['sharedSecret'] as String,
-    nickname: data['nickname'] as String,
+    id: data['client']['id'] as String,
+    sharedSecret: data['client']['sharedSecret'] as String,
+    nickname: data['client']['nickname'] as String,
   );
 }

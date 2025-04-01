@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:music_app/configuration/configuration.dart';
 import 'package:music_app/network/network_repository.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/dependency_context.dart';
+import 'package:music_app/networkiing/diskrot_network.dart';
 
 class NetworkController extends ChangeNotifier {
   NetworkController({
@@ -11,6 +15,10 @@ class NetworkController extends ChangeNotifier {
   final Logger _logger = di.get<Logger>();
 
   Future<String> createInvite() async {
+    _logger.i("Creating invitation...");
+    final invitationCreateResponse = post("/invitations", jsonEncode({}));
+
+    _logger.i("Invitation created: $invitationCreateResponse");
     return "";
   }
 

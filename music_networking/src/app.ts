@@ -4,7 +4,7 @@ import Server from "./server";
 const app: Application = express();
 const server: Server = new Server(app);
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
-export const DISABLE_AUTH = true;
+export const DISABLE_AUTH = false;
 
 
 app
