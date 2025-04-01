@@ -34,22 +34,10 @@ class Prompt extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DataClassName('Client')
-class Client extends Table {
-  TextColumn get id => text()();
-  TextColumn get nickname => text()();
-  TextColumn get sharedSecret => text()();
-  BoolColumn get isExternal => boolean()();
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
 @DataClassName('Invitations')
 class Invitations extends Table {
   TextColumn get id => text()();
-  TextColumn get clientAcceptedId => text()();
+  TextColumn get clientAcceptedId => text().nullable()();
   TextColumn get code => text()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
@@ -84,10 +72,10 @@ class Settings extends Table {
 class Queue extends Table {
   TextColumn get id => text()();
   TextColumn get title => text()();
-  TextColumn get lyrics => text()();
+  TextColumn get lyrics => text().nullable()();
   TextColumn get tags => text()();
-  TextColumn get negativeTags => text()();
-  TextColumn get inputFile => text()();
+  TextColumn get negativeTags => text().nullable()();
+  TextColumn get inputFile => text().nullable()();
   TextColumn get model => text()();
   TextColumn get clientRequestedId => text()();
   TextColumn get lrcPrompt => text()();
@@ -95,8 +83,8 @@ class Queue extends Table {
   IntColumn get steps => integer()();
   IntColumn get cfgStrength => integer()();
   IntColumn get duration => integer()();
-  BoolColumn get isFavorite => boolean()();
-  BoolColumn get isDeleted => boolean()();
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
+  BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   @override

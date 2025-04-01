@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:music_app/configuration/configuration.dart';
+import 'package:music_app/network/network_models.dart';
 import 'package:music_app/network/network_repository.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/dependency_context.dart';
@@ -14,12 +15,23 @@ class NetworkController extends ChangeNotifier {
   final NetworkRepository networkRepository;
   final Logger _logger = di.get<Logger>();
 
-  Future<String> createInvite() async {
+  Future<AcceptInvitationResponse> createInvite() async {
     _logger.i("Creating invitation...");
-    final invitationCreateResponse = post("/invitations", jsonEncode({}));
+    final invitationCreateResponse = await post("/invitations", jsonEncode({}));
+
+    if (invitationCreateResponse.statusCode != 200) {
+      _logger
+          .e("Failed to create invitation: ${invitationCreateResponse.body}");
+      throw Exception("Failed to create invitation");
+    }
+
+    final acceptInvitationResponse = AcceptInvitationResponse.fromJson(
+        jsonDecode(invitationCreateResponse.body));
+
+    await networkRepository.createInvitation(acceptInvitationResponse.code);
 
     _logger.i("Invitation created: $invitationCreateResponse");
-    return "";
+    return acceptInvitationResponse;
   }
 
   /*

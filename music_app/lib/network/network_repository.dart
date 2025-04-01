@@ -1,7 +1,10 @@
+import 'package:drift/drift.dart';
 import 'package:music_app/database/database.dart';
 import 'package:music_app/database/tables.dart';
 import 'package:logger/logger.dart';
+import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
+import 'package:uuid/uuid.dart';
 
 class NetworkRepository {
   NetworkRepository({required AppDatabase database}) : _database = database;
@@ -15,15 +18,11 @@ class NetworkRepository {
     return results as List<Invitations>;
   }
 
-  Future<String> createInvitation() async {
-    /*
-    final invitationCreateResponse =
-        await _diskrotNetwork.post("/invitations", {});
-    _database
-        .prepare("INSERT INTO invitations (id, code) VALUES (?,?)")
-        .run([uuid(), invitationCreateResponse.code]);
-    return invitationCreateResponse;*/
-    return "";
+  Future<void> createInvitation(String code) async {
+    _database.invitations.insertOne(InvitationsCompanion(
+      id: Value(Uuid().v4()),
+      code: Value(code),
+    ));
   }
 
   Future<void> deleteInvitation(String id) async {
@@ -50,8 +49,14 @@ class NetworkRepository {
 }
 
 class Invitations {
+  Invitations({
+    required this.id,
+    required this.clientAcceptedId,
+    required this.code,
+    required this.createdAt,
+  });
   final String id;
+  final String clientAcceptedId;
   final String code;
-
-  Invitations({required this.id, required this.code});
+  final DateTime createdAt;
 }

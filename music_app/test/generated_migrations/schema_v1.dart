@@ -140,52 +140,6 @@ class Prompt extends Table with TableInfo {
   }
 }
 
-class Client extends Table with TableInfo {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  Client(this.attachedDatabase, [this._alias]);
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> nickname = GeneratedColumn<String>(
-      'nickname', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<String> sharedSecret = GeneratedColumn<String>(
-      'shared_secret', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  late final GeneratedColumn<bool> isExternal = GeneratedColumn<bool>(
-      'is_external', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_external" IN (0, 1))'));
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, nickname, sharedSecret, isExternal, createdAt];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'client';
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
-    throw UnsupportedError('TableInfo.map in schema verification code');
-  }
-
-  @override
-  Client createAlias(String alias) {
-    return Client(attachedDatabase, alias);
-  }
-}
-
 class Invitations extends Table with TableInfo {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -195,8 +149,8 @@ class Invitations extends Table with TableInfo {
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> clientAcceptedId = GeneratedColumn<String>(
-      'client_accepted_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'client_accepted_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> code = GeneratedColumn<String>(
       'code', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -316,17 +270,17 @@ class Queue extends Table with TableInfo {
       'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> lyrics = GeneratedColumn<String>(
-      'lyrics', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'lyrics', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> tags = GeneratedColumn<String>(
       'tags', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> negativeTags = GeneratedColumn<String>(
-      'negative_tags', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'negative_tags', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> inputFile = GeneratedColumn<String>(
-      'input_file', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'input_file', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> model = GeneratedColumn<String>(
       'model', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -351,15 +305,17 @@ class Queue extends Table with TableInfo {
   late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
       'is_favorite', aliasedName, false,
       type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_favorite" IN (0, 1))'));
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_favorite" IN (0, 1))'),
+      defaultValue: const CustomExpression('0'));
   late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
       'is_deleted', aliasedName, false,
       type: DriftSqlType.bool,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'));
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const CustomExpression('0'));
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime,
@@ -406,7 +362,6 @@ class DatabaseAtV1 extends GeneratedDatabase {
   DatabaseAtV1(QueryExecutor e) : super(e);
   late final Music music = Music(this);
   late final Prompt prompt = Prompt(this);
-  late final Client client = Client(this);
   late final Invitations invitations = Invitations(this);
   late final Connections connections = Connections(this);
   late final Settings settings = Settings(this);
@@ -416,7 +371,7 @@ class DatabaseAtV1 extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [music, prompt, client, invitations, connections, settings, queue];
+      [music, prompt, invitations, connections, settings, queue];
   @override
   int get schemaVersion => 1;
   @override

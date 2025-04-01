@@ -8,7 +8,6 @@ abstract class $AppDatabase extends i0.GeneratedDatabase {
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final i1.$MusicTable music = i1.$MusicTable(this);
   late final i1.$PromptTable prompt = i1.$PromptTable(this);
-  late final i1.$ClientTable client = i1.$ClientTable(this);
   late final i1.$InvitationsTable invitations = i1.$InvitationsTable(this);
   late final i1.$ConnectionsTable connections = i1.$ConnectionsTable(this);
   late final i1.$SettingsTable settings = i1.$SettingsTable(this);
@@ -18,7 +17,7 @@ abstract class $AppDatabase extends i0.GeneratedDatabase {
       allSchemaEntities.whereType<i0.TableInfo<i0.Table, Object?>>();
   @override
   List<i0.DatabaseSchemaEntity> get allSchemaEntities =>
-      [music, prompt, client, invitations, connections, settings, queue];
+      [music, prompt, invitations, connections, settings, queue];
   @override
   i0.DriftDatabaseOptions get options =>
       const i0.DriftDatabaseOptions(storeDateTimeAsText: true);
@@ -31,8 +30,6 @@ class $AppDatabaseManager {
       i1.$$MusicTableTableManager(_db, _db.music);
   i1.$$PromptTableTableManager get prompt =>
       i1.$$PromptTableTableManager(_db, _db.prompt);
-  i1.$$ClientTableTableManager get client =>
-      i1.$$ClientTableTableManager(_db, _db.client);
   i1.$$InvitationsTableTableManager get invitations =>
       i1.$$InvitationsTableTableManager(_db, _db.invitations);
   i1.$$ConnectionsTableTableManager get connections =>

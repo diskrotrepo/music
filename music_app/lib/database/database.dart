@@ -10,7 +10,6 @@ import 'package:music_app/database/database.drift.dart';
   tables: [
     Music,
     Prompt,
-    Client,
     Invitations,
     Connections,
     Settings,

@@ -196,11 +196,8 @@ class _InvitationsTabState extends State<InvitationsTab> {
 
   void _createInvite() async {
     debugPrint('Creating invite...');
-    await di.get<NetworkController>().createInvite().then((invite) {
-      setState(() {
-        debugPrint('Invite created: $invite');
-      });
-    });
+    final response = await di.get<NetworkController>().createInvite();
+    debugPrint('Invite created: ${response.code}');
   }
 
   Widget _buildInvitationsTable() {

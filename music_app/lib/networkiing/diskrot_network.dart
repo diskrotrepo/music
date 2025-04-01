@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:music_app/configuration/configuration.dart';
@@ -8,15 +9,14 @@ import 'package:crypto/crypto.dart';
 
 final logger = di.get<Logger>();
 
-Future<void> post(String url, String body) async {
+Future<http.Response> post(String url, String body) async {
   final configuration = Configuration.fromEnvironment();
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
   logger.i("${configuration.serverConfiguration.fullUrl}$url");
 
-  http
-      .post(
+  final response = await http.post(
     Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
@@ -28,26 +28,19 @@ Future<void> post(String url, String body) async {
       ),
     },
     body: body,
-  )
-      .then((response) {
-    if (response.statusCode == 200) {
-      logger.i(response.body);
-    } else {
-      logger.i(response.statusCode);
-    }
-  }).catchError((error) {
-    logger.e('Error: $error');
-  });
+  );
+
+  return response;
 }
 
-Future<void> get(String url) async {
+Future<http.Response> get(String url) async {
   final configuration = Configuration.fromEnvironment();
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
   logger.i("${configuration.serverConfiguration.fullUrl}$url");
 
-  http.get(
+  final response = await http.get(
     Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
@@ -58,26 +51,19 @@ Future<void> get(String url) async {
         payload: "{}",
       ),
     },
-  ).then((response) {
-    if (response.statusCode == 200) {
-      logger.i(response.body);
-    } else {
-      logger.i(response.statusCode);
-    }
-  }).catchError((error) {
-    logger.e('Error: $error');
-  });
+  );
+
+  return response;
 }
 
-Future<void> put(String url, String body) async {
+Future<http.Response> put(String url, String body) async {
   final configuration = Configuration.fromEnvironment();
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
   logger.i("${configuration.serverConfiguration.fullUrl}$url");
 
-  http
-      .put(
+  final response = http.put(
     Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
@@ -89,27 +75,19 @@ Future<void> put(String url, String body) async {
       ),
     },
     body: body,
-  )
-      .then((response) {
-    if (response.statusCode == 200) {
-      logger.i(response.body);
-    } else {
-      logger.i(response.statusCode);
-    }
-  }).catchError((error) {
-    logger.e('Error: $error');
-  });
+  );
+
+  return response;
 }
 
-Future<void> patch(String url, String body) async {
+Future<http.Response> patch(String url, String body) async {
   final configuration = Configuration.fromEnvironment();
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
   logger.i("${configuration.serverConfiguration.fullUrl}$url");
 
-  http
-      .patch(
+  final response = await http.patch(
     Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
@@ -121,26 +99,19 @@ Future<void> patch(String url, String body) async {
       ),
     },
     body: body,
-  )
-      .then((response) {
-    if (response.statusCode == 200) {
-      logger.i(response.body);
-    } else {
-      logger.i(response.statusCode);
-    }
-  }).catchError((error) {
-    logger.e('Error: $error');
-  });
+  );
+
+  return response;
 }
 
-Future<void> delete(String url) async {
+Future<http.Response> delete(String url) async {
   final configuration = Configuration.fromEnvironment();
   final logger = di.get<Logger>();
   final diskrotClient = di.get<DiskrotClient>();
 
   logger.i("${configuration.serverConfiguration.fullUrl}$url");
 
-  http.delete(
+  final response = await http.delete(
     Uri.parse("${configuration.serverConfiguration.fullUrl}$url"),
     headers: {
       'Content-Type': 'application/json',
@@ -151,15 +122,9 @@ Future<void> delete(String url) async {
         payload: "{}",
       ),
     },
-  ).then((response) {
-    if (response.statusCode == 200) {
-      logger.i(response.body);
-    } else {
-      logger.i(response.statusCode);
-    }
-  }).catchError((error) {
-    logger.e('Error: $error');
-  });
+  );
+
+  return response;
 }
 
 String _createDigestString(String clientId, String url, String payload) {

@@ -511,185 +511,10 @@ typedef $$PromptTableProcessedTableManager = i0.ProcessedTableManager<
     ),
     i1.Prompt,
     i0.PrefetchHooks Function()>;
-typedef $$ClientTableCreateCompanionBuilder = i1.ClientCompanion Function({
-  required String id,
-  required String nickname,
-  required String sharedSecret,
-  required bool isExternal,
-  i0.Value<DateTime> createdAt,
-  i0.Value<int> rowid,
-});
-typedef $$ClientTableUpdateCompanionBuilder = i1.ClientCompanion Function({
-  i0.Value<String> id,
-  i0.Value<String> nickname,
-  i0.Value<String> sharedSecret,
-  i0.Value<bool> isExternal,
-  i0.Value<DateTime> createdAt,
-  i0.Value<int> rowid,
-});
-
-class $$ClientTableFilterComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$ClientTable> {
-  $$ClientTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  i0.ColumnFilters<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<String> get nickname => $composableBuilder(
-      column: $table.nickname, builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<String> get sharedSecret => $composableBuilder(
-      column: $table.sharedSecret,
-      builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<bool> get isExternal => $composableBuilder(
-      column: $table.isExternal, builder: (column) => i0.ColumnFilters(column));
-
-  i0.ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => i0.ColumnFilters(column));
-}
-
-class $$ClientTableOrderingComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$ClientTable> {
-  $$ClientTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  i0.ColumnOrderings<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<String> get nickname => $composableBuilder(
-      column: $table.nickname, builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<String> get sharedSecret => $composableBuilder(
-      column: $table.sharedSecret,
-      builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<bool> get isExternal => $composableBuilder(
-      column: $table.isExternal,
-      builder: (column) => i0.ColumnOrderings(column));
-
-  i0.ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt,
-      builder: (column) => i0.ColumnOrderings(column));
-}
-
-class $$ClientTableAnnotationComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$ClientTable> {
-  $$ClientTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  i0.GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  i0.GeneratedColumn<String> get nickname =>
-      $composableBuilder(column: $table.nickname, builder: (column) => column);
-
-  i0.GeneratedColumn<String> get sharedSecret => $composableBuilder(
-      column: $table.sharedSecret, builder: (column) => column);
-
-  i0.GeneratedColumn<bool> get isExternal => $composableBuilder(
-      column: $table.isExternal, builder: (column) => column);
-
-  i0.GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-}
-
-class $$ClientTableTableManager extends i0.RootTableManager<
-    i0.GeneratedDatabase,
-    i1.$ClientTable,
-    i1.Client,
-    i1.$$ClientTableFilterComposer,
-    i1.$$ClientTableOrderingComposer,
-    i1.$$ClientTableAnnotationComposer,
-    $$ClientTableCreateCompanionBuilder,
-    $$ClientTableUpdateCompanionBuilder,
-    (
-      i1.Client,
-      i0.BaseReferences<i0.GeneratedDatabase, i1.$ClientTable, i1.Client>
-    ),
-    i1.Client,
-    i0.PrefetchHooks Function()> {
-  $$ClientTableTableManager(i0.GeneratedDatabase db, i1.$ClientTable table)
-      : super(i0.TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              i1.$$ClientTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              i1.$$ClientTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              i1.$$ClientTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            i0.Value<String> id = const i0.Value.absent(),
-            i0.Value<String> nickname = const i0.Value.absent(),
-            i0.Value<String> sharedSecret = const i0.Value.absent(),
-            i0.Value<bool> isExternal = const i0.Value.absent(),
-            i0.Value<DateTime> createdAt = const i0.Value.absent(),
-            i0.Value<int> rowid = const i0.Value.absent(),
-          }) =>
-              i1.ClientCompanion(
-            id: id,
-            nickname: nickname,
-            sharedSecret: sharedSecret,
-            isExternal: isExternal,
-            createdAt: createdAt,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String id,
-            required String nickname,
-            required String sharedSecret,
-            required bool isExternal,
-            i0.Value<DateTime> createdAt = const i0.Value.absent(),
-            i0.Value<int> rowid = const i0.Value.absent(),
-          }) =>
-              i1.ClientCompanion.insert(
-            id: id,
-            nickname: nickname,
-            sharedSecret: sharedSecret,
-            isExternal: isExternal,
-            createdAt: createdAt,
-            rowid: rowid,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), i0.BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ));
-}
-
-typedef $$ClientTableProcessedTableManager = i0.ProcessedTableManager<
-    i0.GeneratedDatabase,
-    i1.$ClientTable,
-    i1.Client,
-    i1.$$ClientTableFilterComposer,
-    i1.$$ClientTableOrderingComposer,
-    i1.$$ClientTableAnnotationComposer,
-    $$ClientTableCreateCompanionBuilder,
-    $$ClientTableUpdateCompanionBuilder,
-    (
-      i1.Client,
-      i0.BaseReferences<i0.GeneratedDatabase, i1.$ClientTable, i1.Client>
-    ),
-    i1.Client,
-    i0.PrefetchHooks Function()>;
 typedef $$InvitationsTableCreateCompanionBuilder = i1.InvitationsCompanion
     Function({
   required String id,
-  required String clientAcceptedId,
+  i0.Value<String?> clientAcceptedId,
   required String code,
   i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
@@ -697,7 +522,7 @@ typedef $$InvitationsTableCreateCompanionBuilder = i1.InvitationsCompanion
 typedef $$InvitationsTableUpdateCompanionBuilder = i1.InvitationsCompanion
     Function({
   i0.Value<String> id,
-  i0.Value<String> clientAcceptedId,
+  i0.Value<String?> clientAcceptedId,
   i0.Value<String> code,
   i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
@@ -801,7 +626,7 @@ class $$InvitationsTableTableManager extends i0.RootTableManager<
               i1.$$InvitationsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             i0.Value<String> id = const i0.Value.absent(),
-            i0.Value<String> clientAcceptedId = const i0.Value.absent(),
+            i0.Value<String?> clientAcceptedId = const i0.Value.absent(),
             i0.Value<String> code = const i0.Value.absent(),
             i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
@@ -815,7 +640,7 @@ class $$InvitationsTableTableManager extends i0.RootTableManager<
           ),
           createCompanionCallback: ({
             required String id,
-            required String clientAcceptedId,
+            i0.Value<String?> clientAcceptedId = const i0.Value.absent(),
             required String code,
             i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
@@ -1173,10 +998,10 @@ typedef $$SettingsTableProcessedTableManager = i0.ProcessedTableManager<
 typedef $$QueueTableCreateCompanionBuilder = i1.QueueCompanion Function({
   required String id,
   required String title,
-  required String lyrics,
+  i0.Value<String?> lyrics,
   required String tags,
-  required String negativeTags,
-  required String inputFile,
+  i0.Value<String?> negativeTags,
+  i0.Value<String?> inputFile,
   required String model,
   required String clientRequestedId,
   required String lrcPrompt,
@@ -1184,18 +1009,18 @@ typedef $$QueueTableCreateCompanionBuilder = i1.QueueCompanion Function({
   required int steps,
   required int cfgStrength,
   required int duration,
-  required bool isFavorite,
-  required bool isDeleted,
+  i0.Value<bool> isFavorite,
+  i0.Value<bool> isDeleted,
   i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
 typedef $$QueueTableUpdateCompanionBuilder = i1.QueueCompanion Function({
   i0.Value<String> id,
   i0.Value<String> title,
-  i0.Value<String> lyrics,
+  i0.Value<String?> lyrics,
   i0.Value<String> tags,
-  i0.Value<String> negativeTags,
-  i0.Value<String> inputFile,
+  i0.Value<String?> negativeTags,
+  i0.Value<String?> inputFile,
   i0.Value<String> model,
   i0.Value<String> clientRequestedId,
   i0.Value<String> lrcPrompt,
@@ -1424,10 +1249,10 @@ class $$QueueTableTableManager extends i0.RootTableManager<
           updateCompanionCallback: ({
             i0.Value<String> id = const i0.Value.absent(),
             i0.Value<String> title = const i0.Value.absent(),
-            i0.Value<String> lyrics = const i0.Value.absent(),
+            i0.Value<String?> lyrics = const i0.Value.absent(),
             i0.Value<String> tags = const i0.Value.absent(),
-            i0.Value<String> negativeTags = const i0.Value.absent(),
-            i0.Value<String> inputFile = const i0.Value.absent(),
+            i0.Value<String?> negativeTags = const i0.Value.absent(),
+            i0.Value<String?> inputFile = const i0.Value.absent(),
             i0.Value<String> model = const i0.Value.absent(),
             i0.Value<String> clientRequestedId = const i0.Value.absent(),
             i0.Value<String> lrcPrompt = const i0.Value.absent(),
@@ -1462,10 +1287,10 @@ class $$QueueTableTableManager extends i0.RootTableManager<
           createCompanionCallback: ({
             required String id,
             required String title,
-            required String lyrics,
+            i0.Value<String?> lyrics = const i0.Value.absent(),
             required String tags,
-            required String negativeTags,
-            required String inputFile,
+            i0.Value<String?> negativeTags = const i0.Value.absent(),
+            i0.Value<String?> inputFile = const i0.Value.absent(),
             required String model,
             required String clientRequestedId,
             required String lrcPrompt,
@@ -1473,8 +1298,8 @@ class $$QueueTableTableManager extends i0.RootTableManager<
             required int steps,
             required int cfgStrength,
             required int duration,
-            required bool isFavorite,
-            required bool isDeleted,
+            i0.Value<bool> isFavorite = const i0.Value.absent(),
+            i0.Value<bool> isDeleted = const i0.Value.absent(),
             i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
@@ -2564,325 +2389,6 @@ class PromptCompanion extends i0.UpdateCompanion<i1.Prompt> {
   }
 }
 
-class $ClientTable extends i2.Client
-    with i0.TableInfo<$ClientTable, i1.Client> {
-  @override
-  final i0.GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $ClientTable(this.attachedDatabase, [this._alias]);
-  static const i0.VerificationMeta _idMeta = const i0.VerificationMeta('id');
-  @override
-  late final i0.GeneratedColumn<String> id = i0.GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: i0.DriftSqlType.string, requiredDuringInsert: true);
-  static const i0.VerificationMeta _nicknameMeta =
-      const i0.VerificationMeta('nickname');
-  @override
-  late final i0.GeneratedColumn<String> nickname = i0.GeneratedColumn<String>(
-      'nickname', aliasedName, false,
-      type: i0.DriftSqlType.string, requiredDuringInsert: true);
-  static const i0.VerificationMeta _sharedSecretMeta =
-      const i0.VerificationMeta('sharedSecret');
-  @override
-  late final i0.GeneratedColumn<String> sharedSecret =
-      i0.GeneratedColumn<String>('shared_secret', aliasedName, false,
-          type: i0.DriftSqlType.string, requiredDuringInsert: true);
-  static const i0.VerificationMeta _isExternalMeta =
-      const i0.VerificationMeta('isExternal');
-  @override
-  late final i0.GeneratedColumn<bool> isExternal = i0.GeneratedColumn<bool>(
-      'is_external', aliasedName, false,
-      type: i0.DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: i0.GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_external" IN (0, 1))'));
-  static const i0.VerificationMeta _createdAtMeta =
-      const i0.VerificationMeta('createdAt');
-  @override
-  late final i0.GeneratedColumn<DateTime> createdAt =
-      i0.GeneratedColumn<DateTime>('created_at', aliasedName, false,
-          type: i0.DriftSqlType.dateTime,
-          requiredDuringInsert: false,
-          defaultValue: i3.currentDateAndTime);
-  @override
-  List<i0.GeneratedColumn> get $columns =>
-      [id, nickname, sharedSecret, isExternal, createdAt];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'client';
-  @override
-  i0.VerificationContext validateIntegrity(i0.Insertable<i1.Client> instance,
-      {bool isInserting = false}) {
-    final context = i0.VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('nickname')) {
-      context.handle(_nicknameMeta,
-          nickname.isAcceptableOrUnknown(data['nickname']!, _nicknameMeta));
-    } else if (isInserting) {
-      context.missing(_nicknameMeta);
-    }
-    if (data.containsKey('shared_secret')) {
-      context.handle(
-          _sharedSecretMeta,
-          sharedSecret.isAcceptableOrUnknown(
-              data['shared_secret']!, _sharedSecretMeta));
-    } else if (isInserting) {
-      context.missing(_sharedSecretMeta);
-    }
-    if (data.containsKey('is_external')) {
-      context.handle(
-          _isExternalMeta,
-          isExternal.isAcceptableOrUnknown(
-              data['is_external']!, _isExternalMeta));
-    } else if (isInserting) {
-      context.missing(_isExternalMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<i0.GeneratedColumn> get $primaryKey => {id};
-  @override
-  i1.Client map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return i1.Client(
-      id: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}id'])!,
-      nickname: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}nickname'])!,
-      sharedSecret: attachedDatabase.typeMapping.read(
-          i0.DriftSqlType.string, data['${effectivePrefix}shared_secret'])!,
-      isExternal: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.bool, data['${effectivePrefix}is_external'])!,
-      createdAt: attachedDatabase.typeMapping.read(
-          i0.DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-    );
-  }
-
-  @override
-  $ClientTable createAlias(String alias) {
-    return $ClientTable(attachedDatabase, alias);
-  }
-}
-
-class Client extends i0.DataClass implements i0.Insertable<i1.Client> {
-  final String id;
-  final String nickname;
-  final String sharedSecret;
-  final bool isExternal;
-  final DateTime createdAt;
-  const Client(
-      {required this.id,
-      required this.nickname,
-      required this.sharedSecret,
-      required this.isExternal,
-      required this.createdAt});
-  @override
-  Map<String, i0.Expression> toColumns(bool nullToAbsent) {
-    final map = <String, i0.Expression>{};
-    map['id'] = i0.Variable<String>(id);
-    map['nickname'] = i0.Variable<String>(nickname);
-    map['shared_secret'] = i0.Variable<String>(sharedSecret);
-    map['is_external'] = i0.Variable<bool>(isExternal);
-    map['created_at'] = i0.Variable<DateTime>(createdAt);
-    return map;
-  }
-
-  i1.ClientCompanion toCompanion(bool nullToAbsent) {
-    return i1.ClientCompanion(
-      id: i0.Value(id),
-      nickname: i0.Value(nickname),
-      sharedSecret: i0.Value(sharedSecret),
-      isExternal: i0.Value(isExternal),
-      createdAt: i0.Value(createdAt),
-    );
-  }
-
-  factory Client.fromJson(Map<String, dynamic> json,
-      {i0.ValueSerializer? serializer}) {
-    serializer ??= i0.driftRuntimeOptions.defaultSerializer;
-    return Client(
-      id: serializer.fromJson<String>(json['id']),
-      nickname: serializer.fromJson<String>(json['nickname']),
-      sharedSecret: serializer.fromJson<String>(json['sharedSecret']),
-      isExternal: serializer.fromJson<bool>(json['isExternal']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({i0.ValueSerializer? serializer}) {
-    serializer ??= i0.driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'nickname': serializer.toJson<String>(nickname),
-      'sharedSecret': serializer.toJson<String>(sharedSecret),
-      'isExternal': serializer.toJson<bool>(isExternal),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-    };
-  }
-
-  i1.Client copyWith(
-          {String? id,
-          String? nickname,
-          String? sharedSecret,
-          bool? isExternal,
-          DateTime? createdAt}) =>
-      i1.Client(
-        id: id ?? this.id,
-        nickname: nickname ?? this.nickname,
-        sharedSecret: sharedSecret ?? this.sharedSecret,
-        isExternal: isExternal ?? this.isExternal,
-        createdAt: createdAt ?? this.createdAt,
-      );
-  Client copyWithCompanion(i1.ClientCompanion data) {
-    return Client(
-      id: data.id.present ? data.id.value : this.id,
-      nickname: data.nickname.present ? data.nickname.value : this.nickname,
-      sharedSecret: data.sharedSecret.present
-          ? data.sharedSecret.value
-          : this.sharedSecret,
-      isExternal:
-          data.isExternal.present ? data.isExternal.value : this.isExternal,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Client(')
-          ..write('id: $id, ')
-          ..write('nickname: $nickname, ')
-          ..write('sharedSecret: $sharedSecret, ')
-          ..write('isExternal: $isExternal, ')
-          ..write('createdAt: $createdAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, nickname, sharedSecret, isExternal, createdAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is i1.Client &&
-          other.id == this.id &&
-          other.nickname == this.nickname &&
-          other.sharedSecret == this.sharedSecret &&
-          other.isExternal == this.isExternal &&
-          other.createdAt == this.createdAt);
-}
-
-class ClientCompanion extends i0.UpdateCompanion<i1.Client> {
-  final i0.Value<String> id;
-  final i0.Value<String> nickname;
-  final i0.Value<String> sharedSecret;
-  final i0.Value<bool> isExternal;
-  final i0.Value<DateTime> createdAt;
-  final i0.Value<int> rowid;
-  const ClientCompanion({
-    this.id = const i0.Value.absent(),
-    this.nickname = const i0.Value.absent(),
-    this.sharedSecret = const i0.Value.absent(),
-    this.isExternal = const i0.Value.absent(),
-    this.createdAt = const i0.Value.absent(),
-    this.rowid = const i0.Value.absent(),
-  });
-  ClientCompanion.insert({
-    required String id,
-    required String nickname,
-    required String sharedSecret,
-    required bool isExternal,
-    this.createdAt = const i0.Value.absent(),
-    this.rowid = const i0.Value.absent(),
-  })  : id = i0.Value(id),
-        nickname = i0.Value(nickname),
-        sharedSecret = i0.Value(sharedSecret),
-        isExternal = i0.Value(isExternal);
-  static i0.Insertable<i1.Client> custom({
-    i0.Expression<String>? id,
-    i0.Expression<String>? nickname,
-    i0.Expression<String>? sharedSecret,
-    i0.Expression<bool>? isExternal,
-    i0.Expression<DateTime>? createdAt,
-    i0.Expression<int>? rowid,
-  }) {
-    return i0.RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (nickname != null) 'nickname': nickname,
-      if (sharedSecret != null) 'shared_secret': sharedSecret,
-      if (isExternal != null) 'is_external': isExternal,
-      if (createdAt != null) 'created_at': createdAt,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  i1.ClientCompanion copyWith(
-      {i0.Value<String>? id,
-      i0.Value<String>? nickname,
-      i0.Value<String>? sharedSecret,
-      i0.Value<bool>? isExternal,
-      i0.Value<DateTime>? createdAt,
-      i0.Value<int>? rowid}) {
-    return i1.ClientCompanion(
-      id: id ?? this.id,
-      nickname: nickname ?? this.nickname,
-      sharedSecret: sharedSecret ?? this.sharedSecret,
-      isExternal: isExternal ?? this.isExternal,
-      createdAt: createdAt ?? this.createdAt,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, i0.Expression> toColumns(bool nullToAbsent) {
-    final map = <String, i0.Expression>{};
-    if (id.present) {
-      map['id'] = i0.Variable<String>(id.value);
-    }
-    if (nickname.present) {
-      map['nickname'] = i0.Variable<String>(nickname.value);
-    }
-    if (sharedSecret.present) {
-      map['shared_secret'] = i0.Variable<String>(sharedSecret.value);
-    }
-    if (isExternal.present) {
-      map['is_external'] = i0.Variable<bool>(isExternal.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = i0.Variable<DateTime>(createdAt.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = i0.Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ClientCompanion(')
-          ..write('id: $id, ')
-          ..write('nickname: $nickname, ')
-          ..write('sharedSecret: $sharedSecret, ')
-          ..write('isExternal: $isExternal, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $InvitationsTable extends i2.Invitations
     with i0.TableInfo<$InvitationsTable, i1.Invitations> {
   @override
@@ -2898,8 +2404,8 @@ class $InvitationsTable extends i2.Invitations
       const i0.VerificationMeta('clientAcceptedId');
   @override
   late final i0.GeneratedColumn<String> clientAcceptedId =
-      i0.GeneratedColumn<String>('client_accepted_id', aliasedName, false,
-          type: i0.DriftSqlType.string, requiredDuringInsert: true);
+      i0.GeneratedColumn<String>('client_accepted_id', aliasedName, true,
+          type: i0.DriftSqlType.string, requiredDuringInsert: false);
   static const i0.VerificationMeta _codeMeta =
       const i0.VerificationMeta('code');
   @override
@@ -2938,8 +2444,6 @@ class $InvitationsTable extends i2.Invitations
           _clientAcceptedIdMeta,
           clientAcceptedId.isAcceptableOrUnknown(
               data['client_accepted_id']!, _clientAcceptedIdMeta));
-    } else if (isInserting) {
-      context.missing(_clientAcceptedIdMeta);
     }
     if (data.containsKey('code')) {
       context.handle(
@@ -2963,8 +2467,7 @@ class $InvitationsTable extends i2.Invitations
       id: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}id'])!,
       clientAcceptedId: attachedDatabase.typeMapping.read(
-          i0.DriftSqlType.string,
-          data['${effectivePrefix}client_accepted_id'])!,
+          i0.DriftSqlType.string, data['${effectivePrefix}client_accepted_id']),
       code: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}code'])!,
       createdAt: attachedDatabase.typeMapping.read(
@@ -2981,19 +2484,21 @@ class $InvitationsTable extends i2.Invitations
 class Invitations extends i0.DataClass
     implements i0.Insertable<i1.Invitations> {
   final String id;
-  final String clientAcceptedId;
+  final String? clientAcceptedId;
   final String code;
   final DateTime createdAt;
   const Invitations(
       {required this.id,
-      required this.clientAcceptedId,
+      this.clientAcceptedId,
       required this.code,
       required this.createdAt});
   @override
   Map<String, i0.Expression> toColumns(bool nullToAbsent) {
     final map = <String, i0.Expression>{};
     map['id'] = i0.Variable<String>(id);
-    map['client_accepted_id'] = i0.Variable<String>(clientAcceptedId);
+    if (!nullToAbsent || clientAcceptedId != null) {
+      map['client_accepted_id'] = i0.Variable<String>(clientAcceptedId);
+    }
     map['code'] = i0.Variable<String>(code);
     map['created_at'] = i0.Variable<DateTime>(createdAt);
     return map;
@@ -3002,7 +2507,9 @@ class Invitations extends i0.DataClass
   i1.InvitationsCompanion toCompanion(bool nullToAbsent) {
     return i1.InvitationsCompanion(
       id: i0.Value(id),
-      clientAcceptedId: i0.Value(clientAcceptedId),
+      clientAcceptedId: clientAcceptedId == null && nullToAbsent
+          ? const i0.Value.absent()
+          : i0.Value(clientAcceptedId),
       code: i0.Value(code),
       createdAt: i0.Value(createdAt),
     );
@@ -3013,7 +2520,7 @@ class Invitations extends i0.DataClass
     serializer ??= i0.driftRuntimeOptions.defaultSerializer;
     return Invitations(
       id: serializer.fromJson<String>(json['id']),
-      clientAcceptedId: serializer.fromJson<String>(json['clientAcceptedId']),
+      clientAcceptedId: serializer.fromJson<String?>(json['clientAcceptedId']),
       code: serializer.fromJson<String>(json['code']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -3023,7 +2530,7 @@ class Invitations extends i0.DataClass
     serializer ??= i0.driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'clientAcceptedId': serializer.toJson<String>(clientAcceptedId),
+      'clientAcceptedId': serializer.toJson<String?>(clientAcceptedId),
       'code': serializer.toJson<String>(code),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -3031,12 +2538,14 @@ class Invitations extends i0.DataClass
 
   i1.Invitations copyWith(
           {String? id,
-          String? clientAcceptedId,
+          i0.Value<String?> clientAcceptedId = const i0.Value.absent(),
           String? code,
           DateTime? createdAt}) =>
       i1.Invitations(
         id: id ?? this.id,
-        clientAcceptedId: clientAcceptedId ?? this.clientAcceptedId,
+        clientAcceptedId: clientAcceptedId.present
+            ? clientAcceptedId.value
+            : this.clientAcceptedId,
         code: code ?? this.code,
         createdAt: createdAt ?? this.createdAt,
       );
@@ -3076,7 +2585,7 @@ class Invitations extends i0.DataClass
 
 class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
   final i0.Value<String> id;
-  final i0.Value<String> clientAcceptedId;
+  final i0.Value<String?> clientAcceptedId;
   final i0.Value<String> code;
   final i0.Value<DateTime> createdAt;
   final i0.Value<int> rowid;
@@ -3089,12 +2598,11 @@ class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
   });
   InvitationsCompanion.insert({
     required String id,
-    required String clientAcceptedId,
+    this.clientAcceptedId = const i0.Value.absent(),
     required String code,
     this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
-        clientAcceptedId = i0.Value(clientAcceptedId),
         code = i0.Value(code);
   static i0.Insertable<i1.Invitations> custom({
     i0.Expression<String>? id,
@@ -3114,7 +2622,7 @@ class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
 
   i1.InvitationsCompanion copyWith(
       {i0.Value<String>? id,
-      i0.Value<String>? clientAcceptedId,
+      i0.Value<String?>? clientAcceptedId,
       i0.Value<String>? code,
       i0.Value<DateTime>? createdAt,
       i0.Value<int>? rowid}) {
@@ -3720,8 +3228,8 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
       const i0.VerificationMeta('lyrics');
   @override
   late final i0.GeneratedColumn<String> lyrics = i0.GeneratedColumn<String>(
-      'lyrics', aliasedName, false,
-      type: i0.DriftSqlType.string, requiredDuringInsert: true);
+      'lyrics', aliasedName, true,
+      type: i0.DriftSqlType.string, requiredDuringInsert: false);
   static const i0.VerificationMeta _tagsMeta =
       const i0.VerificationMeta('tags');
   @override
@@ -3732,14 +3240,14 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
       const i0.VerificationMeta('negativeTags');
   @override
   late final i0.GeneratedColumn<String> negativeTags =
-      i0.GeneratedColumn<String>('negative_tags', aliasedName, false,
-          type: i0.DriftSqlType.string, requiredDuringInsert: true);
+      i0.GeneratedColumn<String>('negative_tags', aliasedName, true,
+          type: i0.DriftSqlType.string, requiredDuringInsert: false);
   static const i0.VerificationMeta _inputFileMeta =
       const i0.VerificationMeta('inputFile');
   @override
   late final i0.GeneratedColumn<String> inputFile = i0.GeneratedColumn<String>(
-      'input_file', aliasedName, false,
-      type: i0.DriftSqlType.string, requiredDuringInsert: true);
+      'input_file', aliasedName, true,
+      type: i0.DriftSqlType.string, requiredDuringInsert: false);
   static const i0.VerificationMeta _modelMeta =
       const i0.VerificationMeta('model');
   @override
@@ -3788,18 +3296,20 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
   late final i0.GeneratedColumn<bool> isFavorite = i0.GeneratedColumn<bool>(
       'is_favorite', aliasedName, false,
       type: i0.DriftSqlType.bool,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints: i0.GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_favorite" IN (0, 1))'));
+          'CHECK ("is_favorite" IN (0, 1))'),
+      defaultValue: const i3.Constant(false));
   static const i0.VerificationMeta _isDeletedMeta =
       const i0.VerificationMeta('isDeleted');
   @override
   late final i0.GeneratedColumn<bool> isDeleted = i0.GeneratedColumn<bool>(
       'is_deleted', aliasedName, false,
       type: i0.DriftSqlType.bool,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints: i0.GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_deleted" IN (0, 1))'));
+          'CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const i3.Constant(false));
   static const i0.VerificationMeta _createdAtMeta =
       const i0.VerificationMeta('createdAt');
   @override
@@ -3851,8 +3361,6 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
     if (data.containsKey('lyrics')) {
       context.handle(_lyricsMeta,
           lyrics.isAcceptableOrUnknown(data['lyrics']!, _lyricsMeta));
-    } else if (isInserting) {
-      context.missing(_lyricsMeta);
     }
     if (data.containsKey('tags')) {
       context.handle(
@@ -3865,14 +3373,10 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
           _negativeTagsMeta,
           negativeTags.isAcceptableOrUnknown(
               data['negative_tags']!, _negativeTagsMeta));
-    } else if (isInserting) {
-      context.missing(_negativeTagsMeta);
     }
     if (data.containsKey('input_file')) {
       context.handle(_inputFileMeta,
           inputFile.isAcceptableOrUnknown(data['input_file']!, _inputFileMeta));
-    } else if (isInserting) {
-      context.missing(_inputFileMeta);
     }
     if (data.containsKey('model')) {
       context.handle(
@@ -3927,14 +3431,10 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
           _isFavoriteMeta,
           isFavorite.isAcceptableOrUnknown(
               data['is_favorite']!, _isFavoriteMeta));
-    } else if (isInserting) {
-      context.missing(_isFavoriteMeta);
     }
     if (data.containsKey('is_deleted')) {
       context.handle(_isDeletedMeta,
           isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
-    } else if (isInserting) {
-      context.missing(_isDeletedMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -3954,13 +3454,13 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
       title: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}title'])!,
       lyrics: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}lyrics'])!,
+          .read(i0.DriftSqlType.string, data['${effectivePrefix}lyrics']),
       tags: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}tags'])!,
       negativeTags: attachedDatabase.typeMapping.read(
-          i0.DriftSqlType.string, data['${effectivePrefix}negative_tags'])!,
+          i0.DriftSqlType.string, data['${effectivePrefix}negative_tags']),
       inputFile: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}input_file'])!,
+          .read(i0.DriftSqlType.string, data['${effectivePrefix}input_file']),
       model: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}model'])!,
       clientRequestedId: attachedDatabase.typeMapping.read(
@@ -3994,10 +3494,10 @@ class $QueueTable extends i2.Queue with i0.TableInfo<$QueueTable, i1.Queue> {
 class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
   final String id;
   final String title;
-  final String lyrics;
+  final String? lyrics;
   final String tags;
-  final String negativeTags;
-  final String inputFile;
+  final String? negativeTags;
+  final String? inputFile;
   final String model;
   final String clientRequestedId;
   final String lrcPrompt;
@@ -4011,10 +3511,10 @@ class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
   const Queue(
       {required this.id,
       required this.title,
-      required this.lyrics,
+      this.lyrics,
       required this.tags,
-      required this.negativeTags,
-      required this.inputFile,
+      this.negativeTags,
+      this.inputFile,
       required this.model,
       required this.clientRequestedId,
       required this.lrcPrompt,
@@ -4030,10 +3530,16 @@ class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
     final map = <String, i0.Expression>{};
     map['id'] = i0.Variable<String>(id);
     map['title'] = i0.Variable<String>(title);
-    map['lyrics'] = i0.Variable<String>(lyrics);
+    if (!nullToAbsent || lyrics != null) {
+      map['lyrics'] = i0.Variable<String>(lyrics);
+    }
     map['tags'] = i0.Variable<String>(tags);
-    map['negative_tags'] = i0.Variable<String>(negativeTags);
-    map['input_file'] = i0.Variable<String>(inputFile);
+    if (!nullToAbsent || negativeTags != null) {
+      map['negative_tags'] = i0.Variable<String>(negativeTags);
+    }
+    if (!nullToAbsent || inputFile != null) {
+      map['input_file'] = i0.Variable<String>(inputFile);
+    }
     map['model'] = i0.Variable<String>(model);
     map['client_requested_id'] = i0.Variable<String>(clientRequestedId);
     map['lrc_prompt'] = i0.Variable<String>(lrcPrompt);
@@ -4051,10 +3557,16 @@ class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
     return i1.QueueCompanion(
       id: i0.Value(id),
       title: i0.Value(title),
-      lyrics: i0.Value(lyrics),
+      lyrics: lyrics == null && nullToAbsent
+          ? const i0.Value.absent()
+          : i0.Value(lyrics),
       tags: i0.Value(tags),
-      negativeTags: i0.Value(negativeTags),
-      inputFile: i0.Value(inputFile),
+      negativeTags: negativeTags == null && nullToAbsent
+          ? const i0.Value.absent()
+          : i0.Value(negativeTags),
+      inputFile: inputFile == null && nullToAbsent
+          ? const i0.Value.absent()
+          : i0.Value(inputFile),
       model: i0.Value(model),
       clientRequestedId: i0.Value(clientRequestedId),
       lrcPrompt: i0.Value(lrcPrompt),
@@ -4074,10 +3586,10 @@ class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
     return Queue(
       id: serializer.fromJson<String>(json['id']),
       title: serializer.fromJson<String>(json['title']),
-      lyrics: serializer.fromJson<String>(json['lyrics']),
+      lyrics: serializer.fromJson<String?>(json['lyrics']),
       tags: serializer.fromJson<String>(json['tags']),
-      negativeTags: serializer.fromJson<String>(json['negativeTags']),
-      inputFile: serializer.fromJson<String>(json['inputFile']),
+      negativeTags: serializer.fromJson<String?>(json['negativeTags']),
+      inputFile: serializer.fromJson<String?>(json['inputFile']),
       model: serializer.fromJson<String>(json['model']),
       clientRequestedId: serializer.fromJson<String>(json['clientRequestedId']),
       lrcPrompt: serializer.fromJson<String>(json['lrcPrompt']),
@@ -4096,10 +3608,10 @@ class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'title': serializer.toJson<String>(title),
-      'lyrics': serializer.toJson<String>(lyrics),
+      'lyrics': serializer.toJson<String?>(lyrics),
       'tags': serializer.toJson<String>(tags),
-      'negativeTags': serializer.toJson<String>(negativeTags),
-      'inputFile': serializer.toJson<String>(inputFile),
+      'negativeTags': serializer.toJson<String?>(negativeTags),
+      'inputFile': serializer.toJson<String?>(inputFile),
       'model': serializer.toJson<String>(model),
       'clientRequestedId': serializer.toJson<String>(clientRequestedId),
       'lrcPrompt': serializer.toJson<String>(lrcPrompt),
@@ -4116,10 +3628,10 @@ class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
   i1.Queue copyWith(
           {String? id,
           String? title,
-          String? lyrics,
+          i0.Value<String?> lyrics = const i0.Value.absent(),
           String? tags,
-          String? negativeTags,
-          String? inputFile,
+          i0.Value<String?> negativeTags = const i0.Value.absent(),
+          i0.Value<String?> inputFile = const i0.Value.absent(),
           String? model,
           String? clientRequestedId,
           String? lrcPrompt,
@@ -4133,10 +3645,11 @@ class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
       i1.Queue(
         id: id ?? this.id,
         title: title ?? this.title,
-        lyrics: lyrics ?? this.lyrics,
+        lyrics: lyrics.present ? lyrics.value : this.lyrics,
         tags: tags ?? this.tags,
-        negativeTags: negativeTags ?? this.negativeTags,
-        inputFile: inputFile ?? this.inputFile,
+        negativeTags:
+            negativeTags.present ? negativeTags.value : this.negativeTags,
+        inputFile: inputFile.present ? inputFile.value : this.inputFile,
         model: model ?? this.model,
         clientRequestedId: clientRequestedId ?? this.clientRequestedId,
         lrcPrompt: lrcPrompt ?? this.lrcPrompt,
@@ -4243,10 +3756,10 @@ class Queue extends i0.DataClass implements i0.Insertable<i1.Queue> {
 class QueueCompanion extends i0.UpdateCompanion<i1.Queue> {
   final i0.Value<String> id;
   final i0.Value<String> title;
-  final i0.Value<String> lyrics;
+  final i0.Value<String?> lyrics;
   final i0.Value<String> tags;
-  final i0.Value<String> negativeTags;
-  final i0.Value<String> inputFile;
+  final i0.Value<String?> negativeTags;
+  final i0.Value<String?> inputFile;
   final i0.Value<String> model;
   final i0.Value<String> clientRequestedId;
   final i0.Value<String> lrcPrompt;
@@ -4280,10 +3793,10 @@ class QueueCompanion extends i0.UpdateCompanion<i1.Queue> {
   QueueCompanion.insert({
     required String id,
     required String title,
-    required String lyrics,
+    this.lyrics = const i0.Value.absent(),
     required String tags,
-    required String negativeTags,
-    required String inputFile,
+    this.negativeTags = const i0.Value.absent(),
+    this.inputFile = const i0.Value.absent(),
     required String model,
     required String clientRequestedId,
     required String lrcPrompt,
@@ -4291,25 +3804,20 @@ class QueueCompanion extends i0.UpdateCompanion<i1.Queue> {
     required int steps,
     required int cfgStrength,
     required int duration,
-    required bool isFavorite,
-    required bool isDeleted,
+    this.isFavorite = const i0.Value.absent(),
+    this.isDeleted = const i0.Value.absent(),
     this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
         title = i0.Value(title),
-        lyrics = i0.Value(lyrics),
         tags = i0.Value(tags),
-        negativeTags = i0.Value(negativeTags),
-        inputFile = i0.Value(inputFile),
         model = i0.Value(model),
         clientRequestedId = i0.Value(clientRequestedId),
         lrcPrompt = i0.Value(lrcPrompt),
         processingStatus = i0.Value(processingStatus),
         steps = i0.Value(steps),
         cfgStrength = i0.Value(cfgStrength),
-        duration = i0.Value(duration),
-        isFavorite = i0.Value(isFavorite),
-        isDeleted = i0.Value(isDeleted);
+        duration = i0.Value(duration);
   static i0.Insertable<i1.Queue> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? title,
@@ -4353,10 +3861,10 @@ class QueueCompanion extends i0.UpdateCompanion<i1.Queue> {
   i1.QueueCompanion copyWith(
       {i0.Value<String>? id,
       i0.Value<String>? title,
-      i0.Value<String>? lyrics,
+      i0.Value<String?>? lyrics,
       i0.Value<String>? tags,
-      i0.Value<String>? negativeTags,
-      i0.Value<String>? inputFile,
+      i0.Value<String?>? negativeTags,
+      i0.Value<String?>? inputFile,
       i0.Value<String>? model,
       i0.Value<String>? clientRequestedId,
       i0.Value<String>? lrcPrompt,
