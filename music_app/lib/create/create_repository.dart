@@ -7,6 +7,18 @@ class CreateRepository {
   final AppDatabase _database;
   final Logger _logger = di.get<Logger>();
 
+  Future<void> createSong({
+    required String title,
+    required String styles,
+    required String lyrics,
+    required int duration,
+    required int steps,
+    required int cfgStrength,
+    required String lyricsPrompt,
+    String? negativeTags,
+    String? inputFile,
+  }) async {}
+
   /*
     generate = async (req: Request, res: Response): Promise<void> => {
         const data = req.body || {};

@@ -61,7 +61,11 @@ GetIt setup() {
     ..registerLazySingleton(
         () => LibraryController(libraryRepository: di.get<LibraryRepository>()))
     ..registerLazySingleton(
-        () => CreateController(createRepository: di.get<CreateRepository>()));
+      () => CreateController(
+        createRepository: di.get<CreateRepository>(),
+        settingsRepository: di.get<SettingsRepository>(),
+      ),
+    );
 }
 
 DiskrotClient get _diskRotClient {

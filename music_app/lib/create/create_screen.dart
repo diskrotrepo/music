@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/create/create_controller.dart';
+import 'package:music_app/dependency_context.dart';
 
 class CreatePage extends StatefulWidget {
   const CreatePage({super.key});
@@ -12,8 +14,8 @@ class _CreatePageState extends State<CreatePage> {
   final _stylesController = TextEditingController();
   final _lyricsController = TextEditingController();
   bool _advancedMode = false;
-  double _songLength = 0;
-  double _cfgStrength = 0;
+  int _songDuration = 0;
+  int _cfgStrength = 0;
   int _steps = 0;
 
   final List<Map<String, String>> _songs = [
@@ -27,6 +29,31 @@ class _CreatePageState extends State<CreatePage> {
 
   void _deleteSong(int index) {
     setState(() => _songs.removeAt(index));
+  }
+
+  void _createSong() {
+    final title = _titleController.text;
+    final styles = _stylesController.text;
+    final lyrics = _lyricsController.text;
+    final songDuration = _songDuration;
+    final cfgStrength = _cfgStrength;
+    final steps = _steps;
+
+    if (title.isEmpty || styles.isEmpty || lyrics.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    di.get<CreateController>().createSong(
+          title: title,
+          styles: styles,
+          lyrics: lyrics,
+          duration: songDuration,
+          cfgStrength: cfgStrength,
+          steps: steps,
+        );
   }
 
   @override
@@ -63,13 +90,13 @@ class _CreatePageState extends State<CreatePage> {
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(labelText: 'Song Length'),
                         onChanged: (val) => setState(
-                            () => _songLength = double.tryParse(val) ?? 0),
+                            () => _songDuration = int.tryParse(val) ?? 0),
                       ),
                       TextField(
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(labelText: 'CFG Strength'),
                         onChanged: (val) => setState(
-                            () => _cfgStrength = double.tryParse(val) ?? 0),
+                            () => _cfgStrength = int.tryParse(val) ?? 0),
                       ),
                       TextField(
                         keyboardType: TextInputType.number,
@@ -78,6 +105,11 @@ class _CreatePageState extends State<CreatePage> {
                             setState(() => _steps = int.tryParse(val) ?? 0),
                       ),
                     ],
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _createSong,
+                      child: const Text('Create'),
+                    ),
                   ],
                 ),
               ),

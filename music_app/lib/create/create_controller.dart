@@ -90,11 +90,37 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/create/create_repository.dart';
 import 'package:music_app/dependency_context.dart';
+import 'package:music_app/settings/settings_repository.dart';
 
 class CreateController extends ChangeNotifier {
   CreateController({
     required this.createRepository,
+    required this.settingsRepository,
   });
   final CreateRepository createRepository;
+  final SettingsRepository settingsRepository;
   final Logger _logger = di.get<Logger>();
+
+  Future<void> createSong({
+    required String title,
+    required String styles,
+    required String lyrics,
+    required int duration,
+    required int cfgStrength,
+    required int steps,
+  }) async {
+    _logger.i("Creating song...");
+
+    final lrcPrompt = await settingsRepository.getPromptSettings();
+
+    await createRepository.createSong(
+      title: title,
+      styles: styles,
+      lyrics: lyrics,
+      duration: duration,
+      cfgStrength: cfgStrength,
+      lyricsPrompt: lrcPrompt,
+      steps: steps,
+    );
+  }
 }
