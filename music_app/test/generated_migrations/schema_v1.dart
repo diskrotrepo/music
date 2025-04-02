@@ -140,11 +140,11 @@ class Prompt extends Table with TableInfo {
   }
 }
 
-class Invitations extends Table with TableInfo {
+class Invitation extends Table with TableInfo {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  Invitations(this.attachedDatabase, [this._alias]);
+  Invitation(this.attachedDatabase, [this._alias]);
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -165,7 +165,7 @@ class Invitations extends Table with TableInfo {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'invitations';
+  static const String $name = 'invitation';
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
@@ -174,16 +174,16 @@ class Invitations extends Table with TableInfo {
   }
 
   @override
-  Invitations createAlias(String alias) {
-    return Invitations(attachedDatabase, alias);
+  Invitation createAlias(String alias) {
+    return Invitation(attachedDatabase, alias);
   }
 }
 
-class Connections extends Table with TableInfo {
+class Network extends Table with TableInfo {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  Connections(this.attachedDatabase, [this._alias]);
+  Network(this.attachedDatabase, [this._alias]);
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -208,7 +208,7 @@ class Connections extends Table with TableInfo {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'connections';
+  static const String $name = 'network';
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
@@ -217,8 +217,8 @@ class Connections extends Table with TableInfo {
   }
 
   @override
-  Connections createAlias(String alias) {
-    return Connections(attachedDatabase, alias);
+  Network createAlias(String alias) {
+    return Network(attachedDatabase, alias);
   }
 }
 
@@ -362,8 +362,8 @@ class DatabaseAtV1 extends GeneratedDatabase {
   DatabaseAtV1(QueryExecutor e) : super(e);
   late final Music music = Music(this);
   late final Prompt prompt = Prompt(this);
-  late final Invitations invitations = Invitations(this);
-  late final Connections connections = Connections(this);
+  late final Invitation invitation = Invitation(this);
+  late final Network network = Network(this);
   late final Settings settings = Settings(this);
   late final Queue queue = Queue(this);
   @override
@@ -371,7 +371,7 @@ class DatabaseAtV1 extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [music, prompt, invitations, connections, settings, queue];
+      [music, prompt, invitation, network, settings, queue];
   @override
   int get schemaVersion => 1;
   @override

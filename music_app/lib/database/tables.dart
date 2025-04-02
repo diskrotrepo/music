@@ -34,8 +34,8 @@ class Prompt extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DataClassName('Invitations')
-class Invitations extends Table {
+@DataClassName('Invitation')
+class Invitation extends Table {
   TextColumn get id => text()();
   TextColumn get clientAcceptedId => text().nullable()();
   TextColumn get code => text()();
@@ -45,8 +45,8 @@ class Invitations extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DataClassName('Connections')
-class Connections extends Table {
+@DataClassName('Network')
+class Network extends Table {
   TextColumn get id => text()();
   TextColumn get nickname => text()();
   TextColumn get direction => text()();

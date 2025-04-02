@@ -1,11 +1,28 @@
-class AcceptInvitationResponse {
+class CreateInvitationResponse {
   final String code;
 
-  AcceptInvitationResponse({required this.code});
+  CreateInvitationResponse({required this.code});
+
+  factory CreateInvitationResponse.fromJson(Map<String, dynamic> json) {
+    return CreateInvitationResponse(
+      code: json['code'] as String,
+    );
+  }
+}
+
+class AcceptInvitationResponse {
+  final String nickname;
+  final String clientId;
+
+  AcceptInvitationResponse({
+    required this.nickname,
+    required this.clientId,
+  });
 
   factory AcceptInvitationResponse.fromJson(Map<String, dynamic> json) {
     return AcceptInvitationResponse(
-      code: json['code'] as String,
+      nickname: json['nickname'] as String,
+      clientId: json['client_id'] as String,
     );
   }
 }

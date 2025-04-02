@@ -89,24 +89,17 @@ class SettingsRepository {
   }
 
   Future<String> getPromptSettings() async {
-    final settings = await _database.select(_database.settings).get();
+    final query = _database.select(_database.settings);
+    query.where((tbl) => tbl.key.equals('lrc_prompt'));
+    final settings = await query.getSingleOrNull();
 
-    if (settings.isEmpty) {
+    if (settings == null) {
       return 'You are a music player. You can play any song. '
           'You can also generate lyrics for the song. '
           'You can also generate a lrc file for the song.';
     }
 
-    final promptSetting =
-        settings.firstWhere((setting) => setting.key == 'lrc_prompt').value;
-
-    if (promptSetting.isEmpty) {
-      return 'You are a music player. You can play any song. '
-          'You can also generate lyrics for the song. '
-          'You can also generate a lrc file for the song.';
-    }
-
-    return promptSetting;
+    return settings.value;
   }
 
   Future<bool> getNetworkSettings() async {

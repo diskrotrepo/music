@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:music_app/configuration/configuration.dart';
+import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/network/network_models.dart';
 import 'package:music_app/network/network_repository.dart';
 import 'package:logger/logger.dart';
@@ -15,7 +16,7 @@ class NetworkController extends ChangeNotifier {
   final NetworkRepository networkRepository;
   final Logger _logger = di.get<Logger>();
 
-  Future<AcceptInvitationResponse> createInvite() async {
+  Future<CreateInvitationResponse> createInvite() async {
     _logger.i("Creating invitation...");
     final invitationCreateResponse = await post("/invitations", jsonEncode({}));
 
@@ -25,43 +26,53 @@ class NetworkController extends ChangeNotifier {
       throw Exception("Failed to create invitation");
     }
 
-    final acceptInvitationResponse = AcceptInvitationResponse.fromJson(
+    final createInvitationResponse = CreateInvitationResponse.fromJson(
         jsonDecode(invitationCreateResponse.body));
 
-    await networkRepository.createInvitation(acceptInvitationResponse.code);
+    await networkRepository.createInvitation(createInvitationResponse.code);
 
     _logger.i("Invitation created: $invitationCreateResponse");
-    return acceptInvitationResponse;
+    return createInvitationResponse;
+  }
+
+  Future<List<Invitation>> getInvitations() async {
+    return networkRepository.getInvitations();
+  }
+
+  Future<bool> acceptInvitation(String code) async {
+    final invitation = await networkRepository.getInvitation(code);
+
+    if (invitation != null) {
+      _logger.e("You can't accept your own invitations.");
+      return false;
+    }
+    final response = await post("/invitations/$code", jsonEncode({}));
+
+    if (response.statusCode != 200) {
+      _logger.e("Failed to accept invitation: ${response.body}");
+      throw Exception("Failed to accept invitation");
+    }
+
+    final acceptInvitationResponse =
+        AcceptInvitationResponse.fromJson(jsonDecode(response.body));
+
+    await networkRepository.acceptInvitation(
+        nickname: acceptInvitationResponse.nickname,
+        direction: 'OUTBOUND',
+        clientId: acceptInvitationResponse.clientId);
+
+    return true;
+  }
+
+  Future<List<Network>> getConnections() async {
+    return await networkRepository.getConnections();
+  }
+
+  Future<List<Queue>> getQueue() async {
+    return await networkRepository.getQueue();
   }
 
   /*
-  acceptInvitation = async (req: Request, res: Response): Promise<void> => {
-
-        let invitation = db.prepare("SELECT * FROM invitations WHERE code = ?").get([req.params.code]);
-
-        if (invitation) {
-            res.status(400).json({ error: "You can't accept your own invitations." });
-            return;
-        }
-
-        let response = await this.diskrotNetwork.post(`/invitations/${req.params.code}`, {});
-        db.prepare("INSERT INTO connections (id, nickname, direction, client_id) VALUES (?,?,?,?)").run([uuid(), response.nickname, "OUTBOUND", response.client_id]);
-        res.status(200).json({});
-    }
-
-    getInvitations = async (req: Request, res: Response): Promise<void> => {
-
-        let invitations = db.prepare("SELECT * FROM invitations").all();
-        res.status(200).json(invitations);
-    }
-
-    createInvitation = async (req: Request, res: Response): Promise<void> => {
-
-        let invitationCreateResponse = await this.diskrotNetwork.post("/invitations", {}) as InvitationCreateResponse;
-        db.prepare("INSERT INTO invitations (id, code) VALUES (?,?)").run([uuid(), invitationCreateResponse.code]);
-        res.status(200).json(invitationCreateResponse);
-    }
-
     deleteInvitation = async (req: Request, res: Response): Promise<void> => {
         db.prepare("DELETE FROM invitations WHERE id = ?").run([req.params.id]);
         res.status(200).json({});

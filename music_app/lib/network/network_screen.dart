@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
 import 'package:music_app/network/network_controller.dart';
 
@@ -47,12 +48,15 @@ class _ConnectionsTabState extends State<ConnectionsTab> {
   }
 
   Future<void> _load() async {
-    di.get<NetworkController>();
+    final connections = await di.get<NetworkController>().getConnections();
+    setState(() {
+      this.connections = connections;
+    });
   }
 
   final TextEditingController _inviteCodeController = TextEditingController();
 
-  List<ConnectionItem> connections = [];
+  List<Network> connections = [];
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +101,11 @@ class _ConnectionsTabState extends State<ConnectionsTab> {
     );
   }
 
-  void _acceptInvite() {
+  Future<void> _acceptInvite() async {
     final code = _inviteCodeController.text.trim();
 
     debugPrint('Accepting invite with code: $code');
+    await di.get<NetworkController>().acceptInvitation(code);
 
     _inviteCodeController.clear();
   }
@@ -129,17 +134,11 @@ class _ConnectionsTabState extends State<ConnectionsTab> {
     );
   }
 
-  void _deleteConnection(ConnectionItem conn) {
+  void _deleteConnection(Network conn) {
     setState(() {
       connections.remove(conn);
     });
   }
-}
-
-class ConnectionItem {
-  final String nickname;
-  final String direction;
-  ConnectionItem({required this.nickname, required this.direction});
 }
 
 class InvitationsTab extends StatefulWidget {
@@ -157,10 +156,14 @@ class _InvitationsTabState extends State<InvitationsTab> {
   }
 
   Future<void> _load() async {
-    di.get<NetworkController>();
+    di.get<NetworkController>().getInvitations().then((invitations) {
+      setState(() {
+        this.invitations = invitations;
+      });
+    });
   }
 
-  List<InvitationItem> invitations = [];
+  List<Invitation> invitations = [];
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +206,6 @@ class _InvitationsTabState extends State<InvitationsTab> {
   Widget _buildInvitationsTable() {
     return DataTable(
       columns: const [
-        DataColumn(label: Text('Nickname')),
         DataColumn(label: Text('Code')),
         DataColumn(label: Text('Status')),
         DataColumn(label: Text('Delete')),
@@ -211,9 +213,8 @@ class _InvitationsTabState extends State<InvitationsTab> {
       rows: invitations.map((invite) {
         return DataRow(
           cells: [
-            DataCell(Text(invite.nickname)),
-            DataCell(Text(invite.code)),
-            DataCell(Text(invite.status)),
+            DataCell(Text(invite.code.toString())),
+            DataCell(Text('')),
             DataCell(
               IconButton(
                 icon: const Icon(Icons.delete, color: Colors.grey),
@@ -226,9 +227,9 @@ class _InvitationsTabState extends State<InvitationsTab> {
     );
   }
 
-  void _deleteInvitation(InvitationItem invite) {
+  void _deleteInvitation(Invitation invitation) {
     setState(() {
-      invitations.remove(invite);
+      invitations.remove(invitation);
     });
   }
 }
@@ -259,16 +260,14 @@ class _QueueTabState extends State<QueueTab> {
   }
 
   Future<void> _load() async {
-    di.get<NetworkController>();
+    di.get<NetworkController>().getQueue().then((queue) {
+      setState(() {
+        this.queue = queue;
+      });
+    });
   }
 
-  // Example queue items
-  List<QueueItem> queueItems = [
-    QueueItem(
-        id: 1, status: 'Pending', clientId: 'alexayers', submitted: '09:00 PM'),
-    QueueItem(
-        id: 2, status: 'Processing', clientId: 'UserC', submitted: '09:02 PM'),
-  ];
+  List<Queue> queue = [];
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +302,7 @@ class _QueueTabState extends State<QueueTab> {
 
   void _clearQueue() {
     setState(() {
-      queueItems.clear();
+      queue.clear();
     });
 
     debugPrint('Queue cleared.');
@@ -317,13 +316,13 @@ class _QueueTabState extends State<QueueTab> {
         DataColumn(label: Text('Client ID')),
         DataColumn(label: Text('Submitted')),
       ],
-      rows: queueItems.map((item) {
+      rows: queue.map((item) {
         return DataRow(
           cells: [
             DataCell(Text(item.id.toString())),
-            DataCell(Text(item.status)),
-            DataCell(Text(item.clientId)),
-            DataCell(Text(item.submitted)),
+            DataCell(Text(item.processingStatus)),
+            DataCell(Text(item.clientRequestedId)),
+            DataCell(Text(item.createdAt.toString())),
           ],
         );
       }).toList(),

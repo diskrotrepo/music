@@ -40,19 +40,19 @@ export class InvitationService {
             return null;
         }
 
-        await this.connectionRepository.createConnection(clientId, invitation[0].client_id, code);
-
-        invitation[0].accepted_client_id = clientId;
-        await this.invitationRepository.updateInvitation(invitation[0]);
-
         let connectedClient: Array<Client> = await this.clientRepository.getByPkey(invitation[0].client_id) as Array<Client>;
 
         console.log(connectedClient);
 
         if (!connectedClient) {
-            console.error("Connected client not found");
+            console.error("Attempting to accept an invitation to a client that no longer exists.");
             return null;
         }
+
+        await this.connectionRepository.createConnection(clientId, invitation[0].client_id, code);
+
+        invitation[0].accepted_client_id = clientId;
+        await this.invitationRepository.updateInvitation(invitation[0]);
 
         return {
             nickname: connectedClient[0].nickname,

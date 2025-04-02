@@ -511,7 +511,7 @@ typedef $$PromptTableProcessedTableManager = i0.ProcessedTableManager<
     ),
     i1.Prompt,
     i0.PrefetchHooks Function()>;
-typedef $$InvitationsTableCreateCompanionBuilder = i1.InvitationsCompanion
+typedef $$InvitationTableCreateCompanionBuilder = i1.InvitationCompanion
     Function({
   required String id,
   i0.Value<String?> clientAcceptedId,
@@ -519,7 +519,7 @@ typedef $$InvitationsTableCreateCompanionBuilder = i1.InvitationsCompanion
   i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
-typedef $$InvitationsTableUpdateCompanionBuilder = i1.InvitationsCompanion
+typedef $$InvitationTableUpdateCompanionBuilder = i1.InvitationCompanion
     Function({
   i0.Value<String> id,
   i0.Value<String?> clientAcceptedId,
@@ -528,9 +528,9 @@ typedef $$InvitationsTableUpdateCompanionBuilder = i1.InvitationsCompanion
   i0.Value<int> rowid,
 });
 
-class $$InvitationsTableFilterComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$InvitationsTable> {
-  $$InvitationsTableFilterComposer({
+class $$InvitationTableFilterComposer
+    extends i0.Composer<i0.GeneratedDatabase, i1.$InvitationTable> {
+  $$InvitationTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -551,9 +551,9 @@ class $$InvitationsTableFilterComposer
       column: $table.createdAt, builder: (column) => i0.ColumnFilters(column));
 }
 
-class $$InvitationsTableOrderingComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$InvitationsTable> {
-  $$InvitationsTableOrderingComposer({
+class $$InvitationTableOrderingComposer
+    extends i0.Composer<i0.GeneratedDatabase, i1.$InvitationTable> {
+  $$InvitationTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -575,9 +575,9 @@ class $$InvitationsTableOrderingComposer
       builder: (column) => i0.ColumnOrderings(column));
 }
 
-class $$InvitationsTableAnnotationComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$InvitationsTable> {
-  $$InvitationsTableAnnotationComposer({
+class $$InvitationTableAnnotationComposer
+    extends i0.Composer<i0.GeneratedDatabase, i1.$InvitationTable> {
+  $$InvitationTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -597,33 +597,33 @@ class $$InvitationsTableAnnotationComposer
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
-class $$InvitationsTableTableManager extends i0.RootTableManager<
+class $$InvitationTableTableManager extends i0.RootTableManager<
     i0.GeneratedDatabase,
-    i1.$InvitationsTable,
-    i1.Invitations,
-    i1.$$InvitationsTableFilterComposer,
-    i1.$$InvitationsTableOrderingComposer,
-    i1.$$InvitationsTableAnnotationComposer,
-    $$InvitationsTableCreateCompanionBuilder,
-    $$InvitationsTableUpdateCompanionBuilder,
+    i1.$InvitationTable,
+    i1.Invitation,
+    i1.$$InvitationTableFilterComposer,
+    i1.$$InvitationTableOrderingComposer,
+    i1.$$InvitationTableAnnotationComposer,
+    $$InvitationTableCreateCompanionBuilder,
+    $$InvitationTableUpdateCompanionBuilder,
     (
-      i1.Invitations,
-      i0.BaseReferences<i0.GeneratedDatabase, i1.$InvitationsTable,
-          i1.Invitations>
+      i1.Invitation,
+      i0
+      .BaseReferences<i0.GeneratedDatabase, i1.$InvitationTable, i1.Invitation>
     ),
-    i1.Invitations,
+    i1.Invitation,
     i0.PrefetchHooks Function()> {
-  $$InvitationsTableTableManager(
-      i0.GeneratedDatabase db, i1.$InvitationsTable table)
+  $$InvitationTableTableManager(
+      i0.GeneratedDatabase db, i1.$InvitationTable table)
       : super(i0.TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              i1.$$InvitationsTableFilterComposer($db: db, $table: table),
+              i1.$$InvitationTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              i1.$$InvitationsTableOrderingComposer($db: db, $table: table),
+              i1.$$InvitationTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              i1.$$InvitationsTableAnnotationComposer($db: db, $table: table),
+              i1.$$InvitationTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             i0.Value<String> id = const i0.Value.absent(),
             i0.Value<String?> clientAcceptedId = const i0.Value.absent(),
@@ -631,7 +631,7 @@ class $$InvitationsTableTableManager extends i0.RootTableManager<
             i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
-              i1.InvitationsCompanion(
+              i1.InvitationCompanion(
             id: id,
             clientAcceptedId: clientAcceptedId,
             code: code,
@@ -645,7 +645,7 @@ class $$InvitationsTableTableManager extends i0.RootTableManager<
             i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
-              i1.InvitationsCompanion.insert(
+              i1.InvitationCompanion.insert(
             id: id,
             clientAcceptedId: clientAcceptedId,
             code: code,
@@ -659,24 +659,23 @@ class $$InvitationsTableTableManager extends i0.RootTableManager<
         ));
 }
 
-typedef $$InvitationsTableProcessedTableManager = i0.ProcessedTableManager<
+typedef $$InvitationTableProcessedTableManager = i0.ProcessedTableManager<
     i0.GeneratedDatabase,
-    i1.$InvitationsTable,
-    i1.Invitations,
-    i1.$$InvitationsTableFilterComposer,
-    i1.$$InvitationsTableOrderingComposer,
-    i1.$$InvitationsTableAnnotationComposer,
-    $$InvitationsTableCreateCompanionBuilder,
-    $$InvitationsTableUpdateCompanionBuilder,
+    i1.$InvitationTable,
+    i1.Invitation,
+    i1.$$InvitationTableFilterComposer,
+    i1.$$InvitationTableOrderingComposer,
+    i1.$$InvitationTableAnnotationComposer,
+    $$InvitationTableCreateCompanionBuilder,
+    $$InvitationTableUpdateCompanionBuilder,
     (
-      i1.Invitations,
-      i0.BaseReferences<i0.GeneratedDatabase, i1.$InvitationsTable,
-          i1.Invitations>
+      i1.Invitation,
+      i0
+      .BaseReferences<i0.GeneratedDatabase, i1.$InvitationTable, i1.Invitation>
     ),
-    i1.Invitations,
+    i1.Invitation,
     i0.PrefetchHooks Function()>;
-typedef $$ConnectionsTableCreateCompanionBuilder = i1.ConnectionsCompanion
-    Function({
+typedef $$NetworkTableCreateCompanionBuilder = i1.NetworkCompanion Function({
   required String id,
   required String nickname,
   required String direction,
@@ -684,8 +683,7 @@ typedef $$ConnectionsTableCreateCompanionBuilder = i1.ConnectionsCompanion
   i0.Value<DateTime> createdAt,
   i0.Value<int> rowid,
 });
-typedef $$ConnectionsTableUpdateCompanionBuilder = i1.ConnectionsCompanion
-    Function({
+typedef $$NetworkTableUpdateCompanionBuilder = i1.NetworkCompanion Function({
   i0.Value<String> id,
   i0.Value<String> nickname,
   i0.Value<String> direction,
@@ -694,9 +692,9 @@ typedef $$ConnectionsTableUpdateCompanionBuilder = i1.ConnectionsCompanion
   i0.Value<int> rowid,
 });
 
-class $$ConnectionsTableFilterComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$ConnectionsTable> {
-  $$ConnectionsTableFilterComposer({
+class $$NetworkTableFilterComposer
+    extends i0.Composer<i0.GeneratedDatabase, i1.$NetworkTable> {
+  $$NetworkTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -719,9 +717,9 @@ class $$ConnectionsTableFilterComposer
       column: $table.createdAt, builder: (column) => i0.ColumnFilters(column));
 }
 
-class $$ConnectionsTableOrderingComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$ConnectionsTable> {
-  $$ConnectionsTableOrderingComposer({
+class $$NetworkTableOrderingComposer
+    extends i0.Composer<i0.GeneratedDatabase, i1.$NetworkTable> {
+  $$NetworkTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -746,9 +744,9 @@ class $$ConnectionsTableOrderingComposer
       builder: (column) => i0.ColumnOrderings(column));
 }
 
-class $$ConnectionsTableAnnotationComposer
-    extends i0.Composer<i0.GeneratedDatabase, i1.$ConnectionsTable> {
-  $$ConnectionsTableAnnotationComposer({
+class $$NetworkTableAnnotationComposer
+    extends i0.Composer<i0.GeneratedDatabase, i1.$NetworkTable> {
+  $$NetworkTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -771,33 +769,31 @@ class $$ConnectionsTableAnnotationComposer
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
-class $$ConnectionsTableTableManager extends i0.RootTableManager<
+class $$NetworkTableTableManager extends i0.RootTableManager<
     i0.GeneratedDatabase,
-    i1.$ConnectionsTable,
-    i1.Connections,
-    i1.$$ConnectionsTableFilterComposer,
-    i1.$$ConnectionsTableOrderingComposer,
-    i1.$$ConnectionsTableAnnotationComposer,
-    $$ConnectionsTableCreateCompanionBuilder,
-    $$ConnectionsTableUpdateCompanionBuilder,
+    i1.$NetworkTable,
+    i1.Network,
+    i1.$$NetworkTableFilterComposer,
+    i1.$$NetworkTableOrderingComposer,
+    i1.$$NetworkTableAnnotationComposer,
+    $$NetworkTableCreateCompanionBuilder,
+    $$NetworkTableUpdateCompanionBuilder,
     (
-      i1.Connections,
-      i0.BaseReferences<i0.GeneratedDatabase, i1.$ConnectionsTable,
-          i1.Connections>
+      i1.Network,
+      i0.BaseReferences<i0.GeneratedDatabase, i1.$NetworkTable, i1.Network>
     ),
-    i1.Connections,
+    i1.Network,
     i0.PrefetchHooks Function()> {
-  $$ConnectionsTableTableManager(
-      i0.GeneratedDatabase db, i1.$ConnectionsTable table)
+  $$NetworkTableTableManager(i0.GeneratedDatabase db, i1.$NetworkTable table)
       : super(i0.TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              i1.$$ConnectionsTableFilterComposer($db: db, $table: table),
+              i1.$$NetworkTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              i1.$$ConnectionsTableOrderingComposer($db: db, $table: table),
+              i1.$$NetworkTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              i1.$$ConnectionsTableAnnotationComposer($db: db, $table: table),
+              i1.$$NetworkTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             i0.Value<String> id = const i0.Value.absent(),
             i0.Value<String> nickname = const i0.Value.absent(),
@@ -806,7 +802,7 @@ class $$ConnectionsTableTableManager extends i0.RootTableManager<
             i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
-              i1.ConnectionsCompanion(
+              i1.NetworkCompanion(
             id: id,
             nickname: nickname,
             direction: direction,
@@ -822,7 +818,7 @@ class $$ConnectionsTableTableManager extends i0.RootTableManager<
             i0.Value<DateTime> createdAt = const i0.Value.absent(),
             i0.Value<int> rowid = const i0.Value.absent(),
           }) =>
-              i1.ConnectionsCompanion.insert(
+              i1.NetworkCompanion.insert(
             id: id,
             nickname: nickname,
             direction: direction,
@@ -837,21 +833,20 @@ class $$ConnectionsTableTableManager extends i0.RootTableManager<
         ));
 }
 
-typedef $$ConnectionsTableProcessedTableManager = i0.ProcessedTableManager<
+typedef $$NetworkTableProcessedTableManager = i0.ProcessedTableManager<
     i0.GeneratedDatabase,
-    i1.$ConnectionsTable,
-    i1.Connections,
-    i1.$$ConnectionsTableFilterComposer,
-    i1.$$ConnectionsTableOrderingComposer,
-    i1.$$ConnectionsTableAnnotationComposer,
-    $$ConnectionsTableCreateCompanionBuilder,
-    $$ConnectionsTableUpdateCompanionBuilder,
+    i1.$NetworkTable,
+    i1.Network,
+    i1.$$NetworkTableFilterComposer,
+    i1.$$NetworkTableOrderingComposer,
+    i1.$$NetworkTableAnnotationComposer,
+    $$NetworkTableCreateCompanionBuilder,
+    $$NetworkTableUpdateCompanionBuilder,
     (
-      i1.Connections,
-      i0.BaseReferences<i0.GeneratedDatabase, i1.$ConnectionsTable,
-          i1.Connections>
+      i1.Network,
+      i0.BaseReferences<i0.GeneratedDatabase, i1.$NetworkTable, i1.Network>
     ),
-    i1.Connections,
+    i1.Network,
     i0.PrefetchHooks Function()>;
 typedef $$SettingsTableCreateCompanionBuilder = i1.SettingsCompanion Function({
   required String key,
@@ -2389,12 +2384,12 @@ class PromptCompanion extends i0.UpdateCompanion<i1.Prompt> {
   }
 }
 
-class $InvitationsTable extends i2.Invitations
-    with i0.TableInfo<$InvitationsTable, i1.Invitations> {
+class $InvitationTable extends i2.Invitation
+    with i0.TableInfo<$InvitationTable, i1.Invitation> {
   @override
   final i0.GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InvitationsTable(this.attachedDatabase, [this._alias]);
+  $InvitationTable(this.attachedDatabase, [this._alias]);
   static const i0.VerificationMeta _idMeta = const i0.VerificationMeta('id');
   @override
   late final i0.GeneratedColumn<String> id = i0.GeneratedColumn<String>(
@@ -2427,10 +2422,10 @@ class $InvitationsTable extends i2.Invitations
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'invitations';
+  static const String $name = 'invitation';
   @override
   i0.VerificationContext validateIntegrity(
-      i0.Insertable<i1.Invitations> instance,
+      i0.Insertable<i1.Invitation> instance,
       {bool isInserting = false}) {
     final context = i0.VerificationContext();
     final data = instance.toColumns(true);
@@ -2461,9 +2456,9 @@ class $InvitationsTable extends i2.Invitations
   @override
   Set<i0.GeneratedColumn> get $primaryKey => {id};
   @override
-  i1.Invitations map(Map<String, dynamic> data, {String? tablePrefix}) {
+  i1.Invitation map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return i1.Invitations(
+    return i1.Invitation(
       id: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}id'])!,
       clientAcceptedId: attachedDatabase.typeMapping.read(
@@ -2476,18 +2471,17 @@ class $InvitationsTable extends i2.Invitations
   }
 
   @override
-  $InvitationsTable createAlias(String alias) {
-    return $InvitationsTable(attachedDatabase, alias);
+  $InvitationTable createAlias(String alias) {
+    return $InvitationTable(attachedDatabase, alias);
   }
 }
 
-class Invitations extends i0.DataClass
-    implements i0.Insertable<i1.Invitations> {
+class Invitation extends i0.DataClass implements i0.Insertable<i1.Invitation> {
   final String id;
   final String? clientAcceptedId;
   final String code;
   final DateTime createdAt;
-  const Invitations(
+  const Invitation(
       {required this.id,
       this.clientAcceptedId,
       required this.code,
@@ -2504,8 +2498,8 @@ class Invitations extends i0.DataClass
     return map;
   }
 
-  i1.InvitationsCompanion toCompanion(bool nullToAbsent) {
-    return i1.InvitationsCompanion(
+  i1.InvitationCompanion toCompanion(bool nullToAbsent) {
+    return i1.InvitationCompanion(
       id: i0.Value(id),
       clientAcceptedId: clientAcceptedId == null && nullToAbsent
           ? const i0.Value.absent()
@@ -2515,10 +2509,10 @@ class Invitations extends i0.DataClass
     );
   }
 
-  factory Invitations.fromJson(Map<String, dynamic> json,
+  factory Invitation.fromJson(Map<String, dynamic> json,
       {i0.ValueSerializer? serializer}) {
     serializer ??= i0.driftRuntimeOptions.defaultSerializer;
-    return Invitations(
+    return Invitation(
       id: serializer.fromJson<String>(json['id']),
       clientAcceptedId: serializer.fromJson<String?>(json['clientAcceptedId']),
       code: serializer.fromJson<String>(json['code']),
@@ -2536,12 +2530,12 @@ class Invitations extends i0.DataClass
     };
   }
 
-  i1.Invitations copyWith(
+  i1.Invitation copyWith(
           {String? id,
           i0.Value<String?> clientAcceptedId = const i0.Value.absent(),
           String? code,
           DateTime? createdAt}) =>
-      i1.Invitations(
+      i1.Invitation(
         id: id ?? this.id,
         clientAcceptedId: clientAcceptedId.present
             ? clientAcceptedId.value
@@ -2549,8 +2543,8 @@ class Invitations extends i0.DataClass
         code: code ?? this.code,
         createdAt: createdAt ?? this.createdAt,
       );
-  Invitations copyWithCompanion(i1.InvitationsCompanion data) {
-    return Invitations(
+  Invitation copyWithCompanion(i1.InvitationCompanion data) {
+    return Invitation(
       id: data.id.present ? data.id.value : this.id,
       clientAcceptedId: data.clientAcceptedId.present
           ? data.clientAcceptedId.value
@@ -2562,7 +2556,7 @@ class Invitations extends i0.DataClass
 
   @override
   String toString() {
-    return (StringBuffer('Invitations(')
+    return (StringBuffer('Invitation(')
           ..write('id: $id, ')
           ..write('clientAcceptedId: $clientAcceptedId, ')
           ..write('code: $code, ')
@@ -2576,27 +2570,27 @@ class Invitations extends i0.DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is i1.Invitations &&
+      (other is i1.Invitation &&
           other.id == this.id &&
           other.clientAcceptedId == this.clientAcceptedId &&
           other.code == this.code &&
           other.createdAt == this.createdAt);
 }
 
-class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
+class InvitationCompanion extends i0.UpdateCompanion<i1.Invitation> {
   final i0.Value<String> id;
   final i0.Value<String?> clientAcceptedId;
   final i0.Value<String> code;
   final i0.Value<DateTime> createdAt;
   final i0.Value<int> rowid;
-  const InvitationsCompanion({
+  const InvitationCompanion({
     this.id = const i0.Value.absent(),
     this.clientAcceptedId = const i0.Value.absent(),
     this.code = const i0.Value.absent(),
     this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   });
-  InvitationsCompanion.insert({
+  InvitationCompanion.insert({
     required String id,
     this.clientAcceptedId = const i0.Value.absent(),
     required String code,
@@ -2604,7 +2598,7 @@ class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
         code = i0.Value(code);
-  static i0.Insertable<i1.Invitations> custom({
+  static i0.Insertable<i1.Invitation> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? clientAcceptedId,
     i0.Expression<String>? code,
@@ -2620,13 +2614,13 @@ class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
     });
   }
 
-  i1.InvitationsCompanion copyWith(
+  i1.InvitationCompanion copyWith(
       {i0.Value<String>? id,
       i0.Value<String?>? clientAcceptedId,
       i0.Value<String>? code,
       i0.Value<DateTime>? createdAt,
       i0.Value<int>? rowid}) {
-    return i1.InvitationsCompanion(
+    return i1.InvitationCompanion(
       id: id ?? this.id,
       clientAcceptedId: clientAcceptedId ?? this.clientAcceptedId,
       code: code ?? this.code,
@@ -2658,7 +2652,7 @@ class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
 
   @override
   String toString() {
-    return (StringBuffer('InvitationsCompanion(')
+    return (StringBuffer('InvitationCompanion(')
           ..write('id: $id, ')
           ..write('clientAcceptedId: $clientAcceptedId, ')
           ..write('code: $code, ')
@@ -2669,12 +2663,12 @@ class InvitationsCompanion extends i0.UpdateCompanion<i1.Invitations> {
   }
 }
 
-class $ConnectionsTable extends i2.Connections
-    with i0.TableInfo<$ConnectionsTable, i1.Connections> {
+class $NetworkTable extends i2.Network
+    with i0.TableInfo<$NetworkTable, i1.Network> {
   @override
   final i0.GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ConnectionsTable(this.attachedDatabase, [this._alias]);
+  $NetworkTable(this.attachedDatabase, [this._alias]);
   static const i0.VerificationMeta _idMeta = const i0.VerificationMeta('id');
   @override
   late final i0.GeneratedColumn<String> id = i0.GeneratedColumn<String>(
@@ -2713,10 +2707,9 @@ class $ConnectionsTable extends i2.Connections
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'connections';
+  static const String $name = 'network';
   @override
-  i0.VerificationContext validateIntegrity(
-      i0.Insertable<i1.Connections> instance,
+  i0.VerificationContext validateIntegrity(i0.Insertable<i1.Network> instance,
       {bool isInserting = false}) {
     final context = i0.VerificationContext();
     final data = instance.toColumns(true);
@@ -2753,9 +2746,9 @@ class $ConnectionsTable extends i2.Connections
   @override
   Set<i0.GeneratedColumn> get $primaryKey => {id};
   @override
-  i1.Connections map(Map<String, dynamic> data, {String? tablePrefix}) {
+  i1.Network map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return i1.Connections(
+    return i1.Network(
       id: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}id'])!,
       nickname: attachedDatabase.typeMapping
@@ -2770,19 +2763,18 @@ class $ConnectionsTable extends i2.Connections
   }
 
   @override
-  $ConnectionsTable createAlias(String alias) {
-    return $ConnectionsTable(attachedDatabase, alias);
+  $NetworkTable createAlias(String alias) {
+    return $NetworkTable(attachedDatabase, alias);
   }
 }
 
-class Connections extends i0.DataClass
-    implements i0.Insertable<i1.Connections> {
+class Network extends i0.DataClass implements i0.Insertable<i1.Network> {
   final String id;
   final String nickname;
   final String direction;
   final String clientId;
   final DateTime createdAt;
-  const Connections(
+  const Network(
       {required this.id,
       required this.nickname,
       required this.direction,
@@ -2799,8 +2791,8 @@ class Connections extends i0.DataClass
     return map;
   }
 
-  i1.ConnectionsCompanion toCompanion(bool nullToAbsent) {
-    return i1.ConnectionsCompanion(
+  i1.NetworkCompanion toCompanion(bool nullToAbsent) {
+    return i1.NetworkCompanion(
       id: i0.Value(id),
       nickname: i0.Value(nickname),
       direction: i0.Value(direction),
@@ -2809,10 +2801,10 @@ class Connections extends i0.DataClass
     );
   }
 
-  factory Connections.fromJson(Map<String, dynamic> json,
+  factory Network.fromJson(Map<String, dynamic> json,
       {i0.ValueSerializer? serializer}) {
     serializer ??= i0.driftRuntimeOptions.defaultSerializer;
-    return Connections(
+    return Network(
       id: serializer.fromJson<String>(json['id']),
       nickname: serializer.fromJson<String>(json['nickname']),
       direction: serializer.fromJson<String>(json['direction']),
@@ -2832,21 +2824,21 @@ class Connections extends i0.DataClass
     };
   }
 
-  i1.Connections copyWith(
+  i1.Network copyWith(
           {String? id,
           String? nickname,
           String? direction,
           String? clientId,
           DateTime? createdAt}) =>
-      i1.Connections(
+      i1.Network(
         id: id ?? this.id,
         nickname: nickname ?? this.nickname,
         direction: direction ?? this.direction,
         clientId: clientId ?? this.clientId,
         createdAt: createdAt ?? this.createdAt,
       );
-  Connections copyWithCompanion(i1.ConnectionsCompanion data) {
-    return Connections(
+  Network copyWithCompanion(i1.NetworkCompanion data) {
+    return Network(
       id: data.id.present ? data.id.value : this.id,
       nickname: data.nickname.present ? data.nickname.value : this.nickname,
       direction: data.direction.present ? data.direction.value : this.direction,
@@ -2857,7 +2849,7 @@ class Connections extends i0.DataClass
 
   @override
   String toString() {
-    return (StringBuffer('Connections(')
+    return (StringBuffer('Network(')
           ..write('id: $id, ')
           ..write('nickname: $nickname, ')
           ..write('direction: $direction, ')
@@ -2872,7 +2864,7 @@ class Connections extends i0.DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is i1.Connections &&
+      (other is i1.Network &&
           other.id == this.id &&
           other.nickname == this.nickname &&
           other.direction == this.direction &&
@@ -2880,14 +2872,14 @@ class Connections extends i0.DataClass
           other.createdAt == this.createdAt);
 }
 
-class ConnectionsCompanion extends i0.UpdateCompanion<i1.Connections> {
+class NetworkCompanion extends i0.UpdateCompanion<i1.Network> {
   final i0.Value<String> id;
   final i0.Value<String> nickname;
   final i0.Value<String> direction;
   final i0.Value<String> clientId;
   final i0.Value<DateTime> createdAt;
   final i0.Value<int> rowid;
-  const ConnectionsCompanion({
+  const NetworkCompanion({
     this.id = const i0.Value.absent(),
     this.nickname = const i0.Value.absent(),
     this.direction = const i0.Value.absent(),
@@ -2895,7 +2887,7 @@ class ConnectionsCompanion extends i0.UpdateCompanion<i1.Connections> {
     this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   });
-  ConnectionsCompanion.insert({
+  NetworkCompanion.insert({
     required String id,
     required String nickname,
     required String direction,
@@ -2906,7 +2898,7 @@ class ConnectionsCompanion extends i0.UpdateCompanion<i1.Connections> {
         nickname = i0.Value(nickname),
         direction = i0.Value(direction),
         clientId = i0.Value(clientId);
-  static i0.Insertable<i1.Connections> custom({
+  static i0.Insertable<i1.Network> custom({
     i0.Expression<String>? id,
     i0.Expression<String>? nickname,
     i0.Expression<String>? direction,
@@ -2924,14 +2916,14 @@ class ConnectionsCompanion extends i0.UpdateCompanion<i1.Connections> {
     });
   }
 
-  i1.ConnectionsCompanion copyWith(
+  i1.NetworkCompanion copyWith(
       {i0.Value<String>? id,
       i0.Value<String>? nickname,
       i0.Value<String>? direction,
       i0.Value<String>? clientId,
       i0.Value<DateTime>? createdAt,
       i0.Value<int>? rowid}) {
-    return i1.ConnectionsCompanion(
+    return i1.NetworkCompanion(
       id: id ?? this.id,
       nickname: nickname ?? this.nickname,
       direction: direction ?? this.direction,
@@ -2967,7 +2959,7 @@ class ConnectionsCompanion extends i0.UpdateCompanion<i1.Connections> {
 
   @override
   String toString() {
-    return (StringBuffer('ConnectionsCompanion(')
+    return (StringBuffer('NetworkCompanion(')
           ..write('id: $id, ')
           ..write('nickname: $nickname, ')
           ..write('direction: $direction, ')

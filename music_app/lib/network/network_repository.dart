@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import 'package:music_app/database/database.dart';
-import 'package:music_app/database/tables.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
@@ -11,52 +10,50 @@ class NetworkRepository {
   final AppDatabase _database;
   final Logger _logger = di.get<Logger>();
 
-  Future<void> acceptInvitation() async {}
+  Future<void> acceptInvitation(
+      {required String nickname,
+      required String direction,
+      required String clientId}) async {
+    _logger.i("Accepting invitation...");
+    await _database.into(_database.network).insert(
+          NetworkCompanion(
+            id: Value(Uuid().v4()),
+            nickname: Value(nickname),
+            direction: Value(direction),
+            clientId: Value(clientId),
+          ),
+        );
+    _logger.i("Invitation accepted: $nickname");
+  }
 
-  Future<List<Invitations>> getInvitations() async {
-    final results = _database.select(_database.invitations).get();
-    return results as List<Invitations>;
+  Future<List<Invitation>> getInvitations() async {
+    final results = await _database.select(_database.invitation).get();
+    return results;
+  }
+
+  Future<Invitation?> getInvitation(String code) async {
+    final query = _database.select(_database.invitation);
+    query.where((tbl) => tbl.code.equals(code));
+    final results = await query.getSingleOrNull();
+    return results;
   }
 
   Future<void> createInvitation(String code) async {
-    _database.invitations.insertOne(InvitationsCompanion(
+    _database.invitation.insertOne(InvitationCompanion(
       id: Value(Uuid().v4()),
       code: Value(code),
     ));
   }
 
   Future<void> deleteInvitation(String id) async {
-    _database.delete(_database.invitations).where((tbl) => tbl.id.equals(id));
+    _database.delete(_database.invitation).where((tbl) => tbl.id.equals(id));
   }
 
-  /*
-  acceptInvitation = async (req: Request, res: Response): Promise<void> => {
+  Future<List<Network>> getConnections() async {
+    return await _database.select(_database.network).get();
+  }
 
-        let invitation = db.prepare("SELECT * FROM invitations WHERE code = ?").get([req.params.code]);
-
-        if (invitation) {
-            res.status(400).json({ error: "You can't accept your own invitations." });
-            return;
-        }
-
-        let response = await this.diskrotNetwork.post(`/invitations/${req.params.code}`, {});
-        db.prepare("INSERT INTO connections (id, nickname, direction, client_id) VALUES (?,?,?,?)").run([uuid(), response.nickname, "OUTBOUND", response.client_id]);
-        res.status(200).json({});
-    }
-
-  
-    */
-}
-
-class Invitations {
-  Invitations({
-    required this.id,
-    required this.clientAcceptedId,
-    required this.code,
-    required this.createdAt,
-  });
-  final String id;
-  final String clientAcceptedId;
-  final String code;
-  final DateTime createdAt;
+  Future<List<Queue>> getQueue() async {
+    return await _database.select(_database.queue).get();
+  }
 }
