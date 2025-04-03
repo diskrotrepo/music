@@ -1,0 +1,45 @@
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies for eSpeak and other requirements
+RUN apt-get update && apt-get install -y \
+    git \
+    espeak-ng \
+    sqlite3 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Clone the DiffRhythm repository
+RUN git clone https://github.com/diskrotrepo/music.git .
+
+WORKDIR music/music_inferencing
+
+# Copy the requirements file into the container
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN cp .env.example .env
+
+RUN flask db init
+RUN flask db migrate
+RUN flask db upgrade
+
+# Set environment variables for eSpeak (if needed)
+ENV PHONEMIZER_ESPEAK_LIBRARY=/usr/lib/x86_64-linux-gnu/libespeak-ng.so.1
+ENV PHONEMIZER_ESPEAK_PATH=/usr/bin
+
+ENV HF_TOKEN=""
+
+# Expose any necessary ports (if applicable)
+EXPOSE 5001
+
+# Create a volume for input/output files
+VOLUME ["/app/input", "/app/output"]
+
+# Set the default command to run when starting the container
+# You might want to modify this based on specific inference scripts
+CMD ["flask", "run", "--port=5001", "--host=0.0.0.0"]

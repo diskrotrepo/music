@@ -66,7 +66,7 @@ cp .env.example .env
 sed -i 's/<yourToken>/abc123/g' .env
 source .env
 ; Note this will download some of the models and complain about 
-flag db init
+flask db init
 flask db migrate
 flask db upgrade
 flask run --port=5001 --host=0.0.0.0
