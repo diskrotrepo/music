@@ -16,9 +16,9 @@ class Configuration {
 
   factory Configuration.fromEnvironment() {
     return Configuration(
-        buildEnvironment: BuildEnvironment.dev,
+        buildEnvironment: BuildEnvironment.release,
         serverConfiguration: ServerConfiguration(
-          hostname: 'localhost',
+          hostname: 'network.diskrot.com',
           port: '8080',
           secure: false,
           api: '/api/v1',
