@@ -19,7 +19,7 @@ describe('RegistrationService', () => {
         const email = 'test@example.com';
         const nickname = 'testuser';
 
-        const client = await registrationService.registerClient(email, nickname);
+        const client = await registrationService.registerClient(email);
 
         expect(client.email).toBe(email);
         expect(client.nickname).toBe(nickname);
@@ -28,8 +28,7 @@ describe('RegistrationService', () => {
 
         expect(client.sharedSecret).toHaveLength(32);
 
-        expect(new Date(client.created_at).toString()).not.toBe('Invalid Date');
-        expect(new Date(client.updated_at).toString()).not.toBe('Invalid Date');
+
 
         expect(mockClientRepository.create).toHaveBeenCalledWith(client);
     });

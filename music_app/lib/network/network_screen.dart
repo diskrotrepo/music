@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
 import 'package:music_app/network/network_controller.dart';
@@ -213,8 +214,26 @@ class _InvitationsTabState extends State<InvitationsTab> {
       rows: invitations.map((invite) {
         return DataRow(
           cells: [
-            DataCell(Text(invite.code.toString())),
-            DataCell(Text('')),
+            DataCell(
+              Row(
+                children: [
+                  Expanded(child: Text(invite.code.toString())),
+                  IconButton(
+                    icon: const Icon(Icons.copy, size: 18, color: Colors.grey),
+                    tooltip: 'Copy code',
+                    onPressed: () {
+                      Clipboard.setData(
+                          ClipboardData(text: invite.code.toString()));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Invitation code copied')),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const DataCell(
+                Text('')), // You can update this when there's a real status
             DataCell(
               IconButton(
                 icon: const Icon(Icons.delete, color: Colors.grey),

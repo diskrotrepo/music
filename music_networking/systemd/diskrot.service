@@ -1,0 +1,14 @@
+[Unit]
+Description=diskrot network
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/music/music_network
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
