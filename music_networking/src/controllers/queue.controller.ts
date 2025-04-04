@@ -42,6 +42,7 @@ export class QueueController {
             const queueItem = await this.queueService.queue(clientId, body);
             res.status(200).json({ id: queueItem });
         } catch (e) {
+            console.error("Error queueing item: ", e);
             res.status(400).json({ error: e });
         }
     }
