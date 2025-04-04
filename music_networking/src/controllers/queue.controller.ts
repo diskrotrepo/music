@@ -38,9 +38,12 @@ export class QueueController {
         console.log("Queueing item for client: ", clientId);
         console.log("Body: ", body);
 
-        const queueItem = await this.queueService.queue(clientId, body);
-
-        res.status(200).json({ id: queueItem });
+        try {
+            const queueItem = await this.queueService.queue(clientId, body);
+            res.status(200).json({ id: queueItem });
+        } catch (e) {
+            res.status(400).json({ error: e });
+        }
     }
 
     getWorkQueue = async (req: Request, res: Response): Promise<void> => {

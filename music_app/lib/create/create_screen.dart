@@ -31,13 +31,13 @@ class _CreatePageState extends State<CreatePage> {
     setState(() => _songs.removeAt(index));
   }
 
-  void _createSong() {
+  Future<void> _createSong() async {
     final title = _titleController.text;
     final styles = _stylesController.text;
     final lyrics = _lyricsController.text;
-    final songDuration = _songDuration;
-    final cfgStrength = _cfgStrength;
-    final steps = _steps;
+    final songDuration = _songDuration = 95;
+    final cfgStrength = _cfgStrength = 6;
+    final steps = _steps = 32;
 
     if (title.isEmpty || styles.isEmpty || lyrics.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,7 +46,7 @@ class _CreatePageState extends State<CreatePage> {
       return;
     }
 
-    di.get<CreateController>().createSong(
+    await di.get<CreateController>().createSong(
           title: title,
           styles: styles,
           lyrics: lyrics,
