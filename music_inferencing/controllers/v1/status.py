@@ -5,7 +5,7 @@ from flask import request
 api = Namespace("status", description="Status related APIs")
 
 
-@api.route("/status")
+@api.route("/health")
 @api.doc(
     description="Returns status of the API",
     tags=["Status"],
@@ -16,7 +16,7 @@ class StatusController(Resource):
         """Retrieve API status."""
         try:
             return {
-                "status": "ok",
+                "status": True,
             }, 200
         except Exception as e:
             return {"error": str(e)}, 500
