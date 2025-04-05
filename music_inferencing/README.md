@@ -14,8 +14,14 @@ By default this will run at http://127.0.0.1:5001 with API documents available a
 1. You'll want either Ubuntu 22.04 or Windows running a WSL image of Ubuntu 22.04
 
 ```bash
-apt-get update && apt-get upgrade -y
-apt-get install espeak-ng unzip sqlite3 build-essential cmake g++ make pkg-config -y
+
+sudo apt-get update && apt-get upgrade -y
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt install python3.10
+sudo unlink /usr/local/bin/python
+sudo ln -s /usr/local/bin/python3.10 /usr/local/bin/python
+sudo apt-get install espeak-ng unzip sqlite3 build-essential cmake g++ make pkg-config -y
 git clone https://github.com/diskrotrepo/music.git
 cd music/music_inferencing
 python -m venv music
