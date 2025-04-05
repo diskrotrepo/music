@@ -5,34 +5,56 @@ import 'package:music_app/database/database.dart';
 import 'package:music_app/database/tables.drift.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/dependency_context.dart';
+import 'package:http/http.dart' as http;
 
 class SettingsRepository {
   SettingsRepository({required AppDatabase database}) : _database = database;
   final AppDatabase _database;
   final Logger _logger = di.get<Logger>();
 
-  Future<void> updateGPUSettings(
+  Future<bool> updateGPUSettings(
       String hostname, String port, String maxQueueSize) async {
-    await _database.into(_database.settings).insertOnConflictUpdate(
-          SettingsCompanion(
-            key: const Value('hostname'),
-            value: Value(hostname),
-          ),
-        );
+    final url = "http://$hostname:$port/api/v1/status/health";
 
-    await _database.into(_database.settings).insertOnConflictUpdate(
-          SettingsCompanion(
-            key: const Value('port'),
-            value: Value(port),
-          ),
-        );
+    _logger.i('Checking GPU server status at $url');
 
-    await _database.into(_database.settings).insertOnConflictUpdate(
-          SettingsCompanion(
-            key: const Value('max_queue_size'),
-            value: Value(maxQueueSize),
-          ),
-        );
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        await _database.into(_database.settings).insertOnConflictUpdate(
+              SettingsCompanion(
+                key: const Value('hostname'),
+                value: Value(hostname),
+              ),
+            );
+
+        await _database.into(_database.settings).insertOnConflictUpdate(
+              SettingsCompanion(
+                key: const Value('port'),
+                value: Value(port),
+              ),
+            );
+
+        await _database.into(_database.settings).insertOnConflictUpdate(
+              SettingsCompanion(
+                key: const Value('max_queue_size'),
+                value: Value(maxQueueSize),
+              ),
+            );
+
+        return true;
+      } else {
+        _logger.i('Unable to reach inference server: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      _logger.e('Error: $e');
+      return false;
+    }
   }
 
   Future<void> updatePromptsSettings(String lrcPrompt) async {

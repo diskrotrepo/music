@@ -203,10 +203,25 @@ class _GPUSettingsTabState extends State<GPUSettingsTab> {
 
     final settingsController = di.get<SettingsController>();
 
-    await settingsController.updateGPUSettings(
+    final success = await settingsController.updateGPUSettings(
       hostname: hostname,
       port: port,
       maxQueueSize: maxQueueSize,
+    );
+
+    late Text resultsText;
+
+    if (success) {
+      resultsText = const Text('Settings saved successfully');
+    } else {
+      resultsText = const Text('Failed to save settings');
+    }
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: resultsText,
+      ),
     );
 
     // For example, store in shared preferences or make an API call

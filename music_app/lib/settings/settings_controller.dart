@@ -18,13 +18,15 @@ class SettingsController extends ChangeNotifier {
   final SettingsRepository _settingsRepository;
   final Logger _logger = di.get<Logger>();
 
-  Future<void> updateGPUSettings({
+  Future<bool> updateGPUSettings({
     required String hostname,
     required String port,
     required String maxQueueSize,
   }) async {
-    _settingsRepository.updateGPUSettings(hostname, port, maxQueueSize);
+    final results = await _settingsRepository.updateGPUSettings(
+        hostname, port, maxQueueSize);
     notifyListeners();
+    return results;
   }
 
   void updatePromptsSettings(String promptText) {
