@@ -46,14 +46,21 @@ class _CreatePageState extends State<CreatePage> {
       return;
     }
 
-    await di.get<CreateController>().createSong(
-          title: title,
-          styles: styles,
-          lyrics: lyrics,
-          duration: songDuration,
-          cfgStrength: cfgStrength,
-          steps: steps,
-        );
+    try {
+      await di.get<CreateController>().createSong(
+            title: title,
+            styles: styles,
+            lyrics: lyrics,
+            duration: songDuration,
+            cfgStrength: cfgStrength,
+            steps: steps,
+          );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('diskrot network error')),
+      );
+    }
   }
 
   @override

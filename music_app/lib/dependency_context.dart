@@ -71,6 +71,8 @@ GetIt setup() {
 DiskrotClient get _diskRotClient {
   final file = File('.diskrot_client.json');
 
+  logger.i('Loading diskrot client from ${file.path}');
+
   if (file.existsSync() == false) {
     return DiskrotClient(id: '', nickname: '', sharedSecret: '');
   }
