@@ -164,6 +164,7 @@ def generate(
 
     id = str(uuid.uuid4())
 
+    logging.info(PROJECT_ROOT_DIR);
     output_path = os.path.join(PROJECT_ROOT_DIR, "music_output", "{}.wav".format(id))
     logging.info(f"Writing file to {output_path}")
 
