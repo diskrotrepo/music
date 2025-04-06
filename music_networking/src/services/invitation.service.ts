@@ -51,8 +51,11 @@ export class InvitationService {
 
         await this.connectionRepository.createConnection(clientId, invitation[0].client_id, code);
 
+        let acceptingClient = await this.clientRepository.getByPkey(clientId) as Array<Client>;
+
         invitation[0].accepted_client_id = clientId;
-        await this.invitationRepository.updateInvitation(invitation[0]);
+        invitation[0].nickname = acceptingClient[0].nickname;
+        await this.invitationRepository.updateInvitation(invitation[0],);
 
         return {
             nickname: connectedClient[0].nickname,
@@ -63,7 +66,15 @@ export class InvitationService {
 
     }
     async getInvitations(clientId: string): Promise<Array<Invitation>> {
-        return await this.invitationRepository.getInvitations(clientId);
+        let invitations = await this.invitationRepository.getInvitations(clientId);
+
+        if (!invitations) {
+            console.error("No invitations found");
+            return [];
+        }
+
+
+        return invitations;
     }
     async rejectInvitation(code: string): Promise<void> {
         await this.invitationRepository.delete(code);
