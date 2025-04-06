@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
 import 'package:music_app/network/network_controller.dart';
+import 'package:music_app/network/network_models.dart';
 
 class NetworkPage extends StatelessWidget {
   const NetworkPage({super.key});
@@ -57,7 +58,7 @@ class _ConnectionsTabState extends State<ConnectionsTab> {
 
   final TextEditingController _inviteCodeController = TextEditingController();
 
-  List<Network> connections = [];
+  List<NetworkConnection> connections = [];
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +136,7 @@ class _ConnectionsTabState extends State<ConnectionsTab> {
     );
   }
 
-  void _deleteConnection(Network conn) {
+  void _deleteConnection(NetworkConnection conn) {
     setState(() {
       connections.remove(conn);
     });

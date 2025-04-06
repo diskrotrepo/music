@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:music_app/database/database.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
+import 'package:music_app/network/network_models.dart';
+import 'package:music_app/networkiing/diskrot_network.dart';
 import 'package:uuid/uuid.dart';
 
 class NetworkRepository {
@@ -49,8 +53,19 @@ class NetworkRepository {
     _database.invitation.deleteWhere((tbl) => tbl.code.equals(code));
   }
 
-  Future<List<Network>> getConnections() async {
-    return await _database.select(_database.network).get();
+  Future<List<NetworkConnection>> getConnections() async {
+    _logger.i("Fetching network connections...");
+
+    final response = await get("/connections");
+
+    final connectionsResponse =
+        ConnectionsResponse.fromJson(jsonDecode(response.body));
+
+    final connections = connectionsResponse.connections;
+
+    final localConnections = await _database.select(_database.network).get();
+
+    return connections;
   }
 
   Future<List<Queue>> getQueue() async {

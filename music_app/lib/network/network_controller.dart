@@ -64,8 +64,10 @@ class NetworkController extends ChangeNotifier {
     return true;
   }
 
-  Future<List<Network>> getConnections() async {
-    return await networkRepository.getConnections();
+  Future<List<NetworkConnection>> getConnections() async {
+    final connections = await networkRepository.getConnections();
+
+    return connections;
   }
 
   Future<List<Queue>> getQueue() async {

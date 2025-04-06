@@ -32,3 +32,9 @@ music_networking/build/**
 music_app/diskrot.db-wal
 music_app/dist/** 
 music_inferencing/music/** 
+music_app/.diskrot_client.json
+music_app/diskrot.sqlite
+music_app/pubspec.lock
+music_app_old/diskrot.db-shm
+music_app_old/diskrot.db-wal
+music_output/** 
