@@ -72,10 +72,14 @@ class NetworkController extends ChangeNotifier {
     return await networkRepository.getQueue();
   }
 
-  /*
-    deleteInvitation = async (req: Request, res: Response): Promise<void> => {
-        db.prepare("DELETE FROM invitations WHERE id = ?").run([req.params.id]);
-        res.status(200).json({});
+  Future<void> deleteInvitation(String code) async {
+    debugPrint("Deleting invitation with code: $code");
+    final response = await delete("/invitations/$code");
+    if (response.statusCode != 200) {
+      _logger.e("Failed to delete invitation: ${response.body}");
+      throw Exception("Failed to delete invitation");
     }
-    */
+    await networkRepository.deleteInvitation(code);
+    _logger.i("Invitation deleted: $code");
+  }
 }

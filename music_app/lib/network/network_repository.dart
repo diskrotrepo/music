@@ -45,8 +45,8 @@ class NetworkRepository {
     ));
   }
 
-  Future<void> deleteInvitation(String id) async {
-    _database.delete(_database.invitation).where((tbl) => tbl.id.equals(id));
+  Future<void> deleteInvitation(String code) async {
+    _database.invitation.deleteWhere((tbl) => tbl.code.equals(code));
   }
 
   Future<List<Network>> getConnections() async {

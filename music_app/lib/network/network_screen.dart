@@ -246,7 +246,8 @@ class _InvitationsTabState extends State<InvitationsTab> {
     );
   }
 
-  void _deleteInvitation(Invitation invitation) {
+  Future<void> _deleteInvitation(Invitation invitation) async {
+    await di.get<NetworkController>().deleteInvitation(invitation.code);
     setState(() {
       invitations.remove(invitation);
     });
