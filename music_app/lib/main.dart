@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:music_app/create/create_screen.dart';
@@ -6,11 +8,14 @@ import 'package:music_app/home/home_screen.dart';
 import 'package:music_app/library/library_screen.dart';
 import 'package:music_app/network/network_screen.dart';
 import 'package:music_app/settings/settings_screen.dart';
+import 'package:music_app/workers/diskrot_background_worker.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await setup();
+
+  await Isolate.spawn(diskRotBackgroundWorker, 4);
 
   runApp(const MyApp());
 }
