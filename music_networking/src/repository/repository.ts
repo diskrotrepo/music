@@ -68,6 +68,8 @@ export class BaseRepository<T> {
             }
         };
 
+        console.log("queryCommandInput", queryCommandInput);
+
         const { Items } = await docClient.send(new QueryCommand(queryCommandInput));
 
         if (Items === undefined || Items.length === 0) {
