@@ -48,9 +48,13 @@ export class QueueService {
     async getWorkQueue(clientId: string): Promise<Array<Queue>> {
         const results = await this.queueRepository.getWorkForClient(clientId, 10);
 
-        if (results === null) {
+        if (results === null || results.length === 0) {
+            console.log("No items found for client: " + clientId);
             return [];
         }
+
+        console.log(results);
+
 
         return results as Array<Queue>;
     }
