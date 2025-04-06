@@ -12,9 +12,11 @@ export class ConnectionRepository extends BaseRepository<Connection> {
     }
 
     async getConnections(clientId: string): Promise<Array<Connection>> {
+        let mapper = new Map<string, string>([
+            ["pkey", "id"],
+        ]);
 
-
-        let data = await super.getByPkeyAndSkey(clientId, 'connection#');
+        let data = await super.getByPkeyAndSkey(clientId, 'connection#', mapper);
 
         if (data === null) {
             return [];
