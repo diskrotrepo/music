@@ -106,25 +106,42 @@ class NetworkConnection {
   }
 }
 
+class QueueResponse {
+  final List<WorkQueue> workQueues;
+
+  QueueResponse({required this.workQueues});
+
+  factory QueueResponse.fromJson(Map<String, dynamic> json) {
+    var queuesJson = json['queue'] as List<dynamic>;
+    List<WorkQueue> workQueuesList = queuesJson
+        .map((queue) => WorkQueue.fromJson(queue as Map<String, dynamic>))
+        .toList();
+
+    return QueueResponse(
+      workQueues: workQueuesList,
+    );
+  }
+}
+
 class WorkQueue {
   final String id;
-  final String clientRequestedId;
+  final String clientId;
   final String createdAt;
   final String processingStatus;
 
   WorkQueue({
     required this.id,
-    required this.clientRequestedId,
+    required this.clientId,
     required this.createdAt,
     required this.processingStatus,
   });
 
   factory WorkQueue.fromJson(Map<String, dynamic> json) {
     return WorkQueue(
-      id: json['id'] as String,
-      clientRequestedId: json['clientRequestedId'] as String,
-      createdAt: json['createdAt'] as String,
-      processingStatus: json['processingStatus'] as String,
+      id: json['music_id'] as String,
+      clientId: json['client_id'] as String,
+      createdAt: json['dt_created'] as String,
+      processingStatus: json['processing_status'] as String,
     );
   }
 }

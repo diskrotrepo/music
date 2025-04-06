@@ -81,7 +81,6 @@ class NetworkRepository {
   }
 
   Future<List<network_models.WorkQueue>> getQueue() async {
-    //return await _database.select(_database.queue).get();
     _logger.i("Fetching queue...");
     final response = await get("/queue");
 
@@ -90,6 +89,9 @@ class NetworkRepository {
       return [];
     }
 
-    return [];
+    final queueResponse =
+        network_models.QueueResponse.fromJson(jsonDecode(response.body));
+
+    return queueResponse.workQueues;
   }
 }

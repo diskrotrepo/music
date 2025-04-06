@@ -331,7 +331,7 @@ class _QueueTabState extends State<QueueTab> {
   Widget _buildQueueTable() {
     return DataTable(
       columns: const [
-        DataColumn(label: Text('#')),
+        DataColumn(label: Text('Music ID')),
         DataColumn(label: Text('Status')),
         DataColumn(label: Text('Client ID')),
         DataColumn(label: Text('Submitted')),
@@ -341,7 +341,7 @@ class _QueueTabState extends State<QueueTab> {
           cells: [
             DataCell(Text(item.id.toString())),
             DataCell(Text(item.processingStatus)),
-            DataCell(Text(item.clientRequestedId)),
+            DataCell(Text(item.clientId)),
             DataCell(Text(item.createdAt.toString())),
           ],
         );
