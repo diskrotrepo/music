@@ -61,7 +61,7 @@ export class BaseRepository<T> {
     async getByPkeyAndSkey(pkey: string, skey: string, mapper?: Map<string, string>): Promise<Array<T> | null> {
         const queryCommandInput: QueryCommandInput = {
             TableName: this.tableName,
-            KeyConditionExpression: "pkey = :pkey AND skey = :skey",
+            KeyConditionExpression: "pkey = :pkey AND begins_with(skey, :skey)",
             ExpressionAttributeValues: {
                 ":pkey": pkey,
                 ":skey": skey
