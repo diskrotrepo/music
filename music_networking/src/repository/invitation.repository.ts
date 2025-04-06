@@ -13,8 +13,16 @@ export class InvitationRepository extends BaseRepository<Invitation> {
     }
 
     async getInvitations(clientId: string): Promise<Array<Invitation>> {
+        const results = await super.getByGSI('client_id-index', "client_id", clientId);
 
-        return [];
+        if (results === null || results.length === 0) {
+            console.log("No invitations found for client ID: ", clientId);
+            return [];
+        }
+
+        console.log("Results: ", results);
+
+        return results as Array<Invitation>;
     }
 
     async updateInvitation(invitation: Invitation): Promise<void> {

@@ -93,8 +93,17 @@ module "dynamodb_tables" {
       range_key    = "skey"
       attributes = [
         { name = "pkey", type = "S" },
-        { name = "skey", type = "S" }
+        { name = "skey", type = "S" },
+        { name = "client_id", type = "S" }
       ]
+      global_secondary_indexes = [
+        {
+          name            = "client_id-index",
+          hash_key        = "client_id",
+          projection_type = "ALL",
+          write_capacity  = 1,
+          read_capacity   = 1
+      }]
       read_capacity  = 1
       write_capacity = 1
       tags = {
