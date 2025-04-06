@@ -98,7 +98,7 @@ export class BaseRepository<T> {
     }
 
 
-    async getByGSI(indexName: string, columnName: string, value: any): Promise<Array<T> | null> {
+    async getByGSI(indexName: string, columnName: string, value: any, mapper?: Map<string, string>): Promise<Array<T> | null> {
 
         const queryCommandInput: QueryCommandInput = {
             TableName: this.tableName,
@@ -110,13 +110,33 @@ export class BaseRepository<T> {
         };
 
         try {
-            const data = await docClient.send(new QueryCommand(queryCommandInput));
+            const items = await docClient.send(new QueryCommand(queryCommandInput));
 
-            if (data.Items === undefined || data.Items.length === 0) {
+            if (items.Items === undefined || items.Items.length === 0) {
                 return null;
             }
 
-            return data.Items as Array<T>;
+            for (let data of items.Items) {
+
+                if (data["pkey"] !== undefined && mapper && mapper.has("pkey")) {
+                    const newKey = mapper.get("pkey");
+                    if (newKey) {
+                        data[newKey] = data["pkey"];
+                        delete data["pkey"];
+                    }
+                }
+
+                if (data["skey"] !== undefined && mapper && mapper.has("skey")) {
+                    const newKey = mapper.get("skey");
+                    if (newKey) {
+                        data[newKey] = data["skey"];
+                        delete data["skey"];
+                    }
+                }
+
+            }
+
+            return items.Items as Array<T>;
         } catch (err) {
             console.error("Unable to query. Error:", err);
         }

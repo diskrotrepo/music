@@ -13,7 +13,12 @@ export class InvitationRepository extends BaseRepository<Invitation> {
     }
 
     async getInvitations(clientId: string): Promise<Array<Invitation>> {
-        const results = await super.getByGSI('client_id-index', "client_id", clientId);
+
+        let mapper = new Map<string, string>([
+            ["pkey", "code"],
+        ]);
+
+        const results = await super.getByGSI('client_id-index', "client_id", clientId, mapper);
 
         if (results === null || results.length === 0) {
             console.log("No invitations found for client ID: ", clientId);
