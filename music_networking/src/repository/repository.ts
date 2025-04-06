@@ -58,12 +58,13 @@ export class BaseRepository<T> {
 
 
 
-    async getByPkeyAndSkey(pkey: string, skey: string, mapper?: Map<string, string>): Promise<T | null> {
+    async getByPkeyAndSkey(pkey: string, skey: string, mapper?: Map<string, string>): Promise<Array<T> | null> {
         const queryCommandInput: QueryCommandInput = {
             TableName: this.tableName,
-            KeyConditionExpression: "pkey = :pkey",
+            KeyConditionExpression: "pkey = :pkey AND skey = :skey",
             ExpressionAttributeValues: {
-                ":pkey": pkey
+                ":pkey": pkey,
+                ":skey": skey
             }
         };
 
@@ -91,7 +92,7 @@ export class BaseRepository<T> {
             }
         }
 
-        return Items[0] as T;
+        return Items as Array<T>;
     }
 
 
