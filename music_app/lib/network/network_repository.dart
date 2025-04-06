@@ -80,7 +80,16 @@ class NetworkRepository {
     return connections;
   }
 
-  Future<List<Queue>> getQueue() async {
-    return await _database.select(_database.queue).get();
+  Future<List<network_models.WorkQueue>> getQueue() async {
+    //return await _database.select(_database.queue).get();
+    _logger.i("Fetching queue...");
+    final response = await get("/queue");
+
+    if (response.statusCode != 200) {
+      _logger.e("Failed to fetch queue: ${response.body}");
+      return [];
+    }
+
+    return [];
   }
 }

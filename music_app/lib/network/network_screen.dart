@@ -280,7 +280,7 @@ class _QueueTabState extends State<QueueTab> {
   }
 
   Future<void> _load() async {
-    di.get<NetworkController>().getQueue().then((queue) {
+    await di.get<NetworkController>().getQueue().then((queue) {
       setState(() {
         this.queue = queue;
       });

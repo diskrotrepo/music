@@ -71,8 +71,7 @@ class NetworkController extends ChangeNotifier {
   }
 
   Future<List<network_models.WorkQueue>> getQueue() async {
-    //return await networkRepository.getQueue();
-    return [];
+    return await networkRepository.getQueue();
   }
 
   Future<void> deleteInvitation(String code) async {
