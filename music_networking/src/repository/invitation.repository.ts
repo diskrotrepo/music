@@ -18,6 +18,7 @@ export class InvitationRepository extends BaseRepository<Invitation> {
             ["pkey", "code"],
         ]);
 
+
         const results = await super.getByGSI('client_id-index', "client_id", clientId, mapper);
 
         if (results === null || results.length === 0) {

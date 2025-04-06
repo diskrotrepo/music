@@ -23,7 +23,11 @@ export class QueueRepository extends BaseRepository<Queue> {
 
     async getByMusicId(queueId: string): Promise<Queue | null> {
 
-        const results = await super.getByGSI('music_id-index', "music_id", queueId);
+        let mapper = new Map<string, string>([
+            ["music_id", "id"],
+        ]);
+
+        const results = await super.getByGSI('music_id-index', "music_id", queueId, mapper);
 
         if (results === null) {
             return null;
