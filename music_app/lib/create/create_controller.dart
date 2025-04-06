@@ -179,7 +179,7 @@ class CreateController extends ChangeNotifier {
     }
     final submitTaskResponse = jsonDecode(response.body);
 
-    return submitTaskResponse.id;
+    return submitTaskResponse["id"];
   }
 
   Future<bool> isRunningLocally() async {
