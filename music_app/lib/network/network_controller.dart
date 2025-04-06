@@ -7,7 +7,7 @@ import 'package:music_app/network/network_models.dart';
 import 'package:music_app/network/network_repository.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/dependency_context.dart';
-import 'package:music_app/networkiing/diskrot_network.dart';
+import 'package:music_app/networking/diskrot_network.dart';
 
 class NetworkController extends ChangeNotifier {
   NetworkController({

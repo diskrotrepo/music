@@ -29,7 +29,16 @@ export class ConnectionRepository extends BaseRepository<Connection> {
         await super.persist({
             pkey: clientId,
             skey: `connection#${connectedToClientId}`,
+            direction: 'OUTBOUND',
             connected_to_client: connectedToClientId,
+            invitation_code: invitationCode
+        });
+
+        await super.persist({
+            pkey: connectedToClientId,
+            skey: `connection#${clientId}`,
+            direction: 'INBOUND',
+            connected_to_client: clientId,
             invitation_code: invitationCode
         });
     }

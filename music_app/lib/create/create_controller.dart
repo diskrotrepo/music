@@ -92,7 +92,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/create/create_repository.dart';
 import 'package:music_app/dependency_context.dart';
-import 'package:music_app/networkiing/diskrot_network.dart';
+import 'package:music_app/networking/diskrot_network.dart';
 import 'package:music_app/settings/settings_repository.dart';
 
 class CreateController extends ChangeNotifier {

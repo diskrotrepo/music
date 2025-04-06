@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
 import 'package:music_app/network/network_models.dart';
-import 'package:music_app/networkiing/diskrot_network.dart';
+import 'package:music_app/networking/diskrot_network.dart';
 import 'package:uuid/uuid.dart';
 
 class NetworkRepository {
@@ -64,11 +64,9 @@ class NetworkRepository {
     }
 
     final connectionsResponse =
-        ConnectionsResponse.fromOutboundJson(jsonDecode(response.body));
+        ConnectionsResponse.fromJson(jsonDecode(response.body));
 
     final connections = connectionsResponse.connections;
-
-    final localConnections = await _database.select(_database.network).get();
 
     return connections;
   }

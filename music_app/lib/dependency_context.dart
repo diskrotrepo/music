@@ -11,7 +11,7 @@ import 'package:music_app/library/library_controller.dart';
 import 'package:music_app/library/library_repository.dart';
 import 'package:music_app/network/network_controller.dart';
 import 'package:music_app/network/network_repository.dart';
-import 'package:music_app/networkiing/diskrot_network.dart';
+import 'package:music_app/networking/diskrot_network.dart';
 import 'package:music_app/settings/settings_controller.dart';
 import 'package:music_app/settings/settings_repository.dart';
 
