@@ -232,8 +232,8 @@ class _InvitationsTabState extends State<InvitationsTab> {
                 ],
               ),
             ),
-            const DataCell(
-                Text('')), // You can update this when there's a real status
+            DataCell(
+                invite.nickname != null ? Text('Accepted') : Text('Pending')),
             DataCell(
               IconButton(
                 icon: const Icon(Icons.delete, color: Colors.grey),

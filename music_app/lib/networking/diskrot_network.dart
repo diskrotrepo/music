@@ -45,6 +45,7 @@ Future<http.Response> get(String url) async {
   final diskrotClient = di.get<DiskrotClient>();
 
   logger.i("${configuration.serverConfiguration.fullUrl}$url");
+  logger.i("Client ID: ${diskrotClient.id}");
 
   try {
     final response = await http.get(
