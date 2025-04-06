@@ -21,6 +21,7 @@ export class ConnectionService {
         let connections = await this.connectionRepository.getConnections(clientId);
 
         if (connections === null) {
+            console.log("No connections found");
             return [];
         }
 
@@ -28,11 +29,14 @@ export class ConnectionService {
             let connection = connections[i];
             let client = await this.clientRepository.getById(connection.connected_to_client);
             if (client === null) {
+                console.log("Client not found");
                 continue;
             }
             connection.nickname = client.nickname;
         }
 
+        console.log("Connections found: ", connections.length);
+        console.log("Connections: ", connections);
         return connections;
     }
 
