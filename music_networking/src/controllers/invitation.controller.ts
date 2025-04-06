@@ -42,7 +42,7 @@ export class InvitationController {
 
     getInvitations = async (req: Request, res: Response): Promise<void> => {
 
-        let clientId = req.headers.clientId as string;
+        let clientId = req.headers['client-id'] as string;
 
         const invitations = await this.invitationService.getInvitations(clientId);
 
