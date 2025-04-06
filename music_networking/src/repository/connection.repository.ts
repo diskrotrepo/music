@@ -2,6 +2,7 @@ import { Connection } from "../models/connection.model";
 import { BaseRepository } from "./repository";
 
 export class ConnectionRepository extends BaseRepository<Connection> {
+
     constructor(tableName: string) {
         super(tableName);
     }
@@ -10,7 +11,20 @@ export class ConnectionRepository extends BaseRepository<Connection> {
         await super.deleteByPkeyAndSkey(clientId, `connection#${connectedToClientId}`);
     }
 
+    async getConnections(clientId: string): Promise<Array<Connection>> {
+        let filter = new Map<string, string>([
+            ["pkey", "client_id"],
+            ["skey", "connection#"]
+        ]);
 
+        let data = await super.getByPkey(clientId, filter);
+
+        if (data === null) {
+            return [];
+        }
+
+        return data as Array<Connection>;
+    }
 
     async createConnection(clientId: string, connectedToClientId: string, invitationCode: string): Promise<void> {
         await super.persist({

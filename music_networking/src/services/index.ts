@@ -9,7 +9,7 @@ import { RegistrationService } from "./registration.service";
 import { ClientRepository } from "../repository/client.repository";
 
 export const clientService = new ClientService(clientRepository);
-export const connectionService = new ConnectionService(connectionRepository, invitationRepository);
+export const connectionService = new ConnectionService(connectionRepository, invitationRepository, clientRepository);
 export const generationService = new GenerationService(generationRepository);
 export const invitationService = new InvitationService(invitationRepository, connectionRepository, clientRepository);
 export const queueService = new QueueService(queueRepository, connectionRepository);

@@ -11,7 +11,11 @@ export class ConnectionController {
     }
 
     getConnections = async (req: Request, res: Response): Promise<void> => {
-        res.status(200).json({ message: "" });
+        let clientId = req.headers['client-id'] as string;
+
+        let connections = await this.connectionService.getConnections(clientId);
+        res.status(200).json({ connections });
+
     }
 
     deleteConnection = async (req: Request, res: Response): Promise<void> => {

@@ -1,4 +1,6 @@
+import { Connection } from "../models/connection.model";
 import { invitationRepository } from "../repository";
+import { ClientRepository } from "../repository/client.repository";
 import { ConnectionRepository } from "../repository/connection.repository";
 import { InvitationRepository } from "../repository/invitation.repository";
 
@@ -7,14 +9,31 @@ export class ConnectionService {
 
     private connectionRepository: ConnectionRepository;
     private invitationRepository: InvitationRepository;
+    private clientRepository: ClientRepository;
 
-    constructor(connectionRepository: ConnectionRepository, invitationRepository: InvitationRepository) {
+    constructor(connectionRepository: ConnectionRepository, invitationRepository: InvitationRepository, clientRepository: ClientRepository) {
+        this.clientRepository = clientRepository;
         this.connectionRepository = connectionRepository;
         this.invitationRepository = invitationRepository;
     }
 
-    async getConnections(clientId: string) {
-        //  return await this.connectionRepository.getConnections(clientId);
+    async getConnections(clientId: string): Promise<Array<Connection>> {
+        let connections = await this.connectionRepository.getConnections(clientId);
+
+        if (connections === null) {
+            return [];
+        }
+
+        for (let i = 0; i < connections.length; i++) {
+            let connection = connections[i];
+            let client = await this.clientRepository.getById(connection.connected_to_client);
+            if (client === null) {
+                continue;
+            }
+            connection.nickname = client.nickname;
+        }
+
+        return connections;
     }
 
     async deleteConnection(clientId: string, connectionId: string) {
