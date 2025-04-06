@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart' hide Disposable;
 import 'package:logger/logger.dart';
 import 'package:music_app/create/create_controller.dart';
@@ -14,11 +15,13 @@ import 'package:music_app/network/network_repository.dart';
 import 'package:music_app/networking/diskrot_network.dart';
 import 'package:music_app/settings/settings_controller.dart';
 import 'package:music_app/settings/settings_repository.dart';
+import 'package:music_app/workers/diskrot_background_worker.dart';
+import 'package:workmanager/workmanager.dart';
 
 final di = GetIt.I;
 
-GetIt setup() {
-  return di
+Future<GetIt> setup() async {
+  di
     ..registerLazySingleton<AppDatabase>(
       AppDatabase.new,
       dispose: (database) => database.close(),
@@ -66,6 +69,21 @@ GetIt setup() {
         settingsRepository: di.get<SettingsRepository>(),
       ),
     );
+
+  Workmanager().initialize(
+    diskRotNetworkBackgroundTask,
+    isInDebugMode: true,
+  );
+
+  const taskName = "diskrotPeriodicTask";
+  await Workmanager().cancelByUniqueName(taskName);
+
+  await Workmanager().registerPeriodicTask(
+    taskName,
+    taskName,
+    frequency: const Duration(seconds: 5),
+  );
+  return di;
 }
 
 DiskrotClient get _diskRotClient {

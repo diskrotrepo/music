@@ -8,7 +8,9 @@ import 'package:music_app/network/network_screen.dart';
 import 'package:music_app/settings/settings_screen.dart';
 
 Future<void> main() async {
-  setup();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await setup();
 
   runApp(const MyApp());
 }
