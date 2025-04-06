@@ -38,6 +38,25 @@ export class QueueRepository extends BaseRepository<Queue> {
 
     async getWorkForClient(requestingClientId: string, limit: number): Promise<Array<Queue> | null> {
 
+        const queryCommandInput = {
+            TableName: this.tableName,
+            KeyConditionExpression: "pkey = :pkey",
+            ExpressionAttributeValues: {
+                ":pkey": requestingClientId,
+            },
+            Limit: 20,
+        };
+
+        const { Items } = await docClient.send(new QueryCommand(queryCommandInput));
+
+
+        return Items as Array<Queue>;
+
+    }
+
+    /*
+    async getWorkForClient(requestingClientId: string, limit: number): Promise<Array<Queue> | null> {
+
         const inProgressCountResult = await docClient.send(
             new QueryCommand({
                 TableName: this.tableName,
@@ -108,7 +127,7 @@ export class QueueRepository extends BaseRepository<Queue> {
 
         return Items as Array<Queue>;
 
-    }
+    }*/
 }
 
 
