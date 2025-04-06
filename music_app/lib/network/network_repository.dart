@@ -58,8 +58,13 @@ class NetworkRepository {
 
     final response = await get("/connections");
 
+    if (response.statusCode != 200) {
+      _logger.e("Failed to fetch connections: ${response.body}");
+      return [];
+    }
+
     final connectionsResponse =
-        ConnectionsResponse.fromJson(jsonDecode(response.body));
+        ConnectionsResponse.fromOutboundJson(jsonDecode(response.body));
 
     final connections = connectionsResponse.connections;
 

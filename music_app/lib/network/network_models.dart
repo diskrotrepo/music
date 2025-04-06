@@ -32,11 +32,23 @@ class ConnectionsResponse {
 
   ConnectionsResponse({required this.connections});
 
-  factory ConnectionsResponse.fromJson(Map<String, dynamic> json) {
+  factory ConnectionsResponse.fromInboundJson(Map<String, dynamic> json) {
     var connectionsJson = json['connections'] as List<dynamic>;
     List<NetworkConnection> connectionsList = connectionsJson
-        .map((connection) =>
-            NetworkConnection.fromJson(connection as Map<String, dynamic>))
+        .map((connection) => NetworkConnection.fromInboundJson(
+            connection as Map<String, dynamic>))
+        .toList();
+
+    return ConnectionsResponse(
+      connections: connectionsList,
+    );
+  }
+
+  factory ConnectionsResponse.fromOutboundJson(Map<String, dynamic> json) {
+    var connectionsJson = json['connections'] as List<dynamic>;
+    List<NetworkConnection> connectionsList = connectionsJson
+        .map((connection) => NetworkConnection.fromOutboundJson(
+            connection as Map<String, dynamic>))
         .toList();
 
     return ConnectionsResponse(
@@ -58,12 +70,21 @@ class NetworkConnection {
     required this.clientId,
   });
 
-  factory NetworkConnection.fromJson(Map<String, dynamic> json) {
+  factory NetworkConnection.fromOutboundJson(Map<String, dynamic> json) {
     return NetworkConnection(
       id: json['id'] as String,
       nickname: json['nickname'] as String,
-      direction: json['direction'] as String,
-      clientId: json['client_id'] as String,
+      direction: 'OUTBOUND', // Assuming outbound direction is fixed
+      clientId: json['connected_to_client'] as String,
+    );
+  }
+
+  factory NetworkConnection.fromInboundJson(Map<String, dynamic> json) {
+    return NetworkConnection(
+      id: json['id'] as String,
+      nickname: json['nickname'] as String,
+      direction: 'INBOUND',
+      clientId: json['connected_to_client'] as String,
     );
   }
 }
