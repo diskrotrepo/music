@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:music_app/configuration/configuration.dart';
-import 'package:music_app/database/tables.drift.dart';
-import 'package:music_app/network/network_models.dart';
+import 'package:music_app/network/network_models.dart' as network_models;
 import 'package:music_app/network/network_repository.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/dependency_context.dart';
@@ -16,7 +14,7 @@ class NetworkController extends ChangeNotifier {
   final NetworkRepository networkRepository;
   final Logger _logger = di.get<Logger>();
 
-  Future<CreateInvitationResponse> createInvite() async {
+  Future<network_models.CreateInvitationResponse> createInvite() async {
     _logger.i("Creating invitation...");
     final invitationCreateResponse = await post("/invitations", jsonEncode({}));
 
@@ -26,8 +24,9 @@ class NetworkController extends ChangeNotifier {
       throw Exception("Failed to create invitation");
     }
 
-    final createInvitationResponse = CreateInvitationResponse.fromJson(
-        jsonDecode(invitationCreateResponse.body));
+    final createInvitationResponse =
+        network_models.CreateInvitationResponse.fromJson(
+            jsonDecode(invitationCreateResponse.body));
 
     await networkRepository.createInvitation(createInvitationResponse.code);
 
@@ -35,7 +34,7 @@ class NetworkController extends ChangeNotifier {
     return createInvitationResponse;
   }
 
-  Future<List<Invitation>> getInvitations() async {
+  Future<List<network_models.Invitation>> getInvitations() async {
     return networkRepository.getInvitations();
   }
 
@@ -54,7 +53,8 @@ class NetworkController extends ChangeNotifier {
     }
 
     final acceptInvitationResponse =
-        AcceptInvitationResponse.fromJson(jsonDecode(response.body));
+        network_models.AcceptInvitationResponse.fromJson(
+            jsonDecode(response.body));
 
     await networkRepository.acceptInvitation(
         nickname: acceptInvitationResponse.nickname,
@@ -64,14 +64,15 @@ class NetworkController extends ChangeNotifier {
     return true;
   }
 
-  Future<List<NetworkConnection>> getConnections() async {
+  Future<List<network_models.NetworkConnection>> getConnections() async {
     final connections = await networkRepository.getConnections();
 
     return connections;
   }
 
-  Future<List<Queue>> getQueue() async {
-    return await networkRepository.getQueue();
+  Future<List<network_models.WorkQueue>> getQueue() async {
+    //return await networkRepository.getQueue();
+    return [];
   }
 
   Future<void> deleteInvitation(String code) async {

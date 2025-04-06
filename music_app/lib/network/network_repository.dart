@@ -5,7 +5,7 @@ import 'package:music_app/database/database.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
-import 'package:music_app/network/network_models.dart';
+import 'package:music_app/network/network_models.dart' as network_models;
 import 'package:music_app/networking/diskrot_network.dart';
 import 'package:uuid/uuid.dart';
 
@@ -30,9 +30,18 @@ class NetworkRepository {
     _logger.i("Invitation accepted: $nickname");
   }
 
-  Future<List<Invitation>> getInvitations() async {
-    final results = await _database.select(_database.invitation).get();
-    return results;
+  Future<List<network_models.Invitation>> getInvitations() async {
+    _logger.i("Fetching invitations...");
+    final response = await get("/invitations");
+
+    if (response.statusCode != 200) {
+      _logger.e("Failed to fetch invitations: ${response.body}");
+      return [];
+    }
+    final invitationsResponse = network_models.GetInvitationsResponse.fromJson(
+        jsonDecode(response.body));
+
+    return invitationsResponse.invitations;
   }
 
   Future<Invitation?> getInvitation(String code) async {
@@ -53,7 +62,7 @@ class NetworkRepository {
     _database.invitation.deleteWhere((tbl) => tbl.code.equals(code));
   }
 
-  Future<List<NetworkConnection>> getConnections() async {
+  Future<List<network_models.NetworkConnection>> getConnections() async {
     _logger.i("Fetching network connections...");
 
     final response = await get("/connections");
@@ -64,7 +73,7 @@ class NetworkRepository {
     }
 
     final connectionsResponse =
-        ConnectionsResponse.fromJson(jsonDecode(response.body));
+        network_models.ConnectionsResponse.fromJson(jsonDecode(response.body));
 
     final connections = connectionsResponse.connections;
 

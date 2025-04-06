@@ -27,6 +27,44 @@ class AcceptInvitationResponse {
   }
 }
 
+class GetInvitationsResponse {
+  final List<Invitation> invitations;
+
+  GetInvitationsResponse({required this.invitations});
+
+  factory GetInvitationsResponse.fromJson(Map<String, dynamic> json) {
+    var invitationsJson = json['invitations'] as List<dynamic>;
+    List<Invitation> invitationsList = invitationsJson
+        .map((invitation) =>
+            Invitation.fromJson(invitation as Map<String, dynamic>))
+        .toList();
+
+    return GetInvitationsResponse(
+      invitations: invitationsList,
+    );
+  }
+}
+
+class Invitation {
+  final String nickname;
+  final String clientId;
+  final String code;
+
+  Invitation({
+    required this.nickname,
+    required this.clientId,
+    required this.code,
+  });
+
+  factory Invitation.fromJson(Map<String, dynamic> json) {
+    return Invitation(
+      nickname: json['nickname'] as String,
+      clientId: json['client_id'] as String,
+      code: json['code'] as String,
+    );
+  }
+}
+
 class ConnectionsResponse {
   final List<NetworkConnection> connections;
 
@@ -64,6 +102,29 @@ class NetworkConnection {
       nickname: json['nickname'] as String,
       direction: json['direction'] as String,
       clientId: json['connected_to_client'] as String,
+    );
+  }
+}
+
+class WorkQueue {
+  final String id;
+  final String clientRequestedId;
+  final String createdAt;
+  final String processingStatus;
+
+  WorkQueue({
+    required this.id,
+    required this.clientRequestedId,
+    required this.createdAt,
+    required this.processingStatus,
+  });
+
+  factory WorkQueue.fromJson(Map<String, dynamic> json) {
+    return WorkQueue(
+      id: json['id'] as String,
+      clientRequestedId: json['clientRequestedId'] as String,
+      createdAt: json['createdAt'] as String,
+      processingStatus: json['processingStatus'] as String,
     );
   }
 }

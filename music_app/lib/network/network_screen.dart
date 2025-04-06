@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
 import 'package:music_app/network/network_controller.dart';
 import 'package:music_app/network/network_models.dart';
@@ -288,7 +287,7 @@ class _QueueTabState extends State<QueueTab> {
     });
   }
 
-  List<Queue> queue = [];
+  List<WorkQueue> queue = [];
 
   @override
   Widget build(BuildContext context) {
