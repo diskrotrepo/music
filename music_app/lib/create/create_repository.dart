@@ -2,7 +2,6 @@ import 'package:music_app/database/database.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
-import 'package:uuid/uuid.dart';
 
 class CreateRepository {
   CreateRepository({required AppDatabase database}) : _database = database;

@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 import 'package:music_app/configuration/configuration.dart';
 import 'package:music_app/dependency_context.dart';
-import 'package:music_app/network/network_repository.dart';
 import 'package:music_app/settings/settings_repository.dart';
 import 'package:http/http.dart' as http;
 
