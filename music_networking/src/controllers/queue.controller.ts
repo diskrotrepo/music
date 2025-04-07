@@ -52,9 +52,27 @@ export class QueueController {
         const clientId = req.headers['client-id'] as string;
         const body = req.body;
 
-        console.log("Getting work for client: ", clientId);
+        console.log("Total work for client: ", clientId);
 
         const queueItem = await this.queueService.getWorkQueue(clientId);
+
+        res.status(200).json({ queue: queueItem });
+    }
+
+    getNextWorkItem = async (req: Request, res: Response): Promise<void> => {
+
+        const clientId = req.headers['client-id'] as string;
+
+
+        console.log("Getting work for client: ", clientId);
+
+        const queueItem = await this.queueService.getNextWorkItem(clientId);
+
+        if (!queueItem) {
+            console.log("No next work item found for client: ", clientId);
+            return res.status(404).json({ error: "No next work item found" });
+        }
+        console.log("Next work item found: ", queueItem);
 
         res.status(200).json({ queue: queueItem });
     }

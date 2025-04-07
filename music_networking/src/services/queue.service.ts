@@ -74,4 +74,14 @@ export class QueueService {
         this.queueRepository.enQueue(requestingClientId, connection.connected_to_client, data);
         return data.music_id;
     }
+
+    async getNextWorkItem(clientId: string): Promise<Queue | null> {
+        const results = await this.queueRepository.getNextWorkItem(clientId, 1);
+
+        if (results === null || results.length === 0) {
+            return null;
+        }
+
+        return results[0] as Queue;
+    }
 }

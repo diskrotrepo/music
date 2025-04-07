@@ -58,8 +58,7 @@ export class QueueRepository extends BaseRepository<Queue> {
 
     }
 
-    /*
-    async getWorkForClient(requestingClientId: string, limit: number): Promise<Array<Queue> | null> {
+    async getNextWorkItem(requestingClientId: string, limit: number): Promise<Array<Queue> | null> {
 
         const inProgressCountResult = await docClient.send(
             new QueryCommand({
@@ -131,7 +130,7 @@ export class QueueRepository extends BaseRepository<Queue> {
 
         return Items as Array<Queue>;
 
-    }*/
+    }
 }
 
 
