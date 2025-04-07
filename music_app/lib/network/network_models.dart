@@ -151,17 +151,17 @@ class WorkQueue {
 
 class Music {
   final String id;
-  final String? title;
+  final String title;
   final String clientId;
   final String? lrcModel;
   final String? model;
-  final String? lrcPrompt;
+  final String lrcPrompt;
   final String? lyrics;
-  final String? tags;
+  final String tags;
   final String? negativeTags;
   final int duration;
   final int steps;
-  final double cfgStregth;
+  final int cfgStregth;
 
   Music({
     required this.id,
@@ -180,15 +180,14 @@ class Music {
   factory Music.fromJson(Map<String, dynamic> json) {
     return Music(
       id: json['music_id'] as String,
-      title: json.containsKey('title') ? json['title'] as String : null,
+      title: json['title'] as String,
       clientId: json['client_id'] as String,
       lrcModel:
           json.containsKey('lrc_model') ? json['lrc_model'] as String : null,
       model: json.containsKey('model') ? json['model'] as String : null,
-      lrcPrompt:
-          json.containsKey('lrc_prompt') ? json['lrc_prompt'] as String : null,
+      lrcPrompt: json['lrc_prompt'] as String,
       lyrics: json.containsKey('lyrics') ? json['lyrics'] as String : null,
-      tags: json.containsKey('tags') ? json['tags'] as String : null,
+      tags: json['tags'] as String,
       negativeTags: json.containsKey('negative_tags')
           ? json['negative_tags'] as String
           : null,

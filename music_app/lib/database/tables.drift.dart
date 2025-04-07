@@ -7,14 +7,14 @@ import 'package:drift/src/runtime/query_builder/query_builder.dart' as i3;
 
 typedef $$MusicTableCreateCompanionBuilder = i1.MusicCompanion Function({
   required String id,
-  i0.Value<String?> title,
+  required String title,
   i0.Value<String?> lyrics,
-  i0.Value<String?> tags,
+  required String tags,
   i0.Value<String?> negativeTags,
   i0.Value<String?> inputFile,
   i0.Value<String?> model,
   required String clientProcessingId,
-  i0.Value<String?> lrcPrompt,
+  required String lrcPrompt,
   required String processingStatus,
   required int steps,
   required int cfgStrength,
@@ -26,14 +26,14 @@ typedef $$MusicTableCreateCompanionBuilder = i1.MusicCompanion Function({
 });
 typedef $$MusicTableUpdateCompanionBuilder = i1.MusicCompanion Function({
   i0.Value<String> id,
-  i0.Value<String?> title,
+  i0.Value<String> title,
   i0.Value<String?> lyrics,
-  i0.Value<String?> tags,
+  i0.Value<String> tags,
   i0.Value<String?> negativeTags,
   i0.Value<String?> inputFile,
   i0.Value<String?> model,
   i0.Value<String> clientProcessingId,
-  i0.Value<String?> lrcPrompt,
+  i0.Value<String> lrcPrompt,
   i0.Value<String> processingStatus,
   i0.Value<int> steps,
   i0.Value<int> cfgStrength,
@@ -258,14 +258,14 @@ class $$MusicTableTableManager extends i0.RootTableManager<
               i1.$$MusicTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             i0.Value<String> id = const i0.Value.absent(),
-            i0.Value<String?> title = const i0.Value.absent(),
+            i0.Value<String> title = const i0.Value.absent(),
             i0.Value<String?> lyrics = const i0.Value.absent(),
-            i0.Value<String?> tags = const i0.Value.absent(),
+            i0.Value<String> tags = const i0.Value.absent(),
             i0.Value<String?> negativeTags = const i0.Value.absent(),
             i0.Value<String?> inputFile = const i0.Value.absent(),
             i0.Value<String?> model = const i0.Value.absent(),
             i0.Value<String> clientProcessingId = const i0.Value.absent(),
-            i0.Value<String?> lrcPrompt = const i0.Value.absent(),
+            i0.Value<String> lrcPrompt = const i0.Value.absent(),
             i0.Value<String> processingStatus = const i0.Value.absent(),
             i0.Value<int> steps = const i0.Value.absent(),
             i0.Value<int> cfgStrength = const i0.Value.absent(),
@@ -296,14 +296,14 @@ class $$MusicTableTableManager extends i0.RootTableManager<
           ),
           createCompanionCallback: ({
             required String id,
-            i0.Value<String?> title = const i0.Value.absent(),
+            required String title,
             i0.Value<String?> lyrics = const i0.Value.absent(),
-            i0.Value<String?> tags = const i0.Value.absent(),
+            required String tags,
             i0.Value<String?> negativeTags = const i0.Value.absent(),
             i0.Value<String?> inputFile = const i0.Value.absent(),
             i0.Value<String?> model = const i0.Value.absent(),
             required String clientProcessingId,
-            i0.Value<String?> lrcPrompt = const i0.Value.absent(),
+            required String lrcPrompt,
             required String processingStatus,
             required int steps,
             required int cfgStrength,
@@ -1354,8 +1354,8 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
       const i0.VerificationMeta('title');
   @override
   late final i0.GeneratedColumn<String> title = i0.GeneratedColumn<String>(
-      'title', aliasedName, true,
-      type: i0.DriftSqlType.string, requiredDuringInsert: false);
+      'title', aliasedName, false,
+      type: i0.DriftSqlType.string, requiredDuringInsert: true);
   static const i0.VerificationMeta _lyricsMeta =
       const i0.VerificationMeta('lyrics');
   @override
@@ -1366,8 +1366,8 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
       const i0.VerificationMeta('tags');
   @override
   late final i0.GeneratedColumn<String> tags = i0.GeneratedColumn<String>(
-      'tags', aliasedName, true,
-      type: i0.DriftSqlType.string, requiredDuringInsert: false);
+      'tags', aliasedName, false,
+      type: i0.DriftSqlType.string, requiredDuringInsert: true);
   static const i0.VerificationMeta _negativeTagsMeta =
       const i0.VerificationMeta('negativeTags');
   @override
@@ -1396,8 +1396,8 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
       const i0.VerificationMeta('lrcPrompt');
   @override
   late final i0.GeneratedColumn<String> lrcPrompt = i0.GeneratedColumn<String>(
-      'lrc_prompt', aliasedName, true,
-      type: i0.DriftSqlType.string, requiredDuringInsert: false);
+      'lrc_prompt', aliasedName, false,
+      type: i0.DriftSqlType.string, requiredDuringInsert: true);
   static const i0.VerificationMeta _processingStatusMeta =
       const i0.VerificationMeta('processingStatus');
   @override
@@ -1485,6 +1485,8 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
     }
     if (data.containsKey('lyrics')) {
       context.handle(_lyricsMeta,
@@ -1493,6 +1495,8 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
     if (data.containsKey('tags')) {
       context.handle(
           _tagsMeta, tags.isAcceptableOrUnknown(data['tags']!, _tagsMeta));
+    } else if (isInserting) {
+      context.missing(_tagsMeta);
     }
     if (data.containsKey('negative_tags')) {
       context.handle(
@@ -1519,6 +1523,8 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
     if (data.containsKey('lrc_prompt')) {
       context.handle(_lrcPromptMeta,
           lrcPrompt.isAcceptableOrUnknown(data['lrc_prompt']!, _lrcPromptMeta));
+    } else if (isInserting) {
+      context.missing(_lrcPromptMeta);
     }
     if (data.containsKey('processing_status')) {
       context.handle(
@@ -1578,11 +1584,11 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
       id: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}id'])!,
       title: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}title']),
+          .read(i0.DriftSqlType.string, data['${effectivePrefix}title'])!,
       lyrics: attachedDatabase.typeMapping
           .read(i0.DriftSqlType.string, data['${effectivePrefix}lyrics']),
       tags: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}tags']),
+          .read(i0.DriftSqlType.string, data['${effectivePrefix}tags'])!,
       negativeTags: attachedDatabase.typeMapping.read(
           i0.DriftSqlType.string, data['${effectivePrefix}negative_tags']),
       inputFile: attachedDatabase.typeMapping
@@ -1593,7 +1599,7 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
           i0.DriftSqlType.string,
           data['${effectivePrefix}client_processing_id'])!,
       lrcPrompt: attachedDatabase.typeMapping
-          .read(i0.DriftSqlType.string, data['${effectivePrefix}lrc_prompt']),
+          .read(i0.DriftSqlType.string, data['${effectivePrefix}lrc_prompt'])!,
       processingStatus: attachedDatabase.typeMapping.read(
           i0.DriftSqlType.string, data['${effectivePrefix}processing_status'])!,
       steps: attachedDatabase.typeMapping
@@ -1619,14 +1625,14 @@ class $MusicTable extends i2.Music with i0.TableInfo<$MusicTable, i1.Music> {
 
 class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
   final String id;
-  final String? title;
+  final String title;
   final String? lyrics;
-  final String? tags;
+  final String tags;
   final String? negativeTags;
   final String? inputFile;
   final String? model;
   final String clientProcessingId;
-  final String? lrcPrompt;
+  final String lrcPrompt;
   final String processingStatus;
   final int steps;
   final int cfgStrength;
@@ -1636,14 +1642,14 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
   final DateTime createdAt;
   const Music(
       {required this.id,
-      this.title,
+      required this.title,
       this.lyrics,
-      this.tags,
+      required this.tags,
       this.negativeTags,
       this.inputFile,
       this.model,
       required this.clientProcessingId,
-      this.lrcPrompt,
+      required this.lrcPrompt,
       required this.processingStatus,
       required this.steps,
       required this.cfgStrength,
@@ -1655,15 +1661,11 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
   Map<String, i0.Expression> toColumns(bool nullToAbsent) {
     final map = <String, i0.Expression>{};
     map['id'] = i0.Variable<String>(id);
-    if (!nullToAbsent || title != null) {
-      map['title'] = i0.Variable<String>(title);
-    }
+    map['title'] = i0.Variable<String>(title);
     if (!nullToAbsent || lyrics != null) {
       map['lyrics'] = i0.Variable<String>(lyrics);
     }
-    if (!nullToAbsent || tags != null) {
-      map['tags'] = i0.Variable<String>(tags);
-    }
+    map['tags'] = i0.Variable<String>(tags);
     if (!nullToAbsent || negativeTags != null) {
       map['negative_tags'] = i0.Variable<String>(negativeTags);
     }
@@ -1674,9 +1676,7 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
       map['model'] = i0.Variable<String>(model);
     }
     map['client_processing_id'] = i0.Variable<String>(clientProcessingId);
-    if (!nullToAbsent || lrcPrompt != null) {
-      map['lrc_prompt'] = i0.Variable<String>(lrcPrompt);
-    }
+    map['lrc_prompt'] = i0.Variable<String>(lrcPrompt);
     map['processing_status'] = i0.Variable<String>(processingStatus);
     map['steps'] = i0.Variable<int>(steps);
     map['cfg_strength'] = i0.Variable<int>(cfgStrength);
@@ -1690,15 +1690,11 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
   i1.MusicCompanion toCompanion(bool nullToAbsent) {
     return i1.MusicCompanion(
       id: i0.Value(id),
-      title: title == null && nullToAbsent
-          ? const i0.Value.absent()
-          : i0.Value(title),
+      title: i0.Value(title),
       lyrics: lyrics == null && nullToAbsent
           ? const i0.Value.absent()
           : i0.Value(lyrics),
-      tags: tags == null && nullToAbsent
-          ? const i0.Value.absent()
-          : i0.Value(tags),
+      tags: i0.Value(tags),
       negativeTags: negativeTags == null && nullToAbsent
           ? const i0.Value.absent()
           : i0.Value(negativeTags),
@@ -1709,9 +1705,7 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
           ? const i0.Value.absent()
           : i0.Value(model),
       clientProcessingId: i0.Value(clientProcessingId),
-      lrcPrompt: lrcPrompt == null && nullToAbsent
-          ? const i0.Value.absent()
-          : i0.Value(lrcPrompt),
+      lrcPrompt: i0.Value(lrcPrompt),
       processingStatus: i0.Value(processingStatus),
       steps: i0.Value(steps),
       cfgStrength: i0.Value(cfgStrength),
@@ -1727,15 +1721,15 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
     serializer ??= i0.driftRuntimeOptions.defaultSerializer;
     return Music(
       id: serializer.fromJson<String>(json['id']),
-      title: serializer.fromJson<String?>(json['title']),
+      title: serializer.fromJson<String>(json['title']),
       lyrics: serializer.fromJson<String?>(json['lyrics']),
-      tags: serializer.fromJson<String?>(json['tags']),
+      tags: serializer.fromJson<String>(json['tags']),
       negativeTags: serializer.fromJson<String?>(json['negativeTags']),
       inputFile: serializer.fromJson<String?>(json['inputFile']),
       model: serializer.fromJson<String?>(json['model']),
       clientProcessingId:
           serializer.fromJson<String>(json['clientProcessingId']),
-      lrcPrompt: serializer.fromJson<String?>(json['lrcPrompt']),
+      lrcPrompt: serializer.fromJson<String>(json['lrcPrompt']),
       processingStatus: serializer.fromJson<String>(json['processingStatus']),
       steps: serializer.fromJson<int>(json['steps']),
       cfgStrength: serializer.fromJson<int>(json['cfgStrength']),
@@ -1750,14 +1744,14 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
     serializer ??= i0.driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'title': serializer.toJson<String?>(title),
+      'title': serializer.toJson<String>(title),
       'lyrics': serializer.toJson<String?>(lyrics),
-      'tags': serializer.toJson<String?>(tags),
+      'tags': serializer.toJson<String>(tags),
       'negativeTags': serializer.toJson<String?>(negativeTags),
       'inputFile': serializer.toJson<String?>(inputFile),
       'model': serializer.toJson<String?>(model),
       'clientProcessingId': serializer.toJson<String>(clientProcessingId),
-      'lrcPrompt': serializer.toJson<String?>(lrcPrompt),
+      'lrcPrompt': serializer.toJson<String>(lrcPrompt),
       'processingStatus': serializer.toJson<String>(processingStatus),
       'steps': serializer.toJson<int>(steps),
       'cfgStrength': serializer.toJson<int>(cfgStrength),
@@ -1770,14 +1764,14 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
 
   i1.Music copyWith(
           {String? id,
-          i0.Value<String?> title = const i0.Value.absent(),
+          String? title,
           i0.Value<String?> lyrics = const i0.Value.absent(),
-          i0.Value<String?> tags = const i0.Value.absent(),
+          String? tags,
           i0.Value<String?> negativeTags = const i0.Value.absent(),
           i0.Value<String?> inputFile = const i0.Value.absent(),
           i0.Value<String?> model = const i0.Value.absent(),
           String? clientProcessingId,
-          i0.Value<String?> lrcPrompt = const i0.Value.absent(),
+          String? lrcPrompt,
           String? processingStatus,
           int? steps,
           int? cfgStrength,
@@ -1787,15 +1781,15 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
           DateTime? createdAt}) =>
       i1.Music(
         id: id ?? this.id,
-        title: title.present ? title.value : this.title,
+        title: title ?? this.title,
         lyrics: lyrics.present ? lyrics.value : this.lyrics,
-        tags: tags.present ? tags.value : this.tags,
+        tags: tags ?? this.tags,
         negativeTags:
             negativeTags.present ? negativeTags.value : this.negativeTags,
         inputFile: inputFile.present ? inputFile.value : this.inputFile,
         model: model.present ? model.value : this.model,
         clientProcessingId: clientProcessingId ?? this.clientProcessingId,
-        lrcPrompt: lrcPrompt.present ? lrcPrompt.value : this.lrcPrompt,
+        lrcPrompt: lrcPrompt ?? this.lrcPrompt,
         processingStatus: processingStatus ?? this.processingStatus,
         steps: steps ?? this.steps,
         cfgStrength: cfgStrength ?? this.cfgStrength,
@@ -1898,14 +1892,14 @@ class Music extends i0.DataClass implements i0.Insertable<i1.Music> {
 
 class MusicCompanion extends i0.UpdateCompanion<i1.Music> {
   final i0.Value<String> id;
-  final i0.Value<String?> title;
+  final i0.Value<String> title;
   final i0.Value<String?> lyrics;
-  final i0.Value<String?> tags;
+  final i0.Value<String> tags;
   final i0.Value<String?> negativeTags;
   final i0.Value<String?> inputFile;
   final i0.Value<String?> model;
   final i0.Value<String> clientProcessingId;
-  final i0.Value<String?> lrcPrompt;
+  final i0.Value<String> lrcPrompt;
   final i0.Value<String> processingStatus;
   final i0.Value<int> steps;
   final i0.Value<int> cfgStrength;
@@ -1935,14 +1929,14 @@ class MusicCompanion extends i0.UpdateCompanion<i1.Music> {
   });
   MusicCompanion.insert({
     required String id,
-    this.title = const i0.Value.absent(),
+    required String title,
     this.lyrics = const i0.Value.absent(),
-    this.tags = const i0.Value.absent(),
+    required String tags,
     this.negativeTags = const i0.Value.absent(),
     this.inputFile = const i0.Value.absent(),
     this.model = const i0.Value.absent(),
     required String clientProcessingId,
-    this.lrcPrompt = const i0.Value.absent(),
+    required String lrcPrompt,
     required String processingStatus,
     required int steps,
     required int cfgStrength,
@@ -1952,7 +1946,10 @@ class MusicCompanion extends i0.UpdateCompanion<i1.Music> {
     this.createdAt = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   })  : id = i0.Value(id),
+        title = i0.Value(title),
+        tags = i0.Value(tags),
         clientProcessingId = i0.Value(clientProcessingId),
+        lrcPrompt = i0.Value(lrcPrompt),
         processingStatus = i0.Value(processingStatus),
         steps = i0.Value(steps),
         cfgStrength = i0.Value(cfgStrength),
@@ -2002,14 +1999,14 @@ class MusicCompanion extends i0.UpdateCompanion<i1.Music> {
 
   i1.MusicCompanion copyWith(
       {i0.Value<String>? id,
-      i0.Value<String?>? title,
+      i0.Value<String>? title,
       i0.Value<String?>? lyrics,
-      i0.Value<String?>? tags,
+      i0.Value<String>? tags,
       i0.Value<String?>? negativeTags,
       i0.Value<String?>? inputFile,
       i0.Value<String?>? model,
       i0.Value<String>? clientProcessingId,
-      i0.Value<String?>? lrcPrompt,
+      i0.Value<String>? lrcPrompt,
       i0.Value<String>? processingStatus,
       i0.Value<int>? steps,
       i0.Value<int>? cfgStrength,

@@ -59,6 +59,8 @@ Future<void> diskRotBackgroundWorker(int timer) async {
       final inferenceServer =
           'http://${gpuSettings.hostname}:${gpuSettings.port}/task';
 
+      logger.i(workItem);
+
       try {
         await http.post(Uri.parse(inferenceServer),
             headers: {
@@ -90,6 +92,17 @@ Future<void> diskRotBackgroundWorker(int timer) async {
         id: Value(workItem.id),
         processingStatus: Value("IN-PROGRESS"),
         createdAt: Value(DateTime.now()),
+        tags: Value(workItem.music.tags),
+        negativeTags: Value(workItem.music.negativeTags),
+        model: Value('unknown'),
+        inputFile: Value(''),
+        lrcPrompt: Value(workItem.music.lrcPrompt),
+        lyrics: Value(workItem.music.lyrics),
+        duration: Value(workItem.music.duration),
+        cfgStrength: Value(workItem.music.cfgStregth),
+        steps: Value(workItem.music.steps),
+        title: Value(workItem.music.title),
+        clientRequestedId: Value(workItem.clientId),
       ));
     } catch (e) {
       logger
@@ -105,8 +118,10 @@ Future<void> diskRotBackgroundWorker(int timer) async {
 
     final results = await query.getSingleOrNull();
 
+    // Sanity check we aren't in an inconsistent state
     if (results == null) {
       logger.i("Diskrot Inference Status Worker: nothing in progress.");
+
       return;
     }
 
