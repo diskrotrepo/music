@@ -62,7 +62,7 @@ def create_app():
             lrc_prompt=task.get("lrc_prompt"),
             lrc_model=task.get("lrc_model"),
             cfg_strength=task.get("cfg_strength"),
-            model="unknown",
+            model=task.get("model"),
         )
 
         db.session.add(new_music)
