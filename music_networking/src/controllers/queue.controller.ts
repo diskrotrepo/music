@@ -70,7 +70,7 @@ export class QueueController {
 
         if (!queueItem) {
             console.log("No next work item found for client: ", clientId);
-            return res.status(404).json({ error: "No next work item found" });
+            res.status(404).json({ error: "No next work item found" });
         }
         console.log("Next work item found: ", queueItem);
 
