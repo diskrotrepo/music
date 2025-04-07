@@ -65,8 +65,13 @@ def create_app():
             model=task.get("model"),
         )
 
-        db.session.add(new_music)
-        db.session.commit()
+        try:
+            db.session.add(new_music)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logging.error(f"Failed to add new music task: {e}")
+            return jsonify({"error": "Failed to add task"}), 500
 
         return jsonify({"id": generation_id})
 
