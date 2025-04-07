@@ -71,7 +71,9 @@ export class QueueController {
         if (!queueItem) {
             console.log("No next work item found for client: ", clientId);
             res.status(404).json({ error: "No next work item found" });
+            return;
         }
+
         console.log("Next work item found: ", queueItem);
 
         res.status(200).json({ queue: queueItem });
