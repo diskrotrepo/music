@@ -51,6 +51,41 @@ Future<void> diskRotBackgroundWorker(int timer) async {
 
       final workItem = queueResponse.workQueues[0];
 
+      logger.i(
+          "Diskrot Inference Dispatch: Found work item ${workItem.id}, starting processing.");
+
+      final gpuSettings = await settingsRepository.getGpuSettings();
+
+      final inferenceServer =
+          'http://${gpuSettings.hostname}:${gpuSettings.port}/task';
+
+      try {
+        await http.post(Uri.parse(inferenceServer),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              'id': workItem.id,
+              'tags': workItem.music.tags,
+              'negative_tags': workItem.music.negativeTags,
+              'model': 'unknown',
+              'input': '',
+              'lrc_model': workItem.music.lrcModel,
+              'lrc_prompt': workItem.music.lrcPrompt,
+              'lyrics': workItem.music.lyrics,
+              'duration': workItem.music.duration,
+              'cfg_strength': workItem.music.cfgStregth,
+              'steps': workItem.music.steps,
+              'title': workItem.music.title,
+              'client_id': workItem.clientId,
+              'music_id': workItem.music.id,
+            }));
+      } catch (e) {
+        logger.e(
+            "Diskrot Inference Dispatch: Failed to send task to inference server: $e");
+        return;
+      }
+
       await database.queue.insertOne(QueueCompanion(
         id: Value(workItem.id),
         processingStatus: Value("IN-PROGRESS"),
