@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:music_app/database/database.dart';
 import 'package:logger/logger.dart';
 import 'package:music_app/database/tables.drift.dart';
@@ -23,17 +24,17 @@ class CreateRepository {
     await _database.into(_database.music).insert(
           MusicCompanion.insert(
             id: id,
-            title: title,
-            tags: styles,
-            negativeTags: negativeTags ?? '',
-            lyrics: lyrics,
+            title: Value(title),
+            tags: Value(styles),
+            negativeTags: Value(negativeTags),
+            lyrics: Value(lyrics),
             duration: duration,
             steps: steps,
             cfgStrength: cfgStrength,
-            lrcPrompt: lyricsPrompt,
-            inputFile: inputFile ?? '',
+            lrcPrompt: Value(lyricsPrompt),
+            inputFile: Value(inputFile),
             isDeleted: false,
-            model: '',
+            model: Value(''),
             processingStatus: 'NEW',
             clientProcessingId: 'remote',
             isFavorite: false,

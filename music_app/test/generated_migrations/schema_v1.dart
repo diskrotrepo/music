@@ -12,29 +12,29 @@ class Music extends Table with TableInfo {
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'title', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> lyrics = GeneratedColumn<String>(
-      'lyrics', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'lyrics', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> tags = GeneratedColumn<String>(
-      'tags', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'tags', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> negativeTags = GeneratedColumn<String>(
-      'negative_tags', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'negative_tags', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> inputFile = GeneratedColumn<String>(
-      'input_file', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'input_file', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> model = GeneratedColumn<String>(
-      'model', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'model', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> clientProcessingId =
       GeneratedColumn<String>('client_processing_id', aliasedName, false,
           type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> lrcPrompt = GeneratedColumn<String>(
-      'lrc_prompt', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      'lrc_prompt', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   late final GeneratedColumn<String> processingStatus = GeneratedColumn<String>(
       'processing_status', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);

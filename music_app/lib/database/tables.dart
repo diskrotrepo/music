@@ -3,14 +3,14 @@ import 'package:drift/drift.dart';
 @DataClassName('Music')
 class Music extends Table {
   TextColumn get id => text()();
-  TextColumn get title => text()();
-  TextColumn get lyrics => text()();
-  TextColumn get tags => text()();
-  TextColumn get negativeTags => text()();
-  TextColumn get inputFile => text()();
-  TextColumn get model => text()();
+  TextColumn get title => text().nullable()();
+  TextColumn get lyrics => text().nullable()();
+  TextColumn get tags => text().nullable()();
+  TextColumn get negativeTags => text().nullable()();
+  TextColumn get inputFile => text().nullable()();
+  TextColumn get model => text().nullable()();
   TextColumn get clientProcessingId => text()();
-  TextColumn get lrcPrompt => text()();
+  TextColumn get lrcPrompt => text().nullable()();
   TextColumn get processingStatus => text()();
   IntColumn get steps => integer()();
   IntColumn get cfgStrength => integer()();
