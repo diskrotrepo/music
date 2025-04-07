@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:music_app/database/database.dart';
+import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
+import 'package:music_app/network/network_models.dart';
 import 'package:music_app/networking/diskrot_network.dart';
 import 'package:music_app/settings/settings_repository.dart';
 
@@ -29,7 +32,35 @@ Future<void> diskRotBackgroundWorker(int timer) async {
 
     logger.i("Diskrot Inference Dispatch: request work.");
 
-    final result = await get("/queue/next");
+    try {
+      final getQueuedWorkResponse = await get("/queue/next");
+
+      if (getQueuedWorkResponse.statusCode != 200) {
+        logger.e(
+            "Diskrot Inference Dispatch: Failed to fetch next work item, status code: ${getQueuedWorkResponse.statusCode}");
+        return;
+      }
+
+      final queueResponse =
+          QueueResponse.fromJson(jsonDecode(getQueuedWorkResponse.body));
+
+      if (queueResponse.workQueues.isEmpty) {
+        logger.i("Diskrot Inference Dispatch: No work items available.");
+        return;
+      }
+
+      final workItem = queueResponse.workQueues[0];
+
+      await database.queue.insertOne(QueueCompanion(
+        id: Value(workItem.id),
+        processingStatus: Value("IN-PROGRESS"),
+        createdAt: Value(DateTime.now()),
+      ));
+    } catch (e) {
+      logger
+          .e("Diskrot Inference Dispatch: Failed to fetch next work item: $e");
+      return;
+    }
   });
 
   // Checking status of existing work
