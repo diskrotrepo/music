@@ -18,7 +18,7 @@ Future<void> diskRotBackgroundWorker(int timer) async {
   final logger = di.get<Logger>();
   final settingsRepository = di.get<SettingsRepository>();
 
-  Timer.periodic(const Duration(seconds: 1), (Timer t) async {
+  Timer.periodic(const Duration(seconds: 60), (Timer t) async {
     final query = database.select(database.queue);
     query.where((tbl) => tbl.processingStatus.equals("IN-PROGRESS"));
 
@@ -99,7 +99,7 @@ Future<void> diskRotBackgroundWorker(int timer) async {
   });
 
   // Checking status of existing work
-  Timer.periodic(const Duration(seconds: 1), (Timer t) async {
+  Timer.periodic(const Duration(seconds: 60), (Timer t) async {
     final query = database.select(database.queue);
     query.where((tbl) => tbl.processingStatus.equals("IN-PROGRESS"));
 

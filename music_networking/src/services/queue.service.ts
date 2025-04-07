@@ -75,13 +75,13 @@ export class QueueService {
         return data.music_id;
     }
 
-    async getNextWorkItem(clientId: string): Promise<Queue | null> {
+    async getNextWorkItem(clientId: string): Promise<Array<Queue> | null> {
         const results = await this.queueRepository.getNextWorkItem(clientId, 1);
 
         if (results === null || results.length === 0) {
             return null;
         }
 
-        return results[0] as Queue;
+        return results as Array<Queue>;
     }
 }
