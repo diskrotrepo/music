@@ -87,5 +87,25 @@ export class QueueController {
 
         res.status(200).json({ queue: queueItem });
     }
+
+    getCurrentWorkItem = async (req: Request, res: Response): Promise<void> => {
+
+        const clientId = req.headers['client-id'] as string;
+
+
+        console.log("Getting in progress work for client: ", clientId);
+
+        const queueItem = await this.queueService.getCurrentWorkItem(clientId);
+
+        if (!queueItem) {
+            console.log("No in progress work item found for client: ", clientId);
+            res.status(404).json({ error: "No current work item found" });
+            return;
+        }
+
+        console.log("Current work item found: ", queueItem);
+
+        res.status(200).json({ queue: queueItem });
+    }
 }
 

@@ -131,6 +131,33 @@ export class QueueRepository extends BaseRepository<Queue> {
         return Items as Array<Queue>;
 
     }
+
+
+    async getCurrentWorkItem(requestingClientId: string): Promise<Array<Queue> | null> {
+
+        const queryCommandInput = {
+            TableName: this.tableName,
+            KeyConditionExpression: "pkey = :pkey",
+            FilterExpression: "#s = :processing_status",
+            ExpressionAttributeNames: {
+                "#s": "processing_status",
+            },
+            ExpressionAttributeValues: {
+                ":pkey": requestingClientId,
+                ":processing_status": "IN-PROGRESS",
+            },
+            Limit: 1,
+        };
+
+        const { Items } = await docClient.send(new QueryCommand(queryCommandInput));
+
+        if (!Items || Items.length == 0) {
+            console.log("No current work item found for client");
+            return [];
+        }
+
+        return Items as Array<Queue>;
+    }
 }
 
 
