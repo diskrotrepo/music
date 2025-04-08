@@ -17,6 +17,7 @@ class QueueRoutes {
         this.router.get("/next", authorizer(), queueController.getNextWorkItem);
         this.router.get("/:id", authorizer(), queueController.getQueuedItem);
         this.router.post("/:id/complete", authorizer(), queueController.completeQueueItem);
+        this.router.post("/:id/error", authorizer(), queueController.errorQueueItem);
     }
 }
 

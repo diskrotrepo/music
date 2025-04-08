@@ -30,6 +30,15 @@ export class QueueController {
         res.status(200).json({ success: true });
     }
 
+    errorQueueItem = async (req: Request, res: Response): Promise<void> => {
+
+        const clientId = req.headers['client-id'] as string;
+        const musicId = req.params.id;
+        await this.queueService.errorWork(musicId);
+
+        res.status(200).json({ success: true });
+    }
+
     queue = async (req: Request, res: Response): Promise<void> => {
 
         const clientId = req.headers['client-id'] as string;
