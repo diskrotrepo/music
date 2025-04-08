@@ -103,7 +103,7 @@ export class QueueService {
     }
 
     async getCurrentWorkItem(clientId: string): Promise<Array<Queue> | null> {
-        const results = await this.queueRepository.getCurrentWorkItem(clientId, 1);
+        const results = await this.queueRepository.getCurrentWorkItem(clientId);
 
         if (results === null || results.length === 0) {
             return null;
