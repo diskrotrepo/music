@@ -47,6 +47,8 @@ Future<void> diskRotBackgroundWorker(int timer) async {
 
       logger.i(workItem);
 
+      final diskRotClient = di.get<DiskrotClient>();
+
       try {
         await http.post(Uri.parse(inferenceServer),
             headers: {
@@ -67,6 +69,8 @@ Future<void> diskRotBackgroundWorker(int timer) async {
               'title': workItem.music.title,
               'client_id': workItem.clientId,
               'music_id': workItem.music.id,
+              'shared_secret': diskRotClient.sharedSecret,
+              'requesting_client_id': diskRotClient.id,
             }));
       } catch (e) {
         logger.e(
@@ -79,10 +83,16 @@ Future<void> diskRotBackgroundWorker(int timer) async {
       return;
     }
   });
+}
 
+/*
   // Checking status of existing work
   Timer.periodic(const Duration(seconds: 5), (Timer t) async {
     final gpuSettings = await settingsRepository.getGpuSettings();
+
+    if (inferenceQueueId == null) {
+      return;
+    }
 
     final inferenceServer =
         'http://${gpuSettings.hostname}:${gpuSettings.port}/api/v1/queue/${inferenceQueueId}';
@@ -101,10 +111,11 @@ Future<void> diskRotBackgroundWorker(int timer) async {
       return;
     }
 
-    if (queueStatusResponse.statusCode == 404) {
-      logger.e("Diskrot Inference Status Worker: in an inconsistent state.");
+    if (queueStatusResponse.statusCode == 200) {
+      logger.e("Diskrot Inference Status Worker: confirmed tasks are running.");
 
       return;
     }
   });
 }
+*/
