@@ -18,26 +18,12 @@ Future<void> diskRotBackgroundWorker(int timer) async {
   final logger = di.get<Logger>();
   final settingsRepository = di.get<SettingsRepository>();
 
-  Timer.periodic(const Duration(seconds: 60), (Timer t) async {
-    final query = database.select(database.queue);
-    query.where((tbl) => tbl.processingStatus.equals("IN-PROGRESS"));
-
-    final results = await query.getSingleOrNull();
-
-    if (results != null) {
-      logger.i(
-          "Diskrot Inference Dispatch: already working on a task, skipping this cycle.");
-      return;
-    }
-
-    logger.i("Diskrot Inference Dispatch: request work.");
-
+  Timer.periodic(const Duration(seconds: 5), (Timer t) async {
     try {
       final getQueuedWorkResponse = await get("/queue/next");
 
       if (getQueuedWorkResponse.statusCode != 200) {
-        logger.e(
-            "Diskrot Inference Dispatch: Failed to fetch next work item, status code: ${getQueuedWorkResponse.statusCode}");
+        logger.i('Diskrot Inference is already working on a task.');
         return;
       }
 
@@ -87,23 +73,6 @@ Future<void> diskRotBackgroundWorker(int timer) async {
             "Diskrot Inference Dispatch: Failed to send task to inference server: $e");
         return;
       }
-
-      await database.queue.insertOne(QueueCompanion(
-        id: Value(workItem.id),
-        processingStatus: Value("IN-PROGRESS"),
-        createdAt: Value(DateTime.now()),
-        tags: Value(workItem.music.tags),
-        negativeTags: Value(workItem.music.negativeTags),
-        model: Value('unknown'),
-        inputFile: Value(''),
-        lrcPrompt: Value(workItem.music.lrcPrompt),
-        lyrics: Value(workItem.music.lyrics),
-        duration: Value(workItem.music.duration),
-        cfgStrength: Value(workItem.music.cfgStregth),
-        steps: Value(workItem.music.steps),
-        title: Value(workItem.music.title),
-        clientRequestedId: Value(workItem.clientId),
-      ));
     } catch (e) {
       logger
           .e("Diskrot Inference Dispatch: Failed to fetch next work item: $e");
@@ -112,27 +81,17 @@ Future<void> diskRotBackgroundWorker(int timer) async {
   });
 
   // Checking status of existing work
-  Timer.periodic(const Duration(seconds: 60), (Timer t) async {
-    final query = database.select(database.queue);
-    query.where((tbl) => tbl.processingStatus.equals("IN-PROGRESS"));
-
-    final results = await query.getSingleOrNull();
-
-    // Sanity check we aren't in an inconsistent state
-    if (results == null) {
-      logger.i("Diskrot Inference Status Worker: nothing in progress.");
-
-      return;
-    }
-
+  Timer.periodic(const Duration(seconds: 5), (Timer t) async {
     final gpuSettings = await settingsRepository.getGpuSettings();
 
     final inferenceServer =
-        'http://${gpuSettings.hostname}:${gpuSettings.port}/api/v1/status/health';
+        'http://${gpuSettings.hostname}:${gpuSettings.port}/api/v1/queue';
 
-    late http.Response inferenceHealthCheck;
+    logger.i(inferenceServer);
+
+    late http.Response queueStatusResponse;
     try {
-      inferenceHealthCheck =
+      queueStatusResponse =
           await http.get(Uri.parse(inferenceServer), headers: {
         'Content-Type': 'application/json',
       });
@@ -142,9 +101,9 @@ Future<void> diskRotBackgroundWorker(int timer) async {
       return;
     }
 
-    if (inferenceHealthCheck.statusCode != 200) {
-      logger.e(
-          "Diskrot Inference Status Worker: Unable to communicate with inference server.");
+    if (queueStatusResponse.statusCode == 404) {
+      logger.e("Diskrot Inference Status Worker: in an inconsistent state.");
+
       return;
     }
   });

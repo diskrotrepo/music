@@ -193,7 +193,7 @@ class Music {
           : null,
       duration: json['duration'] as int,
       steps: json['steps'] as int,
-      cfgStregth: (json['cfg_strength'] as num).toDouble(),
+      cfgStregth: (json['cfg_strength'] as num).toInt(),
     );
   }
 }

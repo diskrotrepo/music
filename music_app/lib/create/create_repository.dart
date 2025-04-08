@@ -24,14 +24,14 @@ class CreateRepository {
     await _database.into(_database.music).insert(
           MusicCompanion.insert(
             id: id,
-            title: Value(title),
-            tags: Value(styles),
+            title: title,
+            tags: styles,
             negativeTags: Value(negativeTags),
             lyrics: Value(lyrics),
             duration: duration,
             steps: steps,
             cfgStrength: cfgStrength,
-            lrcPrompt: Value(lyricsPrompt),
+            lrcPrompt: lyricsPrompt,
             inputFile: Value(inputFile),
             isDeleted: false,
             model: Value(''),
