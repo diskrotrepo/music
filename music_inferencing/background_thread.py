@@ -10,12 +10,16 @@
 import enum
 import logging
 import queue
+import logger
 import threading
 import time
 from queue import Queue
 from abc import abstractmethod, ABC
 from typing import Dict
 import os
+import hmac
+import hashlib
+import requests
 
 from diffrhythm.infer.infer import generate
 from music_inferencing.models import Music, MusicProcessingEnum, Prompt
@@ -121,6 +125,13 @@ class InferenceThread(BackgroundThread):
                     else:
                         song.filename = file_path
 
+                    complete_work(
+                        client_id=song.requesting_client_id,
+                        shared_secret=song.shared_secret,
+                        url=f"/queue/${song.id}/complete",
+                        body="{}",
+                    )
+
                     song.processing_status = MusicProcessingEnum.COMPLETE
                     db.session.commit()
                     logging.info(f"Completed song {song.id}")
@@ -137,3 +148,45 @@ class BackgroundThreadFactory:
     def create(thread_type: BackgroundThreadType, app=None) -> BackgroundThread:
         if thread_type == BackgroundThreadType.INFERENCE:
             return InferenceThread(app)
+
+
+def create_digest_string(client_id: str, url: str, payload: str) -> str:
+    return f"{client_id}|{url}|{payload}"
+
+
+def compute_hmac(client_id: str, shared_secret: str, url: str, payload: str) -> str:
+    digest_string = create_digest_string(client_id, url, payload)
+
+    key = shared_secret.encode("utf-8")
+    message = digest_string.encode("utf-8")
+
+    hmac_sha256 = hmac.new(key, message, hashlib.sha256)
+    return hmac_sha256.hexdigest()
+
+
+def complete_work(client_id: str, shared_secret: str, url: str, body: str):
+    try:
+        full_url = f"http://network.diskrot.com/api/v1/{url}"
+        api_path = f"/api/v1{url}"
+        signature = compute_hmac(
+            client_id=client_id,
+            shared_secret=shared_secret,
+            url=api_path,
+            payload=body,
+        )
+
+        logging.info(f"URL: {full_url}")
+        logging.info(f"API Path: {api_path}")
+        logging.info(f"Signature: {signature}")
+
+        headers = {
+            "Content-Type": "application/json",
+            "client-id": client_id,
+            "diskrot-signature": signature,
+        }
+
+        response = requests.post(full_url, headers=headers, data="{}")
+        return response
+    except Exception as e:
+        logger.error(f"Error in POST request: {e}")
+        raise

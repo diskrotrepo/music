@@ -37,6 +37,8 @@ class Music(db.Model):
     inference_server = db.Column(db.String(256), nullable=False, default="")
     lrc_prompt = db.Column(db.String(2048), nullable=False, default="")
     lrc_model = db.Column(db.String(256), nullable=False, default="")
+    shared_secret = db.Column(db.String(256), nullable=False, default="")
+    requesting_client_id = db.Column(db.String(256), nullable=False, default="")
     processing_status = db.Column(
         db.Enum(MusicProcessingEnum), nullable=False, default=MusicProcessingEnum.NEW
     )

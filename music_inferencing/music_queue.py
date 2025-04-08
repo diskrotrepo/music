@@ -63,6 +63,8 @@ def create_app():
             lrc_model=task.get("lrc_model"),
             cfg_strength=task.get("cfg_strength"),
             model=task.get("model"),
+            requesting_client_id=task.get("requesting_client_id"),
+            shared_secret=task.get("shared_secret"),
         )
 
         try:
