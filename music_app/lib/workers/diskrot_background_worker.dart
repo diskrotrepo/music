@@ -1,20 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:drift/drift.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'package:music_app/database/database.dart';
-import 'package:music_app/database/tables.drift.dart';
 import 'package:music_app/dependency_context.dart';
 import 'package:music_app/network/network_models.dart';
 import 'package:music_app/networking/diskrot_network.dart';
 import 'package:music_app/settings/settings_repository.dart';
 
+String? inferenceQueueId;
+
 // Fetching more work to do
 Future<void> diskRotBackgroundWorker(int timer) async {
   setup();
-  final database = di.get<AppDatabase>();
   final logger = di.get<Logger>();
   final settingsRepository = di.get<SettingsRepository>();
 
@@ -36,6 +34,8 @@ Future<void> diskRotBackgroundWorker(int timer) async {
       }
 
       final workItem = queueResponse.workQueues[0];
+
+      inferenceQueueId = workItem.music.id;
 
       logger.i(
           "Diskrot Inference Dispatch: Found work item ${workItem.id}, starting processing.");
@@ -85,7 +85,7 @@ Future<void> diskRotBackgroundWorker(int timer) async {
     final gpuSettings = await settingsRepository.getGpuSettings();
 
     final inferenceServer =
-        'http://${gpuSettings.hostname}:${gpuSettings.port}/api/v1/queue';
+        'http://${gpuSettings.hostname}:${gpuSettings.port}/api/v1/queue/${inferenceQueueId}';
 
     logger.i(inferenceServer);
 
