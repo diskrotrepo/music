@@ -13,7 +13,6 @@ import transformers
 import torch
 import os
 import logging
-import logging
 
 lrc_pipeline = None
 poet_pipeline = None

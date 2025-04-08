@@ -10,7 +10,6 @@
 import enum
 import logging
 import queue
-import logger
 import threading
 import time
 from queue import Queue
@@ -188,5 +187,5 @@ def complete_work(client_id: str, shared_secret: str, url: str, body: str):
         response = requests.post(full_url, headers=headers, data="{}")
         return response
     except Exception as e:
-        logger.error(f"Error in POST request: {e}")
+        logging.error(f"Error in POST request: {e}")
         raise
