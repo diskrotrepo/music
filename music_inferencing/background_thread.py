@@ -127,11 +127,11 @@ class InferenceThread(BackgroundThread):
                     complete_work(
                         client_id=song.requesting_client_id,
                         shared_secret=song.shared_secret,
-                        url=f"/queue/${song.id}/complete",
+                        url=f"queue/{song.id}/complete",
                         body="{}",
                     )
 
-                    song.processing_status = MusicProcessingEnum.COMPLETE
+                    db.session.delete(Music).where(Music.id == song.id).execute()
                     db.session.commit()
                     logging.info(f"Completed song {song.id}")
         except queue.Empty:
