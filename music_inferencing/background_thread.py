@@ -165,7 +165,7 @@ def compute_hmac(client_id: str, shared_secret: str, url: str, payload: str) -> 
 
 def complete_work(client_id: str, shared_secret: str, url: str, body: str):
     try:
-        full_url = f"http://network.diskrot.com/api/v1/{url}"
+        full_url = f"http://network.diskrot.com:8080/api/v1/{url}"
         api_path = f"/api/v1{url}"
         signature = compute_hmac(
             client_id=client_id,
