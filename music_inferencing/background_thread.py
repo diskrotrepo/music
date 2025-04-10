@@ -166,7 +166,7 @@ def compute_hmac(client_id: str, shared_secret: str, url: str, payload: str) -> 
 def complete_work(client_id: str, shared_secret: str, url: str, body: str):
     try:
         full_url = f"http://network.diskrot.com:8080/api/v1/{url}"
-        api_path = f"/api/v1{url}"
+        api_path = f"/api/v1/{url}"
         signature = compute_hmac(
             client_id=client_id,
             shared_secret=shared_secret,
@@ -175,6 +175,8 @@ def complete_work(client_id: str, shared_secret: str, url: str, body: str):
         )
 
         logging.info(f"URL: {full_url}")
+        logging.info(f"Client ID: {client_id}")
+        logging.info(f"Shared Secret: {shared_secret}")
         logging.info(f"API Path: {api_path}")
         logging.info(f"Signature: {signature}")
 
@@ -184,7 +186,7 @@ def complete_work(client_id: str, shared_secret: str, url: str, body: str):
             "diskrot-signature": signature,
         }
 
-        response = requests.post(full_url, headers=headers, data="{}")
+        response = requests.post(full_url, headers=headers, data=body)
         return response
     except Exception as e:
         logging.error(f"Error in POST request: {e}")
