@@ -131,8 +131,9 @@ class InferenceThread(BackgroundThread):
                         body="{}",
                     )
 
-                    db.session.delete(Music).where(Music.id == song.id).execute()
+                    db.session.delete(song)
                     db.session.commit()
+
                     logging.info(f"Completed song {song.id}")
         except queue.Empty:
             time.sleep(1)
