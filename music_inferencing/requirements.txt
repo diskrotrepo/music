@@ -29,4 +29,3 @@ Flask-Migrate==4.1.0
 flask-cors==5.0.1
 boto3==1.37.13
 python-dotenv
-LangSegment==0.2.0
