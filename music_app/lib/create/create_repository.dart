@@ -18,6 +18,7 @@ class CreateRepository {
     required int steps,
     required int cfgStrength,
     required String lyricsPrompt,
+    required bool isLocal,
     String? negativeTags,
     String? inputFile,
   }) async {
@@ -36,11 +37,21 @@ class CreateRepository {
             isDeleted: false,
             model: Value(''),
             processingStatus: 'NEW',
-            clientProcessingId: 'remote',
+            clientProcessingId: isLocal ? 'local' : 'remote',
             isFavorite: false,
           ),
         );
 
     _logger.i("New music created with ID: $id");
+  }
+
+  Future<Music> getNext() async {
+    return await _database.select(_database.music)
+      ..where((tbl) => tbl.processingStatus.equals('NEW'))
+      ..orderBy([
+        OrderingTerm.desc(_database.music.createdAt),
+      ])
+      ..limit(1)
+      ..getSingle();
   }
 }
