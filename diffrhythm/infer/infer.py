@@ -122,18 +122,30 @@ def generate(
     else:
         raise ValueError(f"Unsupported audio_length: {audio_length}")
 
-    cfm, tokenizer, muq, vae = prepare_model(max_frames,device, music_model)
+    cfm, tokenizer, muq, vae = prepare_model(max_frames, device, music_model)
 
     if lyrics != "":
         lrc = calculate_lrc(lyrics, lrc_prompt)
     else:
         lrc = ""
 
-    lrc_prompt, start_time = get_lrc_token(max_frames,lrc, tokenizer, device)
+    lrc_prompt, start_time = get_lrc_token(max_frames, lrc, tokenizer, device)
 
-    if input_file:
-        input_path = os.path.join("input", input_file)
-        style_prompt = get_style_prompt(muq, input_path)
+    input_files = input_file.split(",")
+
+    embeddings = []
+
+    if len(input_files) > 1:
+        for input_file in input_files:
+            input_path = os.path.join(
+                PROJECT_ROOT_DIR, "music_input", input_file.strip()
+            )
+            style_result = get_style_prompt(muq, wav_path=input_path)
+            embeddings.append(style_result)
+
+        embeddings = torch.cat(embeddings, dim=0)
+        style_prompt = embeddings.mean(dim=0, keepdim=True)
+
     else:
         style_prompt = get_style_prompt(muq, prompt=tags)
 
@@ -164,7 +176,7 @@ def generate(
 
     id = str(uuid.uuid4())
 
-    logging.info(PROJECT_ROOT_DIR);
+    logging.info(PROJECT_ROOT_DIR)
     output_path = os.path.join(PROJECT_ROOT_DIR, "music_output", "{}.wav".format(id))
     logging.info(f"Writing file to {output_path}")
 

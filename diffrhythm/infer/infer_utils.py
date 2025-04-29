@@ -97,9 +97,9 @@ def prepare_model(max_frames, device, repo_id):
         model_config = json.load(f)
     dit_model_cls = DiT
     cfm = CFM(
-        transformer=dit_model_cls(**model_config["model"],max_frames=max_frames),
+        transformer=dit_model_cls(**model_config["model"], max_frames=max_frames),
         num_channels=model_config["model"]["mel_dim"],
-        max_frames=max_frames
+        max_frames=max_frames,
     )
     cfm = cfm.to(device)
     cfm = load_checkpoint(cfm, dit_ckpt_path, device=device, use_ema=False)
@@ -175,6 +175,18 @@ def get_style_prompt(model, wav_path=None, prompt=None):
     return audio_emb
 
 
+def get_average_style_prompt(model, input_files):
+    embeddings = []
+    for input_file in input_files:
+        input_path = os.path.join("input", input_file)
+        style_prompt = get_style_prompt(model, wav_path=input_path)
+        embeddings.append(style_prompt)
+
+    embeddings = torch.cat(embeddings, dim=0)  # Shape: [N, 512]
+    avg_embedding = embeddings.mean(dim=0, keepdim=True)  # Shape: [1, 512]
+    return avg_embedding
+
+
 def parse_lyrics(lyrics: str):
     lyrics_with_time = []
     lyrics = lyrics.strip()
@@ -208,7 +220,7 @@ class CNENTokenizer:
         return "|".join([self.id2phone[x - 1] for x in token])
 
 
-def get_lrc_token(max_frames,text, tokenizer, device):
+def get_lrc_token(max_frames, text, tokenizer, device):
 
     max_frames = 2048
     lyrics_shift = 0
@@ -233,7 +245,7 @@ def get_lrc_token(max_frames,text, tokenizer, device):
         for (time_start, line) in lrc_with_time
         if time_start < max_secs
     ]
-    
+
     if max_frames == 2048:
         lrc_with_time = lrc_with_time[:-1] if len(lrc_with_time) >= 1 else lrc_with_time
 
